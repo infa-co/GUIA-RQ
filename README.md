@@ -11,7 +11,7 @@ Este projeto segue uma arquitetura robusta e escalável, utilizando o padrão **
 | **Backend (Lógica de Negócio)** | **Java** | Responsável pelo processamento de dados, regras de negócio e comunicação com o banco de dados. |
 | **Estrutura** | **MVC** | Organização do código para garantir escalabilidade, manutenção e separação de responsabilidades. |
 | **Frontend (Interface)** | **HTML5, CSS3 & JavaScript** | Interface de usuário (UI) responsiva, focada em performance e usabilidade. |
-| **Banco de Dados** | **PostgreSQL** | Armazenamento de dados de pontos turísticos, eventos e informações. |
+| **Banco de Dados** | **Supabase** | Armazenamento de dados de pontos turísticos, eventos e informações. |
 
 ### **Recursos Principais (Roadmap)**
 
