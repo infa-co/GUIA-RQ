@@ -1,1 +1,1 @@
-# Guia RQ 🌲
+# Guia RQ 
