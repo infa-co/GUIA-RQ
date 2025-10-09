@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .carousel { scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
+        .carousel::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<header id="header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50">
+    <div class="px-4 py-3 flex items-center justify-between">
+        <div class="text-xl font-bold text-blue-600">Guia RQ</div>
+        <nav class="flex space-x-6 text-sm font-medium text-gray-700">
+            <span class="hover:text-blue-600 cursor-pointer">Home</span>
+            <span class="hover:text-blue-600 cursor-pointer">Tickets</span>
+            <span class="hover:text-blue-600 cursor-pointer">Pacotes</span>
+        </nav>
+        <div class="flex items-center space-x-3">
+            <i class="fa-regular fa-user text-gray-600 text-lg"></i>
+            <div class="relative">
+                <i class="fa-solid fa-shopping-cart text-gray-600 text-lg"></i>
+                <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">2</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main id="hero-section" class="pt-16 h-[600px] relative overflow-hidden">
+    <img class="absolute inset-0 w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/57e1bca680-f30e3d78665323e85f83.png" alt="beautiful mountain landscape of Rancho Queimado, Brazilian countryside, rolling hills, green valleys, scenic vista" />
+    <div class="absolute inset-0 bg-black/40"></div>
+    <div class="relative z-10 px-4 h-full flex flex-col justify-center text-white">
+        <h1 class="text-3xl font-bold mb-4 leading-tight">Explore Rancho Queimado com vantagens exclusivas!</h1>
+        <p class="text-lg mb-6 text-gray-100">Economize em hospedagens, cafés e passeios com os tickets oficiais do Guia RQ.</p>
+        <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg mb-4 transition-colors">
+            Veja os tickets disponíveis
+        </button>
+        <p class="text-sm text-gray-200 flex items-center">
+            <i class="fa-solid fa-check-circle mr-2"></i>
+            Mais de 12 mil visitantes já usaram o Guia RQ
+        </p>
+    </div>
+</main>
+
+<section id="featured-tickets" class="py-12 px-4">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Tickets em Destaque</h2>
+    <div class="carousel flex space-x-4 overflow-x-auto pb-4">
+        <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg card-hover">
+            <img class="w-full h-48 object-cover rounded-t-xl" src="./assets/images/forno-e-serra.webp" alt="Pizzaria Forno e Serra">
+            <div class="p-4">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="font-semibold text-gray-800">Ticket Forno e Serra</h3>
+                    <span class="bg-green-600 text-white text-xs px-2 py-1 rounded-full">Favorito da galera</span>
+                </div>
+                <p class="text-sm text-green-600 font-medium mb-1">
+           Pague R$10 e ganhe R$16 de desconto
+        </p>
+                <p class="text-sm text-gray-600 mb-3">Uso único / válido por 12 meses</p>
+                <button class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                    Adicionar ao carrinho
+                </button>
+            </div>
+        </div>
+        
+        <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg card-hover">
+            <img class="w-full h-48 object-cover rounded-t-xl" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/a0e57a1cef-cec917876e384105ae38.png" alt="off-road vehicle on mountain trail, adventure tourism, rugged terrain" />
+            <div class="p-4">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="font-semibold text-gray-800">Ticket RQ Off-Road</h3>
+                    <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full">20% OFF</span>
+                </div>
+                <p class="text-sm text-gray-600 mb-3">Uso único / válido por 12 meses</p>
+                <button class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                    Adicionar ao carrinho
+                </button>
+            </div>
+        </div>
+        
+        <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg card-hover">
+            <img class="w-full h-48 object-cover rounded-t-xl" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/bb9e0b9a22-780fde87ea3e8c4601c2.png" alt="charming mountain chalet, cozy accommodation, wooden architecture" />
+            <div class="p-4">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="font-semibold text-gray-800">Ticket Chalé Encantado</h3>
+                    <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full">10% OFF</span>
+                </div>
+                <p class="text-sm text-gray-600 mb-3">Uso único / válido por 12 meses</p>
+                <button class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                    Adicionar ao carrinho
+                </button>
+            </div>
+        </div>
+        
+        <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg card-hover">
+            <img class="w-full h-48 object-cover rounded-t-xl" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/1b6a0e2282-fe69144055629ff3e444.png" alt="mountain coffee shop, cozy cafe atmosphere, German style architecture" />
+            <div class="p-4">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="font-semibold text-gray-800">Ticket Bergkaffee</h3>
+                    <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full">10% OFF</span>
+                </div>
+                <p class="text-sm text-gray-600 mb-3">Uso único / válido por 12 meses</p>
+                <button class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                    Adicionar ao carrinho
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="cta-section" class="py-16 gradient-bg">
+    <div class="px-4 text-center text-white">
+        <h2 class="text-2xl font-bold mb-4">Planeje sua viagem e economize mais em Rancho Queimado</h2>
+        <p class="text-lg mb-6 text-gray-100">Aproveite e conheça a região pagando menos</p>
+        <button class="bg-white text-blue-600 font-semibold py-4 px-6 rounded-lg hover:bg-gray-100 transition-colors">
+            Quer receber as melhores ofertas e passeios da Serra Catarinense? Cadastre-se.
+        </button>
+    </div>
+</section>
+
+<section id="packages-section" class="py-12 px-4">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Escolha seu pacote de experiências e economize mais</h2>
+    <div class="carousel flex space-x-4 overflow-x-auto pb-4">
+        <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg card-hover relative">
+            <img class="w-full h-48 object-cover rounded-t-xl opacity-20" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/c382520440-f7f166bb6cadda5cfbec.png" alt="compass and mountain exploration theme, adventure travel" />
+            <div class="absolute top-4 left-4">
+                <i class="fa-solid fa-compass text-4xl text-blue-600"></i>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Explorador</h3>
+                <p class="text-sm text-gray-600 mb-4">3 tickets - ideal para quem quer conhecer o essencial</p>
+                <div class="mb-4">
+                    <span class="text-2xl font-bold text-blue-600">R$ 50</span>
+                    <span class="text-sm text-gray-500 ml-2">(economia de R$ 100)</span>
+                </div>
+                <button class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                    Escolher Pacote
+                </button>
+            </div>
+        </div>
+        
+        <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg card-hover relative border-2 border-orange-500">
+            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white text-xs px-3 py-1 rounded-full">
+                Mais Popular
+            </div>
+            <img class="w-full h-48 object-cover rounded-t-xl opacity-20" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/af53b761a5-920b92a2b13692dfa95d.png" alt="adventure map and mountain trails, outdoor activities" />
+            <div class="absolute top-4 left-4">
+                <i class="fa-solid fa-map text-4xl text-orange-500"></i>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Aventureiro</h3>
+                <p class="text-sm text-gray-600 mb-4">5 tickets - para quem quer aproveitar ao máximo</p>
+                <div class="mb-4">
+                    <span class="text-2xl font-bold text-orange-500">R$ 70</span>
+                    <span class="text-sm text-gray-500 ml-2">(economia de R$ 150)</span>
+                </div>
+                <button class="w-full bg-orange-500 text-white py-3 rounded-lg font-medium hover:bg-orange-600 transition-colors">
+                    Escolher Pacote
+                </button>
+            </div>
+        </div>
+        
+        <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg card-hover relative">
+            <img class="w-full h-48 object-cover rounded-t-xl opacity-20" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/1cf61a2aed-6f2b69e260b52ea97079.png" alt="mountain peak summit, premium travel experience, luxury adventure" />
+            <div class="absolute top-4 left-4">
+                <i class="fa-solid fa-mountain text-4xl text-purple-600"></i>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Premium</h3>
+                <p class="text-sm text-gray-600 mb-4">9 tickets - experiência completa com maior economia</p>
+                <div class="mb-4">
+                    <span class="text-2xl font-bold text-purple-600">R$ 110</span>
+                    <span class="text-sm text-gray-500 ml-2">(economia de R$ 300+)</span>
+                </div>
+                <button class="w-full bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
+                    Escolher Pacote
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="testimonials-section" class="py-12 px-4 bg-gray-100">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">O que nossos clientes dizem</h2>
+    <div class="carousel flex space-x-4 overflow-x-auto pb-4">
+        <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center mb-4">
+                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" class="w-12 h-12 rounded-full mr-4">
+                <div>
+                    <h4 class="font-semibold text-gray-800">Juliana R.</h4>
+                    <p class="text-sm text-gray-600">Florianópolis</p>
+                </div>
+            </div>
+            <p class="text-gray-700 mb-3">"Transformei o ticket do Guia em um final de semana incrível. Tudo fácil e rápido!"</p>
+            <div class="flex text-yellow-400">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+            </div>
+        </div>
+        
+        <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center mb-4">
+                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" class="w-12 h-12 rounded-full mr-4">
+                <div>
+                    <h4 class="font-semibold text-gray-800">Felipe M.</h4>
+                    <p class="text-sm text-gray-600">São José</p>
+                </div>
+            </div>
+            <p class="text-gray-700 mb-3">"Melhor maneira de conhecer Rancho Queimado sem gastar muito."</p>
+            <div class="flex text-yellow-400">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+            </div>
+        </div>
+        
+        <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg p-6">
+            <div class="flex items-center mb-4">
+                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" class="w-12 h-12 rounded-full mr-4">
+                <div>
+                    <h4 class="font-semibold text-gray-800">Marina S.</h4>
+                    <p class="text-sm text-gray-600">Blumenau</p>
+                </div>
+            </div>
+            <p class="text-gray-700 mb-3">"Os descontos realmente valem a pena. Recomendo para todos!"</p>
+            <div class="flex text-yellow-400">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="partners-section" class="py-12 px-4">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Nossos Parceiros Oficiais</h2>
+    <div class="carousel flex space-x-8 overflow-x-auto items-center justify-center pb-4">
+        <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg shadow-md flex items-center justify-center">
+            <span class="text-lg font-bold text-gray-600">Forno e Serra</span>
+        </div>
+        <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg shadow-md flex items-center justify-center">
+            <span class="text-lg font-bold text-gray-600">Bergkaffee</span>
+        </div>
+        <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg shadow-md flex items-center justify-center">
+            <span class="text-lg font-bold text-gray-600">Chalé Encantado</span>
+        </div>
+        <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg shadow-md flex items-center justify-center">
+            <span class="text-lg font-bold text-gray-600">RQ Adventures</span>
+        </div>
+    </div>
+</section>
+
+<footer id="footer" class="bg-gray-800 text-white py-12 px-4">
+    <div class="space-y-8">
+        <div class="text-center">
+            <h3 class="text-2xl font-bold mb-4">Guia RQ</h3>
+            <p class="text-gray-300 mb-4">Sua porta de entrada para Rancho Queimado</p>
+            <div class="bg-blue-600/20 text-blue-300 px-4 py-2 rounded-lg inline-block">
+                <i class="fa-solid fa-mobile-alt mr-2"></i>
+                Em breve: app do Guia RQ
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-8 text-sm">
+            <div>
+                <h4 class="font-semibold mb-3">Links Úteis</h4>
+                <ul class="space-y-2 text-gray-300">
+                    <li><span class="hover:text-white cursor-pointer">Sobre</span></li>
+                    <li><span class="hover:text-white cursor-pointer">Contato</span></li>
+                    <li><span class="hover:text-white cursor-pointer">Termos de Uso</span></li>
+                    <li><span class="hover:text-white cursor-pointer">Política de Privacidade</span></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-3">Suporte</h4>
+                <p class="text-gray-300 mb-2">suporte@guiarq.com.br</p>
+                <div class="flex space-x-4">
+                    <i class="fa-brands fa-instagram text-xl hover:text-blue-400 cursor-pointer"></i>
+                    <i class="fa-brands fa-facebook text-xl hover:text-blue-400 cursor-pointer"></i>
+                    <i class="fa-brands fa-whatsapp text-xl hover:text-green-400 cursor-pointer"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center text-sm text-gray-400 border-t border-gray-700 pt-6">
+            © 2024 Guia RQ. Todos os direitos reservados.
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
