@@ -37,9 +37,19 @@
         </div>
     </div>
 </header>
-
+<style>
+.gradient-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.65) 0%,   /* escuro embaixo */
+    rgba(0, 0, 0, 0.25) 60%,  /* meio mais suave */
+    rgba(0, 0, 0, 0.10) 100%  /* transparente no topo */
+  );
+  z-index: 1;
+}
+</style>
 <main id="hero-section" class="relative h-[600px] overflow-hidden">
-        <img class="absolute inset-0 w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/57e1bca680-f30e3d78665323e85f83.png" alt="beautiful mountain landscape of Rancho Queimado, Santa Catarina, Brazil with green hills and misty mountains, scenic countryside view" />
+        <img class="absolute inset-0 w-full h-full object-cover;" src="assets/images/mirante.jpeg" alt="beautiful mountain landscape of Rancho Queimado, Santa Catarina, Brazil with green hills and misty mountains, scenic countryside view" />
         <div class="gradient-overlay absolute inset-0"></div>
         <div class="relative z-10 h-full flex flex-col justify-center items-center text-center px-4">
             <h1 class="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
@@ -144,7 +154,7 @@
     <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Escolha seu pacote de experiências e economize mais</h2>
     <div class="carousel flex space-x-4 overflow-x-auto pb-4">
         <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg card-hover relative">
-            <img class="w-full h-48 object-cover rounded-t-xl opacity-20" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/c382520440-f7f166bb6cadda5cfbec.png" alt="compass and mountain exploration theme, adventure travel" />
+            <img class="w-full h-48 object-cover rounded-t-xl " src="assets/images/entrada.jpeg" alt="compass and mountain exploration theme, adventure travel" />
             <div class="absolute top-4 left-4">
                 <i class="fa-solid fa-compass text-4xl text-blue-600"></i>
             </div>
@@ -165,7 +175,7 @@
             <div class="absolute -top-1 left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-xs px-3 py-1 rounded-full">
                 Mais Popular
             </div>
-            <img class="w-full h-48 object-cover rounded-t-xl opacity-20" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/af53b761a5-920b92a2b13692dfa95d.png" alt="adventure map and mountain trails, outdoor activities" />
+            <img class="w-full h-48 object-cover rounded-t-xl " src="assets/images/praça.jpeg" alt="adventure map and mountain trails, outdoor activities" />
             <div class="absolute top-4 left-4">
                 <i class="fa-solid fa-map text-4xl text-green-500"></i>
             </div>
@@ -183,7 +193,7 @@
         </div>
         
         <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg card-hover relative">
-            <img class="w-full h-48 object-cover rounded-t-xl opacity-20" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/1cf61a2aed-6f2b69e260b52ea97079.png" alt="mountain peak summit, premium travel experience, luxury adventure" />
+            <img class="w-full h-48 object-cover rounded-t-xl " src="assets/images/praça2.jpeg" alt="mountain peak summit, premium travel experience, luxury adventure" />
             <div class="absolute top-4 left-4">
                 <i class="fa-solid fa-mountain text-4xl text-purple-600"></i>
             </div>
@@ -201,19 +211,64 @@
         </div>
     </div>
 </section>
+<<!-- How It Works -->
+<section id="how-it-works" class="py-12 bg-gray-50">
+  <div class="px-6">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Como Funciona</h2>
+    <div class="flex flex-wrap justify-center gap-10 text-center">
+
+      <!-- Etapa 1 -->
+      <div class="w-56">
+        <div class="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fa-solid fa-mouse-pointer text-yellow-500 text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-gray-900 mb-2">Escolha seus tickets</h3>
+        <p class="text-sm text-gray-600">Selecione os tickets ou pacotes que mais combinam com você</p>
+      </div>
+
+      <!-- Etapa 2 -->
+      <div class="w-56">
+        <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fa-solid fa-mobile-screen-button text-green-600 text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-gray-900 mb-2">Faça o pagamento online</h3>
+        <p class="text-sm text-gray-600">Pagamento seguro via cartão ou PIX</p>
+      </div>
+
+      <!-- Etapa 3 -->
+      <div class="w-56">
+        <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fa-solid fa-qrcode text-blue-500 text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-gray-900 mb-2">Receba os QR Codes</h3>
+        <p class="text-sm text-gray-600">Códigos chegam no seu e-mail instantaneamente</p>
+      </div>
+
+      <!-- Etapa 4 -->
+      <div class="w-56">
+        <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fa-solid fa-check text-green-600 text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-gray-900 mb-2">Use em até 12 meses</h3>
+        <p class="text-sm text-gray-600">Apresente o QR Code no estabelecimento e aproveite</p>
+      </div>
+
+    </div>
+  </div>
+</section>
 
 <section id="testimonials-section" class="py-12 px-4 bg-gray-100">
     <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">O que nossos clientes dizem</h2>
     <div class="carousel flex space-x-4 overflow-x-auto pb-4">
         <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg p-6">
             <div class="flex items-center mb-4">
-                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" class="w-12 h-12 rounded-full mr-4">
+                <img src="assets/images/1.jpeg" class="w-12 h-12 rounded-full mr-4">
                 <div>
-                    <h4 class="font-semibold text-gray-800">Juliana R.</h4>
+                    <h4 class="font-semibold text-gray-800">Juliana Schmitz</h4>
                     <p class="text-sm text-gray-600">Florianópolis</p>
                 </div>
             </div>
-            <p class="text-gray-700 mb-3">"Transformei o ticket do Guia em um final de semana incrível. Tudo fácil e rápido!"</p>
+            <p class="text-gray-700 mb-3">Transformei o ticket do Guia em um final de semana incrível. Tudo fácil e rápido!</p>
             <div class="flex text-yellow-400">
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
@@ -225,13 +280,13 @@
         
         <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg p-6">
             <div class="flex items-center mb-4">
-                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" class="w-12 h-12 rounded-full mr-4">
+                <img src="assets/images/2.jpeg" class="w-12 h-12 rounded-full mr-4">
                 <div>
-                    <h4 class="font-semibold text-gray-800">Felipe M.</h4>
+                    <h4 class="font-semibold text-gray-800">Felipe Machado</h4>
                     <p class="text-sm text-gray-600">São José</p>
                 </div>
             </div>
-            <p class="text-gray-700 mb-3">"Melhor maneira de conhecer Rancho Queimado sem gastar muito."</p>
+            <p class="text-gray-700 mb-3">Melhor maneira de conhecer Rancho Queimado sem gastar muito.</p>
             <div class="flex text-yellow-400">
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
@@ -245,11 +300,11 @@
             <div class="flex items-center mb-4">
                 <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" class="w-12 h-12 rounded-full mr-4">
                 <div>
-                    <h4 class="font-semibold text-gray-800">Marina S.</h4>
+                    <h4 class="font-semibold text-gray-800">Marina Back</h4>
                     <p class="text-sm text-gray-600">Blumenau</p>
                 </div>
             </div>
-            <p class="text-gray-700 mb-3">"Os descontos realmente valem a pena. Recomendo para todos!"</p>
+            <p class="text-gray-700 mb-3">Os descontos realmente valem a pena. Recomendo para todos!</p>
             <div class="flex text-yellow-400">
                 <i class="fa-solid fa-star"></i>
                 <i class="fa-solid fa-star"></i>
@@ -261,22 +316,61 @@
     </div>
 </section>
 
-<section id="partners-section" class="py-12 px-4">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Nossos Parceiros Oficiais</h2>
-    <div class="carousel flex space-x-8 overflow-x-auto items-center justify-center pb-4">
-        <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg shadow-md flex items-center justify-center">
-            <span class="text-lg font-bold text-gray-600">Forno e Serra</span>
-        </div>
-        <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg shadow-md flex items-center justify-center">
-            <span class="text-lg font-bold text-gray-600">Bergkaffee</span>
-        </div>
-        <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg shadow-md flex items-center justify-center">
-            <span class="text-lg font-bold text-gray-600">Chalé Encantado</span>
-        </div>
-        <div class="flex-shrink-0 w-32 h-20 bg-white rounded-lg shadow-md flex items-center justify-center">
-            <span class="text-lg font-bold text-gray-600">RQ Adventures</span>
-        </div>
-    </div>
+<section id="partners" class="py-12 px-4 bg-gray-50">
+  <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">Parceiros Oficiais</h2>
+
+  <!-- container com rolagem horizontal -->
+  <div class="flex space-x-6 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory scroll-smooth">
+
+    <!-- Forno & Serra -->
+    <a href="https://www.instagram.com/fornoeserraranchoqueimado/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="assets/images/Logopizza.jpeg" alt="Pizzaria Forno e Serra" class="h-28 w-auto object-contain">
+    </a>
+
+    <!-- Da Roça -->
+    <a href="https://www.instagram.com/darocadeli/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="assets/images/logodaroca.jpeg" alt="Da Roça Delicatessen" class="h-28 w-auto object-contain">
+    </a>
+
+    <!-- Goyah -->
+    <a href="https://www.instagram.com/goyahvinhos/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="assets/images/logogoyah.jpeg" alt="Goyah Vinhos" class="h-28 w-auto object-contain">
+    </a>
+
+    <!-- Bier Haus -->
+    <a href="https://www.instagram.com/bierhausranchoqueimado/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="assets/images/logobier.jpeg" alt="Bier Haus" class="h-28 w-auto object-contain">
+    </a>
+
+    <!-- RJ Off-Road -->
+    <a href="https://www.instagram.com/rjoffroadefazendinha/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="assets/images/logoroad.jpeg" alt="RJ Off-Road" class="h-28 w-auto object-contain">
+    </a>
+
+    <!-- Espaço Floresta -->
+    <a href="https://www.instagram.com/espacoflorestarq/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="assets/images/logoespaço.jpeg" alt="Espaço Floresta" class="h-28 w-auto object-contain">
+    </a>
+
+    <!-- Berkaffe -->
+    <a href="https://www.instagram.com/bergkaffee_rq/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="assets/images/logoberk.jpeg" alt="Berkaffe" class="h-28 w-auto object-contain">
+    </a>
+
+    <!-- Chalé Encantado -->
+    <a href="https://www.instagram.com/ochaleranchoqueimado/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="assets/images/logochaleencantado.jpeg" alt="Chalé Encantado" class="h-28 w-auto object-contain">
+    </a>
+
+  </div>
 </section>
 
 <footer id="footer" class="bg-gray-800 text-white py-12 px-4">
