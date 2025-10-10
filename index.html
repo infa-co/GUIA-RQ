@@ -38,7 +38,6 @@
     </div>
 </header>
 <style>
-<style>
   .gradient-overlay {
     background: linear-gradient(
       to top,
@@ -50,35 +49,38 @@
   }
 </style>
 
-<main id="hero-section" class="relative aspect-[16/9] md:h-[90vh] overflow-hidden">
-  <!-- Imagem de fundo -->
-  <img 
-    class="absolute inset-0 w-full h-full object-cover object-center md:object-[center_top]" 
-    src="assets/images/mirante2.jpeg" 
-    alt="Vista panorâmica de Rancho Queimado"
-  />
+<main id="hero-section" class="relative w-full overflow-hidden">
+  <!-- Container da imagem -->
+  <div class="relative h-[75vh] md:h-[90vh] w-full">
+    <!-- Imagem de fundo -->
+    <img 
+      class="absolute inset-0 w-full h-full object-cover object-center" 
+      src="assets/images/mirante.jpeg" 
+      alt="Vista panorâmica de Rancho Queimado"
+    />
 
-  <!-- Camada de gradiente -->
-  <div class="gradient-overlay absolute inset-0"></div>
+    <!-- Gradiente escuro -->
+    <div class="gradient-overlay absolute inset-0"></div>
 
-  <!-- Conteúdo do Hero -->
-  <div class="relative z-10 flex flex-col justify-center items-center text-center px-4 h-full">
-    <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
-      Explore Rancho Queimado<br>
-      <span class="text-yellow-400">com vantagens exclusivas!</span>
-    </h1>
+    <!-- Conteúdo -->
+    <div class="relative z-10 flex flex-col justify-center items-center text-center px-6 h-full">
+      <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight max-w-3xl">
+        Explore Rancho Queimado<br>
+        <span class="text-yellow-400">com vantagens exclusivas!</span>
+      </h1>
 
-    <p class="text-lg md:text-xl text-gray-200 mb-6 max-w-2xl">
-      Economize em hospedagens, cafés e passeios com os tickets oficiais do Guia RQ.
-    </p>
+      <p class="text-base md:text-xl text-gray-200 mb-6 max-w-2xl">
+        Economize em hospedagens, cafés e passeios com os tickets oficiais do Guia RQ.
+      </p>
 
-    <button class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-3 px-8 rounded-full text-lg transition-colors">
-      Veja os tickets disponíveis
-    </button>
+      <button class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-3 px-8 rounded-full text-lg transition-colors">
+        Veja os tickets disponíveis
+      </button>
 
-    <div class="flex items-center justify-center text-white text-sm mt-6">
-      <i class="fa-solid fa-shield-check text-yellow-400 mr-2"></i>
-      <span>Mais de 12 mil visitantes já usaram o Guia RQ</span>
+      <div class="flex items-center justify-center text-white text-sm mt-6">
+        <i class="fa-solid fa-shield-check text-yellow-400 mr-2"></i>
+        <span>Mais de 12 mil visitantes já usaram o Guia RQ</span>
+      </div>
     </div>
   </div>
 </main>
