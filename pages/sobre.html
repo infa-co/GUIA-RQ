@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#10b981',
+                        accent: '#f59e0b',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+
+<!-- Header -->
+<!-- HEADER -->
+  <header
+    id="header"
+    class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50"
+  >
+    <div class="px-4 py-3 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="index.html" class="flex items-center space-x-2">
+        <i class="fa-solid fa-mountain text-primary text-xl"></i>
+        <span class="font-bold text-lg text-gray-900">Guia RQ</span>
+      </a>
+
+      <!-- Nav -->
+      <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-700">
+        <a href="index.html" class="hover:text-primary">Home</a>
+        <a href="pages/tickets.html" class="hover:text-primary">Tickets</a>
+        <a href="pages/pacotes.html" class="hover:text-primary">Pacotes</a>
+      </nav>
+
+      <!-- Icons -->
+      <div class="flex items-center space-x-4">
+        <a href="pages/login.html">
+          <i class="fa-regular fa-user text-gray-600 text-lg hover:text-primary transition-colors"></i>
+        </a>
+        <a href="pages/carrinho.html">
+          <i class="fa-solid fa-shopping-cart text-gray-600 text-lg hover:text-primary transition-colors"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+<style>
+  .gradient-overlay {
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.65) 0%,   /* escuro embaixo */
+      rgba(0, 0, 0, 0.25) 60%, /* meio mais suave */
+      rgba(0, 0, 0, 0.10) 100% /* transparente no topo */
+    );
+    z-index: 1;
+  }
+</style>
+
+<<!-- Hero Section -->
+<!-- Hero Section -->
+<section id="hero" class="relative h-[600px] overflow-hidden">
+  <!-- Imagem de fundo -->
+  <img 
+    src="../assets/images/mirante2.jpg" 
+    alt="Vista aérea de Rancho Queimado" 
+    class="absolute inset-0 w-full h-full object-cover object-center"
+  />
+
+  <!-- Gradiente escuro -->
+  <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+
+  <!-- Conteúdo central -->
+  <div class="relative z-10 h-full flex flex-col justify-center items-center text-center px-6 text-white">
+    <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4">
+      O guia oficial para viver o melhor de 
+      <span class="text-yellow-400">Rancho Queimado</span>.
+    </h1>
+    <p class="text-lg md:text-xl text-gray-200 max-w-2xl leading-relaxed">
+      Conectamos visitantes e negócios locais em uma experiência completa — 
+      com descontos, dicas e reservas diretas.
+    </p>
+  </div>
+</section>
+
+<!-- Nossa História -->
+<section id="nossa-historia" class="px-6 py-12 bg-white">
+    <div class="max-w-lg mx-auto">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Como tudo começou</h2>
+        <div class="mb-6">
+            <img class="w-full h-48 rounded-lg object-cover" src="../assets/images/leo.jpg" alt="authentic team photo in Rancho Queimado, local entrepreneurs, Brazilian countryside background, natural lighting, documentary style" />
+        </div>
+        <div class="text-gray-700 leading-relaxed space-y-4">
+            <p>O Guia Rancho Queimado foi fundado em 2021 por Leonardo Schütz, gaiteiro e naturólogo, com o objetivo de fornecer informações completas sobre a cidade.</p>
+            <p>A iniciativa cresceu de forma significativa, com a colaboração de diversas pessoas que, ao longo do tempo, compartilharam suas experiências e conhecimentos, impulsionando o desenvolvimento contínuo do projeto.</p>
+            <p>O projeto começou no Instagram, conquistou milhares de seguidores e agora evolui para uma plataforma completa de turismo.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Missão, Visão e Valores -->
+<section id="missao-visao-valores" class="px-6 py-12 bg-gray-50">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+      Missão, Visão e Valores
+    </h2>
+
+    <!-- Container do carrossel -->
+    <div class="relative">
+      <!-- Área rolável -->
+      <div class="carousel flex space-x-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4">
+        <!-- Card 1 -->
+        <div
+          class="min-w-[280px] bg-white p-6 rounded-2xl shadow-md snap-center flex-shrink-0"
+        >
+          <div
+            class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4"
+          >
+            <i class="fa-solid fa-bullseye text-primary text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-2">Missão</h3>
+          <p class="text-gray-600 text-sm leading-relaxed">
+            Facilitar a descoberta e o acesso às melhores experiências de Rancho Queimado.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div
+          class="min-w-[280px] bg-white p-6 rounded-2xl shadow-md snap-center flex-shrink-0"
+        >
+          <div
+            class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mb-4"
+          >
+            <i class="fa-solid fa-eye text-secondary text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-2">Visão</h3>
+          <p class="text-gray-600 text-sm leading-relaxed">
+            Ser o principal canal de turismo e lifestyle da serra catarinense.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div
+          class="min-w-[280px] bg-white p-6 rounded-2xl shadow-md snap-center flex-shrink-0"
+        >
+          <div
+            class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4"
+          >
+            <i class="fa-solid fa-heart text-accent text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-2">Valores</h3>
+          <p class="text-gray-600 text-sm leading-relaxed">
+            Transparência, colaboração, valorização local e sustentabilidade.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Nossos Números -->
+<section id="nossos-numeros" class="px-6 py-12 bg-gray-50">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+      Nossos números
+    </h2>
+
+    <!-- Container do carrossel -->
+    <div class="relative">
+      <div class="carousel flex space-x-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4">
+
+        <!-- Card 1 -->
+        <div class="min-w-[240px] bg-white p-6 rounded-xl shadow-md text-center snap-center flex-shrink-0">
+          <div class="text-3xl font-bold text-primary mb-1">+53k</div>
+          <p class="text-gray-600 text-sm">seguidores nas redes sociais</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="min-w-[240px] bg-white p-6 rounded-xl shadow-md text-center snap-center flex-shrink-0">
+          <div class="text-3xl font-bold text-secondary mb-1">+100</div>
+          <p class="text-gray-600 text-sm">parceiros locais</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="min-w-[240px] bg-white p-6 rounded-xl shadow-md text-center snap-center flex-shrink-0">
+          <div class="text-3xl font-bold text-accent mb-1">+10k</div>
+          <p class="text-gray-600 text-sm">visitantes por mês</p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="min-w-[240px] bg-white p-6 rounded-xl shadow-md text-center snap-center flex-shrink-0">
+          <div class="text-3xl font-bold text-purple-600 mb-1">+90%</div>
+          <p class="text-gray-600 text-sm">satisfação dos usuários</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Equipe & Contato -->
+<section id="equipe-contato" class="px-6 py-12 bg-white">
+    <div class="max-w-lg mx-auto">
+        <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Quem faz o Guia RQ acontecer</h2>
+        <div class="space-y-6">
+            <div class="bg-gray-50 p-6 rounded-xl">
+                <div class="flex items-center space-x-4 mb-4">
+                    <img src="../assets/images/leo2.jpg" class="w-16 h-16 rounded-full object-cover">
+                    <div>
+                        <h3 class="font-semibold text-gray-900">Fundador do Guia</h3>
+                        <p class="text-gray-600 text-sm">Fundador & Relações Locais</p>
+                    </div>
+                </div>
+            </div>
+            
+            
+        <div class="mt-8 text-center">
+            <p class="text-gray-600 mb-4">Quer fazer parte do Guia?</p>
+            <button class="bg-secondary text-white px-6 py-3 rounded-lg font-medium text-sm">
+                <i class="fa-brands fa-whatsapp mr-2"></i>
+                Entre em contato
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Final -->
+<section id="cta-final" class="px-6 py-12 bg-primary text-white">
+    <div class="max-w-lg mx-auto text-center">
+        <h2 class="text-2xl font-bold mb-4">Planeje sua próxima viagem com o Guia RQ</h2>
+        <p class="mb-8 text-blue-100 leading-relaxed">Descubra lugares incríveis, economize com nossos tickets e viva o melhor de Rancho Queimado com quem entende da cidade.</p>
+        <button class="bg-white text-primary px-8 py-3 rounded-lg font-semibold">
+            Ver tickets disponíveis
+        </button>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer id="footer" class="bg-gray-800 text-white py-12 px-4">
+    <div class="space-y-8">
+        <div class="text-center">
+            <h3 class="text-2xl font-bold mb-4">Guia RQ</h3>
+            <p class="text-gray-300 mb-4">Sua porta de entrada para Rancho Queimado</p>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-8 text-sm">
+            <div>
+                <h4 class="font-semibold mb-3">Links Úteis</h4>
+                <ul class="space-y-2 text-gray-300">
+                    <li><span class="hover:text-white cursor-pointer">Contato</span></li>
+                    <li><span class="hover:text-white cursor-pointer">Termos de Uso</span></li>
+                    <li><span class="hover:text-white cursor-pointer">Política de Privacidade</span></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-3">Suporte</h4>
+                <p class="text-gray-300 mb-2">suporte@guiarq.com.br</p>
+                <div class="flex space-x-4 mt-4">
+  <!-- Link do Instagram -->
+  <a 
+    href="https://www.instagram.com/guiaranchoqueimado/" 
+    target="_blank" 
+    rel="noopener noreferrer" 
+    class="text-gray-400 hover:text-blue-400 cursor-pointer text-2xl"
+  >
+    <i class="fa-brands fa-instagram"></i>
+  </a>
+</div>
+        
+        <div class="text-center text-sm text-gray-400 border-t border-gray-700 pt-6">
+            © 2024 Guia RQ. Todos os direitos reservados.
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
