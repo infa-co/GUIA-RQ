@@ -24,19 +24,29 @@ public class Usuario {
         return nome;
     }
     public void setNome(String nome) {
-        this.nome = nome;
+        if (!nome.isEmpty() && nome != null) {
+            this.nome = nome;
+        }
     }
     public String getEmail() {
         return email;
     }  
     public void setEmail(String email) {
-        this.email = email;
+        if (email.contains("@") && email.contains(".")) {
+            this.email = email;
+        } else {
+            throw new IllegalArgumentException("Email inválido.");
+        }
     }
     public String getSenha() {
         return senha;
     }
     public void setSenha(String senha) {
-        this.senha = senha;
+        if (senha.length() >= 6) {
+            this.senha = senha;
+        } else {
+            throw new IllegalArgumentException("Senha deve ter pelo menos 6 caracteres.");
+        }
     }
     public PerfilUsuario getPerfil() {
         return perfil;

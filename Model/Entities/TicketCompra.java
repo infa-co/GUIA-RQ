@@ -34,9 +34,6 @@ public class TicketCompra {
     public String getCodigoValidacao() {
         return codigoValidacao;
     }
-    public void setCodigoValidacao(String codigoValidacao) {
-        this.codigoValidacao = codigoValidacao;
-    }
     public boolean isUsado() {
         return usado;
     }

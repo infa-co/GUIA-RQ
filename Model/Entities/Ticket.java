@@ -22,7 +22,9 @@ public class Ticket {
         return nome;
     }
     public void setNome(String nome) {
-        this.nome = nome;
+        if (!nome.isEmpty() && nome != null) {
+            this.nome = nome;
+        }
     }
     public TipoTicket getTipo() {
         return tipo;
@@ -34,19 +36,25 @@ public class Ticket {
         return descricao;
     }
     public void setDescricao(String descricao) {
-        this.descricao = descricao;
+        if (!descricao.isEmpty() && descricao != null) {
+            this.descricao = descricao;
+        }
     }
     public double getPrecoOrginal() {
         return precoOrginal;
     }
     public void setPrecoOrginal(double precoOrginal) {
-        this.precoOrginal = precoOrginal;
+        if(precoOrginal > 0){
+            this.precoOrginal = precoOrginal;
+        }
     }
     public double getPrecoPromocional() {
         return precoPromocional;
     }
     public void setPrecoPromocional(double precoPromocional) {
-        this.precoPromocional = precoPromocional;
+        if(precoPromocional > 0){
+            this.precoPromocional = precoPromocional;
+        }
     }
     public Parceiro getParceiro() {
         return parceiro;
