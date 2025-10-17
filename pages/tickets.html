@@ -20,15 +20,86 @@
   <div class="px-4 py-3 flex items-center justify-between">
     <div class="text-xl font-bold text-blue-600">Guia RQ</div>
     <nav class="flex space-x-6 text-sm font-medium text-gray-700">
+      <!-- Navegação -->
+    <nav class="flex space-x-6 text-sm font-medium text-gray-700">
       <a href="../index.html" class="hover:text-blue-600">Home</a>
-      <a href="./tickets.html" class="text-blue-600 font-semibold">Tickets</a>
-      <a href="./pacotes.html" class="hover:text-blue-600">Pacotes</a>
+      <a href="tickets.html" class="hover:text-blue-600">Tickets</a>
+      <a href="pacotes.html" class="hover:text-blue-600">Pacotes</a>
+      <a href="sobre.html" class="hover:text-blue-600">Sobre</a>
     </nav>
-    <div class="flex items-center space-x-3">
-      <a href="./login.html"><i class="fa-regular fa-user text-gray-600 text-lg hover:text-blue-600"></i></a>
-      <a href="./carrinho.html"><i class="fa-solid fa-shopping-cart text-gray-600 text-lg hover:text-blue-600"></i></a>
-    </div>
-  </div>
+
+    <!-- Área da direita (usuário + carrinho) -->
+    <div class="flex items-center space-x-5">
+
+      <!-- Ícone do Usuário com dropdown centralizado -->
+      <div class="relative flex items-center justify-center" id="user-menu-container">
+        <button id="user-icon"
+                class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
+          <i class="fa-solid fa-user"></i>
+        </button>
+
+        <!-- Dropdown -->
+        <div id="user-dropdown"
+             class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 transform
+                    w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50">
+          <!-- O JS injeta os links aqui -->
+        </div>
+      </div>
+
+      <!-- Carrinho -->
+      <a href="carrinho.html" class="relative text-gray-600 hover:text-blue-600 transition-colors">
+  <i class="fa-solid fa-shopping-cart text-lg"></i>
+  <span id="cart-count"
+    class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center shadow">
+  </span>
+</a>
+
+  <script>
+    // Estado inicial (false = visitante, true = logado)
+    let userLoggedIn = false;
+
+    const userIcon = document.getElementById('user-icon');
+    const dropdown = document.getElementById('user-dropdown');
+
+    // Função para renderizar o menu conforme estado
+    function renderMenu() {
+      dropdown.innerHTML = userLoggedIn
+        ? `
+          <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minha conta</a>
+          <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minhas compras</a>
+          <hr class="my-1">
+          <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
+        `
+        : `
+          <a href="login.html" class="block px-10 py-5 hover:bg-gray-100 text-gray-700">Entrar ou Cadastrar-se</a>
+        `;
+    }
+
+    // Exibe / oculta o dropdown ao clicar no ícone
+    userIcon.addEventListener('click', () => {
+      dropdown.classList.toggle('hidden');
+      renderMenu();
+    });
+
+    // Fecha o menu se clicar fora
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#user-menu-container')) {
+        dropdown.classList.add('hidden');
+      }
+    });
+
+    // Simula login/logout
+    document.addEventListener('click', (e) => {
+      if (e.target.id === 'logout-btn') {
+        userLoggedIn = false;
+        dropdown.classList.add('hidden');
+        alert('Você saiu da conta.');
+      }
+    });
+
+    // Exemplo: se quiser simular login automático (remova depois)
+    // userLoggedIn = true;
+  </script>
 </header>
 
 <!-- Hero -->
@@ -191,6 +262,78 @@
     </div>
   </div>
 </footer>
+<script>
+  // Atualiza o contador do carrinho
+  function updateCartCount() {
+    const cartCount = document.getElementById('cart-count');
+    const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+    if (carrinho.length > 0) {
+      const totalQtd = carrinho.reduce((acc, i) => acc + i.qtd, 0);
+      cartCount.textContent = totalQtd;
+      cartCount.classList.remove('hidden');
+    } else {
+      cartCount.classList.add('hidden');
+    }
+  }
+
+  // Adiciona itens ao carrinho
+  document.querySelectorAll('.add-to-cart').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const product = {
+      id: btn.dataset.id,
+      nome: btn.dataset.nome,
+      local: btn.dataset.local,
+      preco: parseFloat(btn.dataset.preco),
+      img: btn.dataset.img,
+      qtd: 1
+    };
+
+    let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+    const existente = carrinho.find(p => p.id === product.id);
+    if (existente) {
+      existente.qtd += 1;
+    } else {
+      carrinho.push(product);
+    }
+
+    // ✅ Correção aqui:
+    localStorage.setItem('carrinho', JSON.stringify(carrinho));
+
+    updateCartCount();
+
+    btn.innerHTML = '✅ Adicionado!';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.innerHTML = 'Adicionar ao Carrinho';
+      btn.disabled = false;
+    }, 1200);
+  });
+});
+
+updateCartCount();
+</script>
+<script>
+// Clique no “Cadastre-se e GANHE”
+document.getElementById('bonus-btn')?.addEventListener('click', () => {
+  // Marca que o usuário tem direito ao bônus
+  localStorage.setItem('bonusTicket', 'true');
+  // Vai para a página de login/cadastro (caminho relativo a partir do index.html)
+  window.location.href = 'pages/login.html';
+});
+
+// Se já ganhou o bônus, ajusta o estado visual do botão
+(function initBonusButtonUI() {
+  const btn = document.getElementById('bonus-btn');
+  if (!btn) return;
+  const bonusAtivo = localStorage.setItem('bonusTicket') === 'true';
+  if (bonusAtivo) {
+    btn.textContent = 'Bônus garantido ✅';
+    btn.classList.remove('bg-blue-600','hover:bg-blue-700');
+    btn.classList.add('bg-green-600','cursor-default');
+    btn.disabled = true;
+  }
+})();
+</script>
 
 </body>
 </html>
