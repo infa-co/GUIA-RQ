@@ -63,62 +63,51 @@
 </a>
 
   <script>
-  // === Atualiza contador do carrinho instantaneamente ===
-  function updateCartCount() {
-    const cartCount = document.getElementById('cart-count');
-    const cart = window.cartCache || JSON.parse(localStorage.getItem('carrinho')) || [];
-    const totalItems = cart.reduce((sum, item) => sum + item.qtd, 0);
+    // Estado inicial (false = visitante, true = logado)
+    let userLoggedIn = false;
 
-    if (totalItems > 0) {
-      cartCount.textContent = totalItems;
-      cartCount.classList.remove('hidden');
-    } else {
-      cartCount.classList.add('hidden');
+    const userIcon = document.getElementById('user-icon');
+    const dropdown = document.getElementById('user-dropdown');
+
+    // Função para renderizar o menu conforme estado
+    function renderMenu() {
+      dropdown.innerHTML = userLoggedIn
+        ? `
+          <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minha conta</a>
+          <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minhas compras</a>
+          <hr class="my-1">
+          <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
+        `
+        : `
+          <a href="pages/login.html" class="block px-10 py-5 hover:bg-gray-100 text-gray-700">Entrar ou Cadastrar-se</a>
+        `;
     }
-  }
 
-  // === Mantém cache do carrinho na memória (para resposta instantânea) ===
-  window.cartCache = JSON.parse(localStorage.getItem('carrinho')) || [];
-
-  // === Função para salvar carrinho e atualizar imediatamente ===
-  function saveCart() {
-    localStorage.setItem('carrinho', JSON.stringify(window.cartCache));
-    updateCartCount(); // atualiza no mesmo instante
-  }
-
-  // === Adicionar item ao carrinho (versão instantânea) ===
-  document.querySelectorAll('.add-to-cart').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = parseInt(btn.dataset.id);
-      const nome = btn.dataset.nome;
-      const local = btn.dataset.local;
-      const preco = parseFloat(btn.dataset.preco);
-      const img = btn.dataset.img;
-
-      // Busca ou adiciona o item
-      const existing = window.cartCache.find(item => item.id === id);
-      if (existing) {
-        existing.qtd += 1;
-      } else {
-        window.cartCache.push({ id, nome, local, preco, qtd: 1, img });
-      }
-
-      // Atualiza localStorage + contador
-      saveCart();
-
-      // Feedback visual imediato
-      btn.textContent = "Adicionado ✓";
-      btn.classList.add("bg-green-600");
-      setTimeout(() => {
-        btn.textContent = "Adicionar ao carrinho 🛒";
-        btn.classList.remove("bg-green-600");
-      }, 1000);
+    // Exibe / oculta o dropdown ao clicar no ícone
+    userIcon.addEventListener('click', () => {
+      dropdown.classList.toggle('hidden');
+      renderMenu();
     });
-  });
 
-  // === Atualiza contador ao carregar ===
-  updateCartCount();
-</script>
+    // Fecha o menu se clicar fora
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#user-menu-container')) {
+        dropdown.classList.add('hidden');
+      }
+    });
+
+    // Simula login/logout
+    document.addEventListener('click', (e) => {
+      if (e.target.id === 'logout-btn') {
+        userLoggedIn = false;
+        dropdown.classList.add('hidden');
+        alert('Você saiu da conta.');
+      }
+    });
+
+    // Exemplo: se quiser simular login automático (remova depois)
+    // userLoggedIn = true;
+  </script>
 </header>
 <style>
   .gradient-overlay {
@@ -278,15 +267,9 @@
            Pague R$10 e ganhe R$25 de desconto
             </p>
                 <p class="text-sm text-gray-600 mb-3">Uso único / válido por 12 meses</p>
-                <button
-  class="add-to-cart bg-primary w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-  data-id="2"
-  data-nome="Ticket RJ Off-Road"
-  data-local="RJ Off-Road"
-  data-preco="10.00"
-  data-img="../assets/images/rjoffroadjpg.jpg">
-  Adicionar ao Carrinho
-</button>
+                <button class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                    Adicionar ao carrinho
+                </button>
             </div>
         </div>
         
@@ -523,64 +506,41 @@
     </div>
 </footer>
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+  // Captura todos os botões "Adicionar ao Carrinho"
+  document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', () => {
+      const product = {
+        id: button.dataset.id,
+        nome: button.dataset.nome,
+        local: button.dataset.local,
+        preco: parseFloat(button.dataset.preco),
+        img: button.dataset.img,
+        qtd: 1
+      };
 
-  // === Inicia cache do carrinho ===
-  window.cartCache = JSON.parse(localStorage.getItem('carrinho')) || [];
+      // Recupera carrinho atual (ou cria um novo)
+      let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
 
-  const cartCount = document.getElementById('cart-count');
-
-  // === Atualiza contador instantaneamente ===
-  function updateCartCount() {
-    if (!cartCount) return;
-    const totalItems = window.cartCache.reduce((sum, item) => sum + item.qtd, 0);
-    if (totalItems > 0) {
-      cartCount.textContent = totalItems;
-      cartCount.classList.remove('hidden');
-    } else {
-      cartCount.classList.add('hidden');
-    }
-  }
-
-  // === Salva carrinho + atualiza contador ===
-  function saveCart() {
-    localStorage.setItem('carrinho', JSON.stringify(window.cartCache));
-    updateCartCount(); // atualiza imediatamente
-  }
-
-  // === Adicionar item ao carrinho ===
-  document.querySelectorAll('.add-to-cart').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = parseInt(btn.dataset.id);
-      const nome = btn.dataset.nome;
-      const local = btn.dataset.local;
-      const preco = parseFloat(btn.dataset.preco);
-      const img = btn.dataset.img;
-
-      // verifica se já existe
-      const existing = window.cartCache.find(item => item.id === id);
-      if (existing) {
-        existing.qtd += 1;
+      // Verifica se o item já existe → aumenta quantidade
+      const existente = carrinho.find(p => p.id === product.id);
+      if (existente) {
+        existente.qtd += 1;
       } else {
-        window.cartCache.push({ id, nome, local, preco, qtd: 1, img });
+        carrinho.push(product);
       }
 
-      // salva e atualiza sem delay
-      saveCart();
+      // Atualiza o carrinho no LocalStorage
+      localStorage.setItem('carrinho', JSON.stringify(carrinho));
 
-      // feedback visual
-      btn.textContent = "Adicionado ✅";
-      btn.classList.add("bg-green-600");
+      // Feedback visual
+      button.innerHTML = '✅ Adicionado!';
+      button.disabled = true;
       setTimeout(() => {
-        btn.textContent = "Adicionar ao carrinho 🛒";
-        btn.classList.remove("bg-green-600");
-      }, 1000);
+        button.innerHTML = 'Adicionar ao Carrinho';
+        button.disabled = false;
+      }, 1500);
     });
   });
-
-  // === Atualiza contador logo que a página carrega ===
-  updateCartCount();
-});
 </script>
 
 </body>
