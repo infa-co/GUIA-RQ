@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrinho • Guia RQ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-gray-50 font-[Inter]">
+
+<header class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50">
+  <div class="px-4 py-3 flex items-center justify-between">
+    <a href="../index.html" class="text-xl font-bold text-blue-600">Guia RQ</a>
+
+    <nav class="hidden sm:flex space-x-6 text-sm font-medium text-gray-700">
+      <a href="../index.html" class="hover:text-blue-600">Home</a>
+      <a href="tickets.html" class="hover:text-blue-600">Tickets</a>
+      <a href="pacotes.html" class="hover:text-blue-600">Pacotes</a>
+      <a href="sobre.html" class="hover:text-blue-600">Sobre</a>
+    </nav>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 py-32">
+  <h1 class="text-2xl font-bold text-center mb-6">Seu carrinho de experiências 🧳</h1>
+
+  <div class="lg:grid lg:grid-cols-3 lg:gap-8">
+    <!-- Itens -->
+    <div id="cart-items" class="lg:col-span-2 space-y-4 mb-8"></div>
+
+    <!-- Resumo -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 h-fit sticky top-24">
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Resumo da compra</h2>
+      <div id="summary-lines" class="space-y-3 mb-4"></div>
+
+      <div class="flex justify-between text-lg font-bold text-green-600 border-t pt-3">
+        <span>Total</span>
+        <span id="total">R$ 0,00</span>
+      </div>
+
+      <button class="w-full bg-blue-600 text-white font-semibold py-3 mt-6 rounded-lg hover:bg-blue-700">
+        Continuar para o pagamento 💳
+      </button>
+    </div>
+  </div>
+
+  <!-- Upsell -->
+  <section class="mt-12 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">💡 Aproveite mais experiências</h3>
+    <div class="grid sm:grid-cols-2 gap-4">
+      <button data-upsell="cafe" class="border border-gray-200 rounded-lg p-4 hover:border-blue-500 flex items-center gap-3">
+        <img src="../assets/images/praca.jpg" class="w-16 h-16 rounded-lg object-cover" />
+        <div>
+          <h4 class="font-semibold text-gray-900">Café da Manhã Especial</h4>
+          <p class="text-sm text-gray-600">+ R$ 18,00</p>
+        </div>
+      </button>
+      <button data-upsell="mesa" class="border border-gray-200 rounded-lg p-4 hover:border-blue-500 flex items-center gap-3 relative">
+        <span class="absolute -top-2 -right-2 bg-yellow-400 text-gray-900 text-xs px-2 py-1 rounded-full font-semibold">10% OFF</span>
+        <img src="../assets/images/mirante2.jpg" class="w-16 h-16 rounded-lg object-cover" />
+        <div>
+          <h4 class="font-semibold text-gray-900">Mesa Decorada</h4>
+          <p class="text-sm text-gray-600">+ R$ 22,50</p>
+        </div>
+      </button>
+    </div>
+  </section>
+</main>
+
+<script>
+const cartContainer = document.getElementById('cart-items');
+const totalEl = document.getElementById('total');
+const summaryLines = document.getElementById('summary-lines');
+
+let cart = JSON.parse(localStorage.getItem('carrinho')) || [];
+const upsells = {
+  cafe: { nome: 'Café da Manhã Especial', preco: 18.00, ativo: false },
+  mesa: { nome: 'Mesa Decorada', preco: 22.50, ativo: false }
+};
+
+function money(v) { return 'R$ ' + v.toFixed(2); }
+
+function saveCart() { localStorage.setItem('carrinho', JSON.stringify(cart)); }
+
+function renderCart() {
+  cartContainer.innerHTML = '';
+
+  if (cart.length === 0) {
+    cartContainer.innerHTML = `
+      <div class="bg-white p-6 rounded-xl shadow-sm text-center text-gray-700">
+        Seu carrinho está vazio 😢<br>
+        <a href="../index.html" class="text-blue-600 underline hover:text-blue-800">Voltar e ver experiências</a>
+      </div>`;
+    summaryLines.innerHTML = '';
+    totalEl.textContent = 'R$ 0,00';
+    return;
+  }
+
+  cart.forEach(item => {
+    const row = document.createElement('div');
+    row.className = "bg-white rounded-xl shadow-sm border p-4 flex gap-4";
+    row.innerHTML = `
+      <img src="../${item.img}" class="w-24 h-24 rounded-lg object-cover">
+      <div class="flex-1">
+        <div class="flex justify-between">
+          <div>
+            <h3 class="font-semibold">${item.nome}</h3>
+            <p class="text-sm text-gray-600">${item.local}</p>
+          </div>
+          <button onclick="removeItem(${item.id})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+        </div>
+        <div class="flex justify-between items-center mt-3">
+          <div class="flex items-center gap-2">
+            <button onclick="changeQtd(${item.id}, -1)" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center"><i class="fa-solid fa-minus text-xs"></i></button>
+            <span class="w-8 text-center font-semibold">${item.qtd}</span>
+            <button onclick="changeQtd(${item.id}, 1)" class="w-8 h-8 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center"><i class="fa-solid fa-plus text-xs"></i></button>
+          </div>
+          <p class="font-semibold">${money(item.preco * item.qtd)}</p>
+        </div>
+      </div>`;
+    cartContainer.appendChild(row);
+  });
+
+  renderSummary();
+}
+
+function changeQtd(id, delta) {
+  const item = cart.find(i => i.id == id);
+  if (!item) return;
+  item.qtd = Math.max(1, item.qtd + delta);
+  saveCart();
+  renderCart();
+}
+
+function removeItem(id) {
+  cart = cart.filter(i => i.id != id);
+  saveCart();
+  renderCart();
+}
+
+function renderSummary() {
+  summaryLines.innerHTML = '';
+  let subtotal = 0;
+
+  cart.forEach(i => {
+    subtotal += i.qtd * i.preco;
+    summaryLines.innerHTML += `<div class="flex justify-between text-sm"><span>${i.qtd}× ${i.nome}</span><span>${money(i.qtd * i.preco)}</span></div>`;
+  });
+
+  Object.values(upsells).forEach(u => {
+    if (u.ativo) {
+      subtotal += u.preco;
+      summaryLines.innerHTML += `<div class="flex justify-between text-sm text-gray-700"><span>+ ${u.nome}</span><span>${money(u.preco)}</span></div>`;
+    }
+  });
+
+  totalEl.textContent = money(subtotal);
+}
+
+document.querySelectorAll('[data-upsell]').forEach(btn => {
+  const id = btn.dataset.upsell;
+  const setAdded = (add) => {
+    btn.classList.toggle('bg-green-50', add);
+    btn.classList.toggle('border-green-400', add);
+    const old = btn.querySelector('.added');
+    if (old) old.remove();
+    if (add) {
+      const s = document.createElement('span');
+      s.className = 'added ml-auto text-green-600 font-semibold flex items-center gap-1';
+      s.innerHTML = 'Adicionado ✅';
+      btn.appendChild(s);
+    }
+  };
+  btn.onclick = () => {
+    upsells[id].ativo = !upsells[id].ativo;
+    setAdded(upsells[id].ativo);
+    renderSummary();
+  };
+});
+
+renderCart();
+</script>
+
+</body>
+</html>

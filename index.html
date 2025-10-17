@@ -245,12 +245,12 @@
         </p>
                 <p class="text-sm text-gray-600 mb-3">Uso único / válido por 12 meses</p>
                 <button
-  class="add-to-cart bg-primary w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+  class="add-to-cart w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
   data-id="1"
-  data-nome="Ticket Pizzaria Forno e Serra"
-  data-local="Pizzaria Forno e Serra"
+  data-nome="Ticket Forno e Serra"
+  data-local="Forno"
   data-preco="8.00"
-  data-img="../assets/images/forno-e-serra.jpeg">
+  data-img="assets/images/forno-e-serra.jpeg">
   Adicionar ao Carrinho
 </button>
             </div>
@@ -506,22 +506,32 @@
     </div>
 </footer>
 <script>
-  // Captura todos os botões "Adicionar ao Carrinho"
-  document.querySelectorAll('.add-to-cart').forEach(button => {
-    button.addEventListener('click', () => {
+  // Atualiza o contador do carrinho
+  function updateCartCount() {
+    const cartCount = document.getElementById('cart-count');
+    const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+    if (carrinho.length > 0) {
+      const totalQtd = carrinho.reduce((acc, i) => acc + i.qtd, 0);
+      cartCount.textContent = totalQtd;
+      cartCount.classList.remove('hidden');
+    } else {
+      cartCount.classList.add('hidden');
+    }
+  }
+
+  // Adiciona itens ao carrinho
+  document.querySelectorAll('.add-to-cart').forEach(btn => {
+    btn.addEventListener('click', () => {
       const product = {
-        id: button.dataset.id,
-        nome: button.dataset.nome,
-        local: button.dataset.local,
-        preco: parseFloat(button.dataset.preco),
-        img: button.dataset.img,
+        id: btn.dataset.id,
+        nome: btn.dataset.nome,
+        local: btn.dataset.local,
+        preco: parseFloat(btn.dataset.preco),
+        img: btn.dataset.img,
         qtd: 1
       };
 
-      // Recupera carrinho atual (ou cria um novo)
       let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-
-      // Verifica se o item já existe → aumenta quantidade
       const existente = carrinho.find(p => p.id === product.id);
       if (existente) {
         existente.qtd += 1;
@@ -529,18 +539,19 @@
         carrinho.push(product);
       }
 
-      // Atualiza o carrinho no LocalStorage
       localStorage.setItem('carrinho', JSON.stringify(carrinho));
+      updateCartCount();
 
-      // Feedback visual
-      button.innerHTML = '✅ Adicionado!';
-      button.disabled = true;
+      btn.innerHTML = '✅ Adicionado!';
+      btn.disabled = true;
       setTimeout(() => {
-        button.innerHTML = 'Adicionar ao Carrinho';
-        button.disabled = false;
-      }, 1500);
+        btn.innerHTML = 'Adicionar ao Carrinho';
+        btn.disabled = false;
+      }, 1200);
     });
   });
+
+  updateCartCount();
 </script>
 
 </body>
