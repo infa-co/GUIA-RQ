@@ -248,7 +248,7 @@
   class="add-to-cart w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
   data-id="1"
   data-nome="Ticket Forno e Serra"
-  data-local="Forno"
+  data-local="Forno e Serra"
   data-preco="8.00"
   data-img="assets/images/forno-e-serra.jpeg">
   Adicionar ao Carrinho
@@ -267,9 +267,15 @@
            Pague R$10 e ganhe R$25 de desconto
             </p>
                 <p class="text-sm text-gray-600 mb-3">Uso único / válido por 12 meses</p>
-                <button class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                    Adicionar ao carrinho
-                </button>
+                <button
+  class="add-to-cart w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+  data-id="2"
+  data-nome="Ticket RJ Off-Road"
+  data-local="Rj off-road"
+  data-preco="10.00"
+  data-img="assets/images/rjoffroadjpg.jpg">
+  Adicionar ao Carrinho
+</button>
             </div>
         </div>
         
@@ -283,9 +289,15 @@
                 <p class="text-sm text-green-600 font-medium mb-1">
            Pague R$25 e ganhe R$50 de desconto
                 <p class="text-sm text-gray-600 mb-3">Uso único / válido por 12 meses</p>
-                <button class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                    Adicionar ao carrinho
-                </button>
+                <button
+  class="add-to-cart w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+  data-id="3"
+  data-nome="Ticket Espaço Floresta"
+  data-local="Espaço Floresta"
+  data-preco="25.00"
+  data-img="assets/images/espaco.jpg">
+  Adicionar ao Carrinho
+</button>
             </div>
         </div>
         
@@ -299,9 +311,21 @@
                 <p class="text-sm text-green-600 font-medium mb-1">
               Ganhe R$10 a cada R$50 em compras
                 <p class="text-sm text-gray-600 mb-3">Uso único / válido por 12 meses</p>
-                <button class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                <button 
+                id="bonus-btn"
+                class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
                     Cadastre-se e GANHE
                 </button>
+                <script>
+  // Quando clicar em "Cadastre-se e Ganhe"
+  document.getElementById('bonus-btn').addEventListener('click', () => {
+    // Marca no localStorage que o usuário ganhou o bônus
+    localStorage.setItem('bonusTicket', 'true');
+
+    // Redireciona para a página de login/cadastro
+    window.location.href = '../pages/login.html';
+  });
+</script>
             </div>
         </div>
     </div>
@@ -539,7 +563,7 @@
         carrinho.push(product);
       }
 
-      localStorage.setItem('carrinho', JSON.stringify(carrinho));
+      localStorage.getItem('carrinho', JSON.stringify(carrinho));
       updateCartCount();
 
       btn.innerHTML = '✅ Adicionado!';
@@ -553,6 +577,30 @@
 
   updateCartCount();
 </script>
+<script>
+// ===== USUÁRIO (seu dropdown) – permanece igual ao seu código acima =====
 
+// ===== CARRINHO (dados reais via LocalStorage) =====
+let cart = JSON.parse(localStorage.getItem('carrinho')) || [];
+
+// Se tiver bônus ativo, garante o item de bônus no carrinho (sem duplicar)
+(function ensureBonusInCart(){
+  const bonusAtivo = localStorage.getItem('bonusTicket') === 'true';
+  if (!bonusAtivo) return;
+
+  const existe = cart.find(p => String(p.id) === '4');
+  if (!existe) {
+    cart.push({
+      id: "4",
+      nome: "Ticket Da Roça Delicatéssen",
+      local: "Da Roça Delicatéssen",
+      preco: 0.00,
+      qtd: 1,
+      img: "assets/images/daroca.jpg"
+    });
+    localStorage.setItem('carrinho', JSON.stringify(cart));
+  }
+})();
+</script>
 </body>
 </html>
