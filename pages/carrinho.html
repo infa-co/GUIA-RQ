@@ -1,0 +1,324 @@
+<!DOC<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrinho • Guia RQ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563eb',
+            secondary: '#10b981',
+            accent: '#facc15',
+            background: '#f9fafb'
+          },
+          fontFamily: { inter: ['Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
+  <style>::-webkit-scrollbar{display:none}</style>
+</head>
+
+<body class="bg-background font-inter">
+
+  <!-- HEADER GLOBAL -->
+  <header id="header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50">
+    <div class="px-4 py-3 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="../index.html" class="text-xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
+        Guia RQ
+      </a>
+
+      <!-- Navegação -->
+      <nav class="hidden sm:flex space-x-6 text-sm font-medium text-gray-700">
+        <a href="../index.html" class="hover:text-blue-600">Home</a>
+        <a href="tickets.html" class="hover:text-blue-600">Tickets</a>
+        <a href="pacotes.html" class="hover:text-blue-600">Pacotes</a>
+        <a href="sobre.html" class="hover:text-blue-600">Sobre</a>
+      </nav>
+
+      <!-- Área Direita -->
+      <div class="flex items-center space-x-5">
+        <!-- Usuário -->
+        <div class="relative flex items-center justify-center" id="user-menu-container">
+          <button id="user-icon" class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
+            <i class="fa-solid fa-user"></i>
+          </button>
+          <div id="user-dropdown" class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 transform
+                w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50"></div>
+        </div>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Seu carrinho de experiências 🧳</h1>
+
+    <div class="lg:grid lg:grid-cols-3 lg:gap-8">
+      <!-- Itens -->
+      <div id="cart-items" class="lg:col-span-2 space-y-4 mb-8 lg:mb-0"></div>
+
+      <!-- Resumo -->
+      <!-- Resumo -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-24">
+  <h2 class="text-xl font-semibold text-gray-900 mb-6">Resumo da compra</h2>
+
+  <div id="summary-lines" class="space-y-3 mb-4">
+    <!-- As linhas dos itens e upsells serão renderizadas aqui via JS -->
+  </div>
+
+  <div class="space-y-3 mb-6">
+    <div class="flex justify-between">
+      <span class="text-gray-600">Subtotal</span>
+      <span id="subtotal" class="font-semibold">R$ 0,00</span>
+    </div>
+  </div>
+
+  <button id="checkout-btn"
+    class="w-full bg-primary text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors">
+    Continuar para o pagamento 💳
+  </button>
+
+  <div class="text-center text-sm text-gray-600 mt-4">
+    <i class="fa-solid fa-lock text-secondary"></i> Pagamento 100% seguro
+  </div>
+</div>
+    </div>
+
+    <!-- Upsell -->
+    <section class="mt-12 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">💡 Aproveite mais experiências</h3>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <button data-upsell="cafe" class="border border-gray-200 rounded-lg p-4 hover:border-primary transition-colors flex items-center gap-3">
+          <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/9878072405-c5c924503f4713947b99.png" class="w-16 h-16 rounded-lg object-cover" />
+          <div class="text-left">
+            <h4 class="font-semibold text-gray-900">Café da Manhã Especial</h4>
+            <p class="text-sm text-gray-600">+ R$ 18,00</p>
+          </div>
+        </button>
+        <button data-upsell="mesa" class="border border-gray-200 rounded-lg p-4 hover:border-primary transition-colors flex items-center gap-3 relative">
+          <span class="absolute -top-2 -right-2 bg-accent text-gray-900 text-xs px-2 py-1 rounded-full font-semibold">10% OFF</span>
+          <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/25cfdf535c-ad1dd16f94a3e4e79dee.png" class="w-16 h-16 rounded-lg object-cover" />
+          <div class="text-left">
+            <h4 class="font-semibold text-gray-900">Mesa Decorada</h4>
+            <p class="text-sm text-gray-600">+ R$ 22,50</p>
+          </div>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- SCRIPT -->
+  <script>
+  // ====== USUÁRIO (mantém o seu mesmo dropdown) ======
+  let userLoggedIn = false;
+  const userIcon = document.getElementById('user-icon');
+  const dropdown = document.getElementById('user-dropdown');
+
+  function renderMenu() {
+    dropdown.innerHTML = userLoggedIn
+      ? `
+        <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minha conta</a>
+        <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minhas compras</a>
+        <hr class="my-1">
+        <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
+      `
+      : `
+        <a href="login.html" class="block px-10 py-7 hover:bg-gray-100 text-gray-700">Entrar ou Cadastrar-se</a>
+      `;
+  }
+
+  userIcon.addEventListener('click', () => {
+    dropdown.classList.toggle('hidden');
+    renderMenu();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#user-menu-container')) dropdown.classList.add('hidden');
+    if (e.target.id === 'logout-btn') {
+      userLoggedIn = false;
+      dropdown.classList.add('hidden');
+      alert('Você saiu da conta.');
+    }
+  });
+
+  // ====== CARRINHO REAL (com LocalStorage) ======
+  let cart = JSON.parse(localStorage.getItem('carrinho')) || [];
+
+  const cartContainer = document.getElementById('cart-items');
+  const subtotalEl   = document.getElementById('subtotal');
+  const totalEl      = document.getElementById('total');
+  const summaryLines = document.getElementById('summary-lines');
+  const convenienceFee = 8.5;
+
+  // Função utilitária de formato
+  function money(n) {
+    return 'R$ ' + n.toFixed(2).replace('.', ',');
+  }
+
+  // Salva carrinho
+  function saveCart() {
+    localStorage.setItem('carrinho', JSON.stringify(cart));
+  }
+
+  // Renderiza carrinho
+  function renderCart() {
+    if (cart.length === 0) {
+      cartContainer.innerHTML = `
+        <div class="bg-white p-6 rounded-xl shadow-sm text-center text-gray-700">
+          Seu carrinho está vazio 😢<br>
+          <a href="pages/tickets.html" class="text-primary underline hover:text-blue-700">Ver experiências</a>
+        </div>`;
+      subtotalEl.textContent = money(0);
+      totalEl.textContent = money(0);
+      summaryLines.innerHTML = '';
+      return;
+    }
+
+    cartContainer.innerHTML = '';
+    cart.forEach(item => {
+      const totalItem = item.preco * item.qtd;
+      const div = document.createElement('div');
+      div.className = 'bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex gap-4 items-center justify-between';
+      div.innerHTML = `
+        <div class="flex items-center gap-4 flex-1">
+          <img src="${item.img}" class="w-24 h-24 rounded-lg object-cover" alt="${item.nome}">
+          <div>
+            <h3 class="font-semibold text-gray-900">${item.nome}</h3>
+            <p class="text-sm text-gray-600"><i class="fa-solid fa-location-dot text-primary"></i> ${item.local}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <button class="btn-minus w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center" data-id="${item.id}">
+            <i class="fa-solid fa-minus text-xs"></i>
+          </button>
+          <span class="w-8 text-center font-semibold">${item.qtd}</span>
+          <button class="btn-plus w-8 h-8 rounded-full bg-primary text-white hover:bg-blue-700 flex items-center justify-center" data-id="${item.id}">
+            <i class="fa-solid fa-plus text-xs"></i>
+          </button>
+        </div>
+        <div class="text-right min-w-[90px]">
+          <p class="text-sm text-gray-500">${money(item.preco)}</p>
+          <p class="font-bold text-lg text-gray-900">${money(totalItem)}</p>
+        </div>
+        <button class="btn-remove text-red-500 hover:text-red-700" data-id="${item.id}">
+          <i class="fa-solid fa-trash text-lg"></i>
+        </button>
+      `;
+      cartContainer.appendChild(div);
+    });
+
+    attachCartEvents();
+    renderSummary();
+  }
+
+  // Atualiza resumo
+  function renderSummary() {
+    summaryLines.innerHTML = '';
+    let subtotal = 0;
+
+    cart.forEach(item => {
+      subtotal += item.preco * item.qtd;
+      const line = document.createElement('div');
+      line.className = 'flex justify-between text-sm';
+      line.innerHTML = `<span>${item.qtd}× ${item.nome}</span><span>${money(item.qtd * item.preco)}</span>`;
+      summaryLines.appendChild(line);
+    });
+
+    // Upsells ativos
+    Object.values(upsells).forEach(u => {
+      if (u.ativo) {
+        const up = document.createElement('div');
+        up.className = 'flex justify-between text-sm text-gray-700';
+        up.innerHTML = `<span>+ ${u.nome}</span><span class="font-medium">+ ${money(u.preco)}</span>`;
+        summaryLines.appendChild(up);
+        subtotal += u.preco;
+      }
+    });
+
+    subtotalEl.textContent = money(subtotal);
+    totalEl.textContent = money(subtotal + convenienceFee);
+  }
+
+  // Eventos do carrinho
+  function attachCartEvents() {
+    document.querySelectorAll('.btn-plus').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const item = cart.find(i => i.id == id);
+        if (item) item.qtd++;
+        saveCart();
+        renderCart();
+      });
+    });
+
+    document.querySelectorAll('.btn-minus').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const item = cart.find(i => i.id == id);
+        if (item && item.qtd > 1) item.qtd--;
+        else if (item && confirm(`Remover "${item.nome}" do carrinho?`)) {
+          cart = cart.filter(i => i.id != id);
+        }
+        saveCart();
+        renderCart();
+      });
+    });
+
+    document.querySelectorAll('.btn-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        const item = cart.find(i => i.id == id);
+        if (item && confirm(`Remover "${item.nome}" do carrinho?`)) {
+          cart = cart.filter(i => i.id != id);
+          saveCart();
+          renderCart();
+        }
+      });
+    });
+  }
+
+  // ====== UPSELLS ======
+  const upsells = {
+    cafe: { id: 'cafe', nome: 'Café da Manhã Especial', preco: 18.00, ativo: false },
+    mesa: { id: 'mesa', nome: 'Mesa Decorada', preco: 22.50, ativo: false }
+  };
+
+  document.querySelectorAll('[data-upsell]').forEach(btn => {
+    const id = btn.dataset.upsell;
+
+    const setAddedStyle = (added) => {
+      btn.classList.toggle('border-secondary', added);
+      btn.classList.toggle('bg-green-50', added);
+
+      const old = btn.querySelector('.upsell-added');
+      if (old) old.remove();
+      if (added) {
+        const tag = document.createElement('span');
+        tag.className = 'upsell-added ml-auto text-secondary font-semibold flex items-center gap-1';
+        tag.innerHTML = `Adicionado <span>✅</span>`;
+        btn.appendChild(tag);
+      }
+    };
+
+    setAddedStyle(upsells[id]?.ativo);
+
+    btn.addEventListener('click', () => {
+      if (!upsells[id]) return;
+      upsells[id].ativo = !upsells[id].ativo;
+      setAddedStyle(upsells[id].ativo);
+      renderSummary();
+    });
+  });
+
+  // Render inicial
+  renderCart();
+</script>
+</body>
+</html>

@@ -22,6 +22,7 @@
 
 <header id="header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50">
   <div class="px-4 py-3 flex items-center justify-between">
+
     <!-- Logo -->
     <a href="index.html" class="text-xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
       Guia RQ
@@ -29,25 +30,95 @@
 
     <!-- Navegação -->
     <nav class="flex space-x-6 text-sm font-medium text-gray-700">
-    <a href="index.html" class="hover:text-blue-600">Home</a>
-    <a href="pages/tickets.html" class="hover:text-blue-600">Tickets</a>
-    <a href="pages/pacotes.html" class="hover:text-blue-600">Pacotes</a>
-    <a href="pages/sobre.html" class="hover:text-blue-600">Sobre</a>
-</nav>
+      <a href="index.html" class="hover:text-blue-600">Home</a>
+      <a href="pages/tickets.html" class="hover:text-blue-600">Tickets</a>
+      <a href="pages/pacotes.html" class="hover:text-blue-600">Pacotes</a>
+      <a href="pages/sobre.html" class="hover:text-blue-600">Sobre</a>
+    </nav>
 
-    <!-- Ícones -->
-    <div class="flex items-center space-x-4">
-      <!-- Usuário -->
-      <a href="login.html" class="text-gray-600 hover:text-blue-600 transition-colors">
-        <i class="fa-regular fa-user text-lg"></i>
-      </a>
+    <!-- Área da direita (usuário + carrinho) -->
+    <div class="flex items-center space-x-5">
+
+      <!-- Ícone do Usuário com dropdown centralizado -->
+      <div class="relative flex items-center justify-center" id="user-menu-container">
+        <button id="user-icon"
+                class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
+          <i class="fa-solid fa-user"></i>
+        </button>
+
+        <!-- Dropdown -->
+        <div id="user-dropdown"
+             class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 transform
+                    w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50">
+          <!-- O JS injeta os links aqui -->
+        </div>
+      </div>
 
       <!-- Carrinho -->
-      <a href="carrinho.html" class="text-gray-600 hover:text-blue-600 transition-colors relative">
-        <i class="fa-solid fa-shopping-cart text-lg"></i>
-      </a>
-    </div>
-  </div>
+      <a href="pages/carrinho.html" class="relative text-gray-600 hover:text-blue-600 transition-colors">
+  <i class="fa-solid fa-shopping-cart text-lg"></i>
+  <span id="cart-count"
+    class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center shadow">
+  </span>
+</a>
+
+  <script>
+  // === Atualiza contador do carrinho instantaneamente ===
+  function updateCartCount() {
+    const cartCount = document.getElementById('cart-count');
+    const cart = window.cartCache || JSON.parse(localStorage.getItem('carrinho')) || [];
+    const totalItems = cart.reduce((sum, item) => sum + item.qtd, 0);
+
+    if (totalItems > 0) {
+      cartCount.textContent = totalItems;
+      cartCount.classList.remove('hidden');
+    } else {
+      cartCount.classList.add('hidden');
+    }
+  }
+
+  // === Mantém cache do carrinho na memória (para resposta instantânea) ===
+  window.cartCache = JSON.parse(localStorage.getItem('carrinho')) || [];
+
+  // === Função para salvar carrinho e atualizar imediatamente ===
+  function saveCart() {
+    localStorage.setItem('carrinho', JSON.stringify(window.cartCache));
+    updateCartCount(); // atualiza no mesmo instante
+  }
+
+  // === Adicionar item ao carrinho (versão instantânea) ===
+  document.querySelectorAll('.add-to-cart').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = parseInt(btn.dataset.id);
+      const nome = btn.dataset.nome;
+      const local = btn.dataset.local;
+      const preco = parseFloat(btn.dataset.preco);
+      const img = btn.dataset.img;
+
+      // Busca ou adiciona o item
+      const existing = window.cartCache.find(item => item.id === id);
+      if (existing) {
+        existing.qtd += 1;
+      } else {
+        window.cartCache.push({ id, nome, local, preco, qtd: 1, img });
+      }
+
+      // Atualiza localStorage + contador
+      saveCart();
+
+      // Feedback visual imediato
+      btn.textContent = "Adicionado ✓";
+      btn.classList.add("bg-green-600");
+      setTimeout(() => {
+        btn.textContent = "Adicionar ao carrinho 🛒";
+        btn.classList.remove("bg-green-600");
+      }, 1000);
+    });
+  });
+
+  // === Atualiza contador ao carregar ===
+  updateCartCount();
+</script>
 </header>
 <style>
   .gradient-overlay {
@@ -184,9 +255,15 @@
            Pague R$8 e ganhe R$16 de desconto
         </p>
                 <p class="text-sm text-gray-600 mb-3">Uso único / válido por 12 meses</p>
-                <button class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                    Adicionar ao carrinho
-                </button>
+                <button
+  class="add-to-cart bg-primary w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+  data-id="1"
+  data-nome="Ticket Pizzaria Forno e Serra"
+  data-local="Pizzaria Forno e Serra"
+  data-preco="8.00"
+  data-img="../assets/images/forno-e-serra.jpeg">
+  Adicionar ao Carrinho
+</button>
             </div>
         </div>
         
@@ -201,9 +278,15 @@
            Pague R$10 e ganhe R$25 de desconto
             </p>
                 <p class="text-sm text-gray-600 mb-3">Uso único / válido por 12 meses</p>
-                <button class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                    Adicionar ao carrinho
-                </button>
+                <button
+  class="add-to-cart bg-primary w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+  data-id="2"
+  data-nome="Ticket RJ Off-Road"
+  data-local="RJ Off-Road"
+  data-preco="10.00"
+  data-img="../assets/images/rjoffroadjpg.jpg">
+  Adicionar ao Carrinho
+</button>
             </div>
         </div>
         
@@ -439,6 +522,66 @@
         </div>
     </div>
 </footer>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  // === Inicia cache do carrinho ===
+  window.cartCache = JSON.parse(localStorage.getItem('carrinho')) || [];
+
+  const cartCount = document.getElementById('cart-count');
+
+  // === Atualiza contador instantaneamente ===
+  function updateCartCount() {
+    if (!cartCount) return;
+    const totalItems = window.cartCache.reduce((sum, item) => sum + item.qtd, 0);
+    if (totalItems > 0) {
+      cartCount.textContent = totalItems;
+      cartCount.classList.remove('hidden');
+    } else {
+      cartCount.classList.add('hidden');
+    }
+  }
+
+  // === Salva carrinho + atualiza contador ===
+  function saveCart() {
+    localStorage.setItem('carrinho', JSON.stringify(window.cartCache));
+    updateCartCount(); // atualiza imediatamente
+  }
+
+  // === Adicionar item ao carrinho ===
+  document.querySelectorAll('.add-to-cart').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = parseInt(btn.dataset.id);
+      const nome = btn.dataset.nome;
+      const local = btn.dataset.local;
+      const preco = parseFloat(btn.dataset.preco);
+      const img = btn.dataset.img;
+
+      // verifica se já existe
+      const existing = window.cartCache.find(item => item.id === id);
+      if (existing) {
+        existing.qtd += 1;
+      } else {
+        window.cartCache.push({ id, nome, local, preco, qtd: 1, img });
+      }
+
+      // salva e atualiza sem delay
+      saveCart();
+
+      // feedback visual
+      btn.textContent = "Adicionado ✅";
+      btn.classList.add("bg-green-600");
+      setTimeout(() => {
+        btn.textContent = "Adicionar ao carrinho 🛒";
+        btn.classList.remove("bg-green-600");
+      }, 1000);
+    });
+  });
+
+  // === Atualiza contador logo que a página carrega ===
+  updateCartCount();
+});
+</script>
 
 </body>
 </html>
