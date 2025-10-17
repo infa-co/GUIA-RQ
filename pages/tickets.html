@@ -16,16 +16,9 @@
 <body class="bg-gray-50">
 
 <!-- Header -->
-<header
-    id="header"
-    class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50"
-  >
-    <div class="px-4 py-3 flex items-center justify-between">
-      <!-- Logo -->
-      <a href="../index.html" class="flex items-center space-x-2">
-        <i class="fa-solid fa-mountain text-primary text-xl"></i>
-        <span class="font-bold text-lg text-gray-900">Guia RQ</span>
-      </a>
+<header id="header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50">
+  <div class="px-4 py-3 flex items-center justify-between">
+    <div class="text-xl font-bold text-blue-600">Guia RQ</div>
     <nav class="flex space-x-6 text-sm font-medium text-gray-700">
       <a href="../index.html" class="hover:text-blue-600">Home</a>
       <a href="./tickets.html" class="text-blue-600 font-semibold">Tickets</a>
@@ -178,93 +171,25 @@
   </div>
 </section>
 
-  <div class="px-6">
-    <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Entenda Como Funciona</h2>
-    <div class="flex flex-wrap justify-center gap-10 text-center">
-
-      <!-- Etapa 1 -->
-      <div class="w-56">
-        <div class="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-          <i class="fa-solid fa-mouse-pointer text-yellow-500 text-2xl"></i>
-        </div>
-        <h3 class="font-semibold text-gray-900 mb-2">Escolha seus tickets</h3>
-        <p class="text-sm text-gray-600">Selecione os tickets ou pacotes que mais combinam com você</p>
-      </div>
-
-      <!-- Etapa 2 -->
-      <div class="w-56">
-        <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-          <i class="fa-solid fa-mobile-screen-button text-green-600 text-2xl"></i>
-        </div>
-        <h3 class="font-semibold text-gray-900 mb-2">Faça o pagamento online</h3>
-        <p class="text-sm text-gray-600">Pagamento seguro via cartão ou PIX</p>
-      </div>
-
-      <!-- Etapa 3 -->
-      <div class="w-56">
-        <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-          <i class="fa-solid fa-qrcode text-blue-500 text-2xl"></i>
-        </div>
-        <h3 class="font-semibold text-gray-900 mb-2">Receba os QR Codes</h3>
-        <p class="text-sm text-gray-600">Códigos chegam no seu e-mail instantaneamente</p>
-      </div>
-
-      <!-- Etapa 4 -->
-      <div class="w-56">
-        <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-          <i class="fa-solid fa-check text-green-600 text-2xl"></i>
-        </div>
-        <h3 class="font-semibold text-gray-900 mb-2">Use em até 12 meses</h3>
-        <p class="text-sm text-gray-600">Apresente o QR Code no estabelecimento e aproveite</p>
-    </a>
-      </div>
-   
-
-
-  </div>
-</section>
-
-<!-- Espaço antes do footer -->
-<div class="h-20 md:h-24"></div>
-
-
-
-<footer id="footer" class="bg-gray-900 text-white py-12 px-6 w-screen relative left-1/2 right-1/2 -mx-[50vw]">
-    <div class="space-y-8">
-        <div class="text-center">
-            <h3 class="text-2xl font-bold mb-4">Guia RQ</h3>
-            <p class="text-gray-300 mb-4">Sua porta de entrada para Rancho Queimado</p>
-            </div>
-        </div>
-        
-        <div class="grid grid-cols-2 gap-8 text-sm">
-            <div>
-                <h4 class="font-semibold mb-3">Links Úteis</h4>
-                <ul class="space-y-2 text-gray-300">
-    <li><a href="sobre.html" class="hover:text-white transition-colors">Sobre</a></li>
-    <li><a href="termosdeuso.html" class="hover:text-white transition-colors">Termos de Uso</a></li>
-    <li><a href="politica.html" class="hover:text-white transition-colors">Política de Privacidade</a></li>
-</ul>
-            </div>
-            <div>
-                <h4 class="font-semibold mb-3">Suporte</h4>
-                <p class="text-gray-300 mb-2">gropoguiarq@gmail.com</p>
-                <div class="flex space-x-4 mt-4">
-  <!-- Link do Instagram -->
-  <a 
-    href="https://www.instagram.com/guiaranchoqueimado/" 
-    target="_blank" 
-    rel="noopener noreferrer" 
-    class="text-gray-400 hover:text-blue-400 cursor-pointer text-2xl"
-  >
-    <i class="fa-brands fa-instagram"></i>
-  </a>
-</div>
-        
-        <div class="text-center text-sm text-gray-400 border-t border-gray-700 pt-6">
-            © 2024 Guia RQ. Todos os direitos reservados.
-        </div>
+<!-- Footer -->
+<footer class="bg-gray-900 text-white px-6 py-12 mt-8">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 text-sm">
+    <div>
+      <h4 class="font-semibold mb-3">Links Úteis</h4>
+      <ul class="space-y-2 text-gray-400">
+        <li><a href="../pages/sobre.html" class="hover:text-white">Sobre</a></li>
+        <li><a href="../pages/politica.html" class="hover:text-white">Política de Privacidade</a></li>
+      </ul>
     </div>
+    <div>
+      <h4 class="font-semibold mb-3">Contato</h4>
+      <p class="text-gray-400">suporte@guiarq.com.br</p>
+      <p class="text-gray-400">Rancho Queimado - SC</p>
+    </div>
+    <div class="text-center md:text-right">
+      <p class="text-gray-500 text-sm">© 2025 Guia RQ. Todos os direitos reservados.</p>
+    </div>
+  </div>
 </footer>
 
 </body>

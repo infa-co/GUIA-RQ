@@ -545,62 +545,62 @@
 
   // Adiciona itens ao carrinho
   document.querySelectorAll('.add-to-cart').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const product = {
-        id: btn.dataset.id,
-        nome: btn.dataset.nome,
-        local: btn.dataset.local,
-        preco: parseFloat(btn.dataset.preco),
-        img: btn.dataset.img,
-        qtd: 1
-      };
+  btn.addEventListener('click', () => {
+    const product = {
+      id: btn.dataset.id,
+      nome: btn.dataset.nome,
+      local: btn.dataset.local,
+      preco: parseFloat(btn.dataset.preco),
+      img: btn.dataset.img,
+      qtd: 1
+    };
 
-      let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-      const existente = carrinho.find(p => p.id === product.id);
-      if (existente) {
-        existente.qtd += 1;
-      } else {
-        carrinho.push(product);
-      }
+    let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+    const existente = carrinho.find(p => p.id === product.id);
+    if (existente) {
+      existente.qtd += 1;
+    } else {
+      carrinho.push(product);
+    }
 
-      localStorage.getItem('carrinho', JSON.stringify(carrinho));
-      updateCartCount();
+    // ✅ Correção aqui:
+    localStorage.setItem('carrinho', JSON.stringify(carrinho));
 
-      btn.innerHTML = '✅ Adicionado!';
-      btn.disabled = true;
-      setTimeout(() => {
-        btn.innerHTML = 'Adicionar ao Carrinho';
-        btn.disabled = false;
-      }, 1200);
-    });
+    updateCartCount();
+
+    btn.innerHTML = '✅ Adicionado!';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.innerHTML = 'Adicionar ao Carrinho';
+      btn.disabled = false;
+    }, 1200);
   });
+});
 
-  updateCartCount();
+updateCartCount();
 </script>
 <script>
-// ===== USUÁRIO (seu dropdown) – permanece igual ao seu código acima =====
+// Clique no “Cadastre-se e GANHE”
+document.getElementById('bonus-btn')?.addEventListener('click', () => {
+  // Marca que o usuário tem direito ao bônus
+  localStorage.setItem('bonusTicket', 'true');
+  // Vai para a página de login/cadastro (caminho relativo a partir do index.html)
+  window.location.href = 'pages/login.html';
+});
 
-// ===== CARRINHO (dados reais via LocalStorage) =====
-let cart = JSON.parse(localStorage.getItem('carrinho')) || [];
-
-// Se tiver bônus ativo, garante o item de bônus no carrinho (sem duplicar)
-(function ensureBonusInCart(){
-  const bonusAtivo = localStorage.getItem('bonusTicket') === 'true';
-  if (!bonusAtivo) return;
-
-  const existe = cart.find(p => String(p.id) === '4');
-  if (!existe) {
-    cart.push({
-      id: "4",
-      nome: "Ticket Da Roça Delicatéssen",
-      local: "Da Roça Delicatéssen",
-      preco: 0.00,
-      qtd: 1,
-      img: "assets/images/daroca.jpg"
-    });
-    localStorage.setItem('carrinho', JSON.stringify(cart));
+// Se já ganhou o bônus, ajusta o estado visual do botão
+(function initBonusButtonUI() {
+  const btn = document.getElementById('bonus-btn');
+  if (!btn) return;
+  const bonusAtivo = localStorage.setItem('bonusTicket') === 'true';
+  if (bonusAtivo) {
+    btn.textContent = 'Bônus garantido ✅';
+    btn.classList.remove('bg-blue-600','hover:bg-blue-700');
+    btn.classList.add('bg-green-600','cursor-default');
+    btn.disabled = true;
   }
 })();
 </script>
+
 </body>
 </html>
