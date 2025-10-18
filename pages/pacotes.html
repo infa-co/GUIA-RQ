@@ -22,20 +22,90 @@
   >
     <div class="px-4 py-3 flex items-center justify-between">
       <!-- Logo -->
-      <a href="../index.html" class="flex items-center space-x-2">
-        <i class="fa-solid fa-mountain text-primary text-xl"></i>
-        <span class="font-bold text-lg text-gray-900">Guia RQ</span>
-      </a>
+    <a href="index.html" class="text-xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
+      Guia RQ
+    </a>
+
+    <!-- Navegação -->
     <nav class="flex space-x-6 text-sm font-medium text-gray-700">
       <a href="../index.html" class="hover:text-blue-600">Home</a>
-      <a href="./tickets.html" class="text-blue-600 font-semibold">Tickets</a>
-      <a href="./pacotes.html" class="hover:text-blue-600">Pacotes</a>
+      <a href="tickets.html" class="hover:text-blue-600">Tickets</a>
+      <a href="pacotes.html" class="hover:text-blue-600">Pacotes</a>
+      <a href="sobre.html" class="hover:text-blue-600">Sobre</a>
     </nav>
-    <div class="flex items-center space-x-3">
-      <a href="./login.html"><i class="fa-regular fa-user text-gray-600 text-lg hover:text-blue-600"></i></a>
-      <a href="./carrinho.html"><i class="fa-solid fa-shopping-cart text-gray-600 text-lg hover:text-blue-600"></i></a>
-    </div>
-  </div>
+
+    <!-- Área da direita (usuário + carrinho) -->
+    <div class="flex items-center space-x-5">
+
+      <!-- Ícone do Usuário com dropdown centralizado -->
+      <div class="relative flex items-center justify-center" id="user-menu-container">
+        <button id="user-icon"
+                class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
+          <i class="fa-solid fa-user"></i>
+        </button>
+
+        <!-- Dropdown -->
+        <div id="user-dropdown"
+             class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 transform
+                    w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50">
+          <!-- O JS injeta os links aqui -->
+        </div>
+      </div>
+
+      <!-- Carrinho -->
+      <a href="carrinho.html" class="relative text-gray-600 hover:text-blue-600 transition-colors">
+  <i class="fa-solid fa-shopping-cart text-lg"></i>
+  <span id="cart-count"
+    class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center shadow">
+  </span>
+</a>
+
+  <script>
+    // Estado inicial (false = visitante, true = logado)
+    let userLoggedIn = false;
+
+    const userIcon = document.getElementById('user-icon');
+    const dropdown = document.getElementById('user-dropdown');
+
+    // Função para renderizar o menu conforme estado
+    function renderMenu() {
+      dropdown.innerHTML = userLoggedIn
+        ? `
+          <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minha conta</a>
+          <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minhas compras</a>
+          <hr class="my-1">
+          <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
+        `
+        : `
+          <a href="pages/login.html" class="block px-10 py-5 hover:bg-gray-100 text-gray-700">Entrar ou Cadastrar-se</a>
+        `;
+    }
+
+    // Exibe / oculta o dropdown ao clicar no ícone
+    userIcon.addEventListener('click', () => {
+      dropdown.classList.toggle('hidden');
+      renderMenu();
+    });
+
+    // Fecha o menu se clicar fora
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#user-menu-container')) {
+        dropdown.classList.add('hidden');
+      }
+    });
+
+    // Simula login/logout
+    document.addEventListener('click', (e) => {
+      if (e.target.id === 'logout-btn') {
+        userLoggedIn = false;
+        dropdown.classList.add('hidden');
+        alert('Você saiu da conta.');
+      }
+    });
+
+    // Exemplo: se quiser simular login automático (remova depois)
+    // userLoggedIn = true;
+  </script>
 </header>
 
 <!-- Hero -->
@@ -64,9 +134,10 @@
                     <span class="text-2xl font-bold text-blue-600">R$ 50</span>
                     <span class="text-sm text-gray-500 ml-2">(economia de R$ 100)</span>
                 </div>
-                <button class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                    Escolher Pacote
-                </button>
+                <button onclick="window.location.href='resumo.html?pacote=explorador'"
+  class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+  Escolher Pacote
+</button>
             </div>
         </div>
         
@@ -85,9 +156,10 @@
                     <span class="text-2xl font-bold text-green-500">R$ 70</span>
                     <span class="text-sm text-gray-500 ml-2">(economia de R$ 150)</span>
                 </div>
-                <button class="w-full bg-green-500 text-white py-3 rounded-lg font-medium hover:bg-orange-600 transition-colors">
-                    Escolher Pacote
-                </button>
+                <button onclick="window.location.href='resumo.html?pacote=aventureiro'"
+  class="w-full bg-green-500 text-white py-3 rounded-lg font-medium hover:bg-green-600 transition-colors">
+  Escolher Pacote
+</button>
             </div>
         </div>
         
@@ -103,9 +175,10 @@
                     <span class="text-2xl font-bold text-purple-600">R$ 110</span>
                     <span class="text-sm text-gray-500 ml-2">(economia de R$ 300+)</span>
                 </div>
-                <button class="w-full bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
-                    Escolher Pacote
-                </button>
+                <button onclick="window.location.href='resumo.html?pacote=premium'"
+  class="w-full bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
+  Escolher Pacote
+</button>
             </div>
         </div>
     </div>
@@ -259,6 +332,14 @@
         </div>
     </div>
 </footer>
+<script>
+  document.querySelectorAll("[data-pacote]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const pacote = btn.dataset.pacote;
+      window.location.href = `pages/resumo.html?pacote=${pacote}`;
+    });
+  });
+</script>
 
 </body>
 </html>
