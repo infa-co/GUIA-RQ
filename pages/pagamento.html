@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <!-- Cabeçalho -->
+  <header id="header" class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <i class="fa-solid fa-mountain-sun text-blue-600 text-xl"></i>
+        <span class="text-xl font-bold text-gray-900">Guia RQ</span>
+      </div>
+      <div class="flex items-center space-x-1 bg-green-50 px-2 py-1 rounded-full">
+        <i class="fa-solid fa-shield-halved text-green-500 text-xs"></i>
+        <span class="text-xs font-medium text-green-600">100% seguro</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo -->
+  <main id="main-content" class="pb-32">
+
+    <!-- Resumo do pedido -->
+    <section id="order-summary" class="bg-white border-b border-gray-100 sticky top-[64px] z-40">
+  <div id="order-content" class="px-4 py-4">
+    <!-- Conteúdo será injetado aqui via JavaScript -->
+  </div>
+</section>
+
+    <!-- Dados pessoais -->
+    <section id="personal-data" class="px-4 py-6">
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-1">Dados Pessoais</h2>
+        <p class="text-sm text-gray-600">Preencha seus dados para finalizar a reserva</p>
+      </div>
+      
+      <form id="personal-form" class="space-y-4">
+        <input type="text" placeholder="Seu nome completo" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600" id="nome">
+        <input type="email" placeholder="seu@email.com" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600" id="email">
+        <input type="tel" placeholder="(48) 99999-9999" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600" id="telefone">
+      </form>
+
+      <div id="user-logged" class="hidden bg-green-50 border border-green-200 rounded-xl p-4 mt-3 text-sm text-green-700 flex items-center justify-between">
+        <div><i class="fa-solid fa-user-check mr-2"></i>Dados carregados automaticamente</div>
+        <button class="text-xs underline text-green-700" id="logout">Sair</button>
+      </div>
+    </section>
+
+    <!-- Métodos de pagamento -->
+    <section id="payment-methods" class="px-4 py-6 bg-white">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Método de Pagamento</h2>
+      
+      <div class="space-y-3">
+        <div class="payment-option border-2 border-gray-200 rounded-xl p-4 cursor-pointer hover:border-blue-600" onclick="selectPayment('credit', event)">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-credit-card text-blue-600"></i>
+              </div>
+              <div>
+                <div class="font-medium text-gray-900">Cartão de Crédito</div>
+                <div class="text-sm text-gray-600">Até 12x sem juros</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="credit-card-form" class="hidden mt-4 bg-gray-50 p-4 rounded-xl space-y-3">
+          <input type="text" placeholder="Número do cartão" maxlength="16" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600">
+          <div class="flex space-x-3">
+            <input type="text" placeholder="MM/AA" class="w-1/2 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600">
+            <input type="text" placeholder="CVV" maxlength="3" class="w-1/2 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600">
+          </div>
+          <button id="save-card" class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition">Salvar Cartão</button>
+          <p id="card-saved" class="hidden text-green-600 text-sm font-medium text-center mt-2"><i class="fa-solid fa-check mr-1"></i> Cartão salvo com sucesso!</p>
+        </div>
+
+        <div class="payment-option border-2 border-gray-200 rounded-xl p-4 cursor-pointer hover:border-blue-600" onclick="selectPayment('pix', event)">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-qrcode text-green-600"></i>
+              </div>
+              <div>
+                <div class="font-medium text-gray-900">PIX</div>
+                <div class="text-sm text-gray-600">Aprovação instantânea</div>
+              </div>
+            </div>
+            </div>
+
+          </div class="payment-option border-2 border-gray-200 rounded-xl p-4 cursor-pointer hover:border-blue-600" onclick="selectPayment('wallet')">
+                    <div 
+  class="payment-option border-2 border-gray-200 rounded-xl p-4 cursor-pointer hover:border-blue-600 transition-colors" 
+  onclick="selectPayment('wallet', event)"
+>
+  <div class="flex justify-between items-center">
+    
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+        <i class="fa-solid fa-wallet text-gray-600"></i>
+      </div>
+      <div>
+        <div class="font-medium text-gray-900">Carteira Digital</div>
+        <div class="text-sm text-gray-600">Apple Pay, Google Pay</div>
+      </div>
+    </div>
+
+    <!-- Ícones alinhados -->
+    <div class="flex items-center space-x-3">
+      <div class="flex items-center justify-center bg-black text-white px-2.5 py-1 rounded-md text-[13px] font-semibold">
+         Pay
+      </div>
+      <div class="flex items-center justify-center bg-[#4285F4] text-white px-2.5 py-1 rounded-md text-[13px] font-semibold">
+        G Pay
+      </div>
+  </section>
+
+   
+
+<section id="upsell" class="px-4 py-6">
+            <div class="mb-4">
+                <h2 class="text-lg font-semibold text-gray-900 mb-1">Antes de finalizar, adicione e ganhe mais benefícios</h2>
+                <p class="text-sm text-gray-600">Ofertas especiais por tempo limitado</p>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="border border-gray-200 rounded-xl p-4">
+                    <div class="flex items-start space-x-3">
+                        <input type="checkbox" class="mt-1 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <i class="fa-solid fa-umbrella text-primary"></i>
+                                <span class="font-medium text-gray-900 text-sm">Seguro contra chuva</span>
+                                <span class="bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded-full font-medium">+R$ 10</span>
+                            </div>
+                            <p class="text-xs text-gray-600">Garante reembolso total em caso de cancelamento por chuva forte</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="border border-gray-200 rounded-xl p-4">
+                    <div class="flex items-start space-x-3">
+                        <input type="checkbox" class="mt-1 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <i class="fa-solid fa-percent text-success"></i>
+                                <span class="font-medium text-gray-900 text-sm">Desconto de 5% em nova reserva</span>
+                                <span class="bg-success text-white text-xs px-2 py-0.5 rounded-full font-medium">+R$ 15</span>
+                            </div>
+                            <p class="text-xs text-gray-600">Cupom válido por 30 dias para sua próxima experiência no Guia RQ</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+  <div id="checkout-footer" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-50">
+    <button id="pay-btn" class="w-full bg-primary text-white py-4 rounded-xl font-semibold text-base">
+  Confirmar Pagamento
+</button>
+
+<script>
+  document.getElementById("pay-btn").addEventListener("click", () => {
+    const resumo = JSON.parse(localStorage.getItem("resumo"));
+    const carrinho = JSON.parse(localStorage.getItem("carrinho"));
+    
+    // Exemplo: enviar via webhook
+    fetch("https://seuservidor.com/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ carrinho, resumo }),
+    })
+    .then(() => {
+      window.location.href = "../pages/sucesso.html";
+    });
+  });
+</script>
+  </div>
+
+  <script>
+    // ======== LOGIN SIMPLIFICADO ========
+    const form = document.getElementById('personal-form');
+    const loggedSection = document.getElementById('user-logged');
+
+    // Verifica se usuário está logado
+    const userData = JSON.parse(localStorage.getItem('usuarioRQ'));
+    if (userData) {
+      form.classList.add('hidden');
+      loggedSection.classList.remove('hidden');
+    }
+
+    // Logout
+    document.getElementById('logout').addEventListener('click', () => {
+      localStorage.removeItem('usuarioRQ');
+      location.reload();
+    });
+
+    // ======== PAGAMENTO ========
+    function selectPayment(type, event) {
+      document.querySelectorAll('.payment-option').forEach(opt => {
+        opt.classList.remove('border-blue-600', 'bg-blue-50');
+        opt.classList.add('border-gray-200');
+      });
+      event.currentTarget.classList.add('border-blue-600', 'bg-blue-50');
+
+      const cardForm = document.getElementById('credit-card-form');
+      cardForm.classList.toggle('hidden', type !== 'credit');
+    }
+
+    // Salvar cartão
+    document.getElementById('save-card').addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.setItem('cardSaved', 'true');
+      document.getElementById('card-saved').classList.remove('hidden');
+    });
+
+    // Mostrar se o cartão já foi salvo antes
+    if (localStorage.getItem('cardSaved') === 'true') {
+      document.getElementById('credit-card-form').innerHTML = `
+        <div class="flex items-center justify-between bg-green-50 p-3 rounded-xl">
+          <div class="flex items-center text-green-700">
+            <i class="fa-solid fa-credit-card mr-2"></i>
+            <span>Cartão salvo e pronto para uso</span>
+          </div>
+          <button class="text-xs text-red-600 underline" onclick="localStorage.removeItem('cardSaved'); location.reload();">Remover</button>
+        </div>`;
+    }
+  </script>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const resumoEl = document.querySelector("#order-content");
+  const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+  const resumo = JSON.parse(localStorage.getItem("resumoCompra")) || {};
+  const upsells = JSON.parse(localStorage.getItem("upsells")) || {};
+
+  console.log("Carrinho:", carrinho);
+  console.log("Resumo:", resumo);
+  console.log("Upsells:", upsells);
+
+  // Verifica se há dados válidos
+  if (carrinho.length === 0 || !resumo.totalFinal) {
+    resumoEl.innerHTML = `
+      <div class="p-6 text-center text-gray-600">
+        Nenhum item no carrinho.
+      </div>`;
+    return;
+  }
+
+  // Detecta se está dentro da pasta /pages/
+  const isInPages = window.location.pathname.includes("/pages/");
+  const basePath = isInPages ? "../assets/images/" : "./assets/images/";
+
+  // ================================
+  // 🔹 Monta os itens do carrinho
+  const itemsHTML = carrinho.map(item => `
+    <div class="flex items-start space-x-3 mb-3">
+      <img 
+        class="w-16 h-16 rounded-lg object-cover" 
+        src="${item.img?.startsWith('..') ? item.img : '../' + item.img}" 
+        onerror="this.src='${basePath}default.jpg';"
+      />
+      <div class="flex-1 min-w-0">
+        <h3 class="font-semibold text-gray-900 text-sm mb-1">${item.nome}</h3>
+        <div class="space-y-1">
+          <div class="flex items-center text-xs text-gray-600">
+            <i class="fa-solid fa-location-dot w-4"></i>
+            <span class="ml-1">${item.local || 'Rancho Queimado'}</span>
+          </div>
+          <div class="flex items-center text-xs text-gray-600">
+            <i class="fa-solid fa-users w-4"></i>
+            <span class="ml-1">${item.qtd} pessoa(s)</span>
+          </div>
+        </div>
+      </div>
+      <span class="text-sm font-medium text-gray-700 whitespace-nowrap">
+        R$ ${(item.preco * item.qtd).toFixed(2)}
+      </span>
+    </div>
+  `).join('');
+
+  // ================================
+// 🔹 Recupera catálogo e lista de upsells selecionados
+const upsellsCatalogo = JSON.parse(localStorage.getItem("upsells")) || {};
+const upsellsSelecionados = JSON.parse(localStorage.getItem("upsellsSelecionados")) || [];
+
+// 🔹 Filtra apenas os upsells realmente selecionados
+const upsellsAtivos = upsellsSelecionados
+  .map(id => upsellsCatalogo[id])
+  .filter(Boolean);
+
+const upsellsHTML = upsellsAtivos.length > 0
+  ? upsellsAtivos.map(u => `
+      <div class="flex items-start space-x-3 mb-3 pl-1">
+        <img
+          class="w-14 h-14 rounded-lg object-cover"
+          src="${u.img ? (u.img.startsWith('..') ? u.img : basePath + u.img) : basePath + 'default.jpg'}"
+          onerror="this.src='${basePath}default.jpg';"
+        />
+        <div class="flex-1 min-w-0">
+          <h3 class="font-semibold text-gray-900 text-sm mb-1">+ ${u.nome}</h3>
+          <p class="text-xs text-gray-600">Benefício adicional</p>
+        </div>
+        <span class="text-sm font-medium text-gray-700 whitespace-nowrap">
+          R$ ${u.preco.toFixed(2)}
+        </span>
+      </div>
+    `).join('')
+  : '';
+
+  // ================================
+  // 🔹 Injeta o conteúdo final
+  resumoEl.innerHTML = `
+    <div class="px-4 py-4">
+      <div class="bg-gray-50 rounded-xl p-4">
+        ${itemsHTML}
+        ${upsellsHTML ? `<div class="mt-2">${upsellsHTML}</div>` : ""}
+        <div class="mt-4 pt-3 border-t border-gray-200 space-y-2">
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Subtotal</span>
+            <span class="text-gray-900">R$ ${resumo.subtotal.toFixed(2)}</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Taxa de serviço</span>
+            <span class="text-gray-900">R$ ${resumo.taxa}</span>
+          </div>
+          <div class="flex justify-between text-base font-semibold pt-2 border-t border-gray-200">
+            <span class="text-gray-900">Total</span>
+            <span class="text-gray-900">R$ ${resumo.totalFinal}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+});
+</script>
+</body>
+</html>
+
+
+

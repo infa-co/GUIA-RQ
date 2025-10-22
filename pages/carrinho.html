@@ -41,9 +41,11 @@
         <span id="total">R$ 0,00</span>
       </div>
 
-      <button class="w-full bg-blue-600 text-white font-semibold py-3 mt-6 rounded-lg hover:bg-blue-700">
-        Continuar para o pagamento 💳
-      </button>
+      <button 
+  id="continuar-pagamento" 
+  class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors">
+  Continuar para Pagamento
+</button>
     </div>
   </div>
 
@@ -76,9 +78,23 @@ const totalEl = document.getElementById('total');
 const summaryLines = document.getElementById('summary-lines');
 
 let cart = JSON.parse(localStorage.getItem('carrinho')) || [];
+// Detecta o caminho base de forma automática
+const isInPages = window.location.pathname.includes("/pages/");
+const basePath = isInPages ? "../assets/images/" : "./assets/images/";
+
 const upsells = {
-  cafe: { nome: 'Café da Manhã Especial', preco: 18.00, ativo: false },
-  mesa: { nome: 'Mesa Decorada', preco: 22.50, ativo: false }
+  cafe: { 
+    nome: 'Descubra Rancho Queimado em 3 Dias', 
+    preco: 18.00, 
+    ativo: false, 
+    img: basePath + 'praca2.jpeg'
+  },
+  mesa: { 
+    nome: 'Mapa de Rancho Queimado', 
+    preco: 22.50, 
+    ativo: false, 
+    img: basePath + 'praca.jpeg'
+  }
 };
 
 function money(v) { return 'R$ ' + v.toFixed(2); }
@@ -162,6 +178,7 @@ function renderSummary() {
 
 document.querySelectorAll('[data-upsell]').forEach(btn => {
   const id = btn.dataset.upsell;
+
   const setAdded = (add) => {
     btn.classList.toggle('bg-green-50', add);
     btn.classList.toggle('border-green-400', add);
@@ -174,14 +191,68 @@ document.querySelectorAll('[data-upsell]').forEach(btn => {
       btn.appendChild(s);
     }
   };
+
+  // 🔹 Evento de clique
   btn.onclick = () => {
     upsells[id].ativo = !upsells[id].ativo;
     setAdded(upsells[id].ativo);
     renderSummary();
+
+    // 🔹 Salva estado dos upsells no localStorage (agora no momento certo)
+    localStorage.setItem("upsells", JSON.stringify(upsells));
   };
+
+  // 🔹 Ao recarregar a página, mantém o estado visual do upsell ativo
+  if (upsells[id].ativo) setAdded(true);
 });
 
 renderCart();
+</script>
+
+<script>
+ document.getElementById("continuar-pagamento").addEventListener("click", () => {
+  const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+  if (carrinho.length === 0) {
+    alert("Seu carrinho está vazio!");
+    return;
+  }
+
+  // 🔹 Lê catálogo de upsells do localStorage
+  const upsellsCatalogo = JSON.parse(localStorage.getItem("upsells")) || {};
+
+  // 🔹 Garante que o objeto atual no código reflete o estado real (botões)
+  // Atualiza o localStorage com o estado mais recente da variável "upsells"
+  localStorage.setItem("upsells", JSON.stringify(upsells));
+
+  // 🔹 Coleta apenas os upsells realmente selecionados
+  const upsellsSelecionados = Object.entries(upsellsCatalogo)
+    .filter(([id, u]) => upsells[id]?.ativo === true)
+    .map(([id]) => id);
+
+  // 🔹 Calcula subtotal + upsells realmente ativos
+  const subtotal = carrinho.reduce((acc, item) => acc + item.preco * item.qtd, 0);
+  const taxa = 0;
+
+  const totalUpsells = upsellsSelecionados
+    .map(id => upsellsCatalogo[id]?.preco || 0)
+    .reduce((acc, val) => acc + val, 0);
+
+  const totalFinal = (subtotal + totalUpsells + taxa).toFixed(2);
+
+  const resumoCompra = {
+    subtotal,
+    taxa,
+    totalFinal,
+    data: new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" }),
+  };
+
+  // 🔹 Salva tudo
+  localStorage.setItem("resumoCompra", JSON.stringify(resumoCompra));
+  localStorage.setItem("upsellsSelecionados", JSON.stringify(upsellsSelecionados));
+
+  // 👉 Segue para pagamento
+  window.location.href = "pagamento.html";
+});
 </script>
 
 </body>
