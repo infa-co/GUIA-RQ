@@ -18,28 +18,31 @@
 <!-- Header -->
 <header id="header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50">
   <div class="px-4 py-3 flex items-center justify-between">
+    
     <!-- Logo -->
-    <a href="../index.html" class="flex items-center">
-      <img src="../assets/images/guia-rancho-queimado-logo-sem-fundo.png"
-           alt="Logo Guia RQ"
-           class="h-12 sm:h-14 w-auto hover:opacity-90 transition-opacity">
-    </a>
-    <nav class="flex space-x-6 text-sm font-medium text-gray-700">
-      <!-- Navegação -->
-    <nav class="flex space-x-6 text-sm font-medium text-gray-700">
-      <a href="../index.html" class="hover:text-blue-600">Home</a>
-      <a href="tickets.html" class="hover:text-blue-600">Tickets</a>
-      <a href="pacotes.html" class="hover:text-blue-600">Pacotes</a>
-      <a href="sobre.html" class="hover:text-blue-600">Sobre</a>
+   
+<a href="../index.html" class="flex items-center space-x-2 group">
+  <img src="../assets/images/guia-rancho-queimado-logo-sem-fundo.png"
+       alt="Logo Guia RQ"
+       class="h-12 sm:h-14 w-auto transition-transform group-hover:scale-105">
+  <span class="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+    Guia RQ
+  </span>
+</a>
+
+    <!-- Navegação principal -->
+    <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-700">
+      <a href="../index.html" class="hover:text-blue-600 transition-colors">Home</a>
+      <a href="tickets.html" class="text-blue-600 font-semibold border-b-2 border-blue-600 pb-1">Tickets</a>
+      <a href="pacotes.html" class="hover:text-blue-600 transition-colors">Pacotes</a>
+      <a href="sobre.html" class="hover:text-blue-600 transition-colors">Sobre</a>
     </nav>
 
-    <!-- Área da direita (usuário + carrinho) -->
+    <!-- Área da direita -->
     <div class="flex items-center space-x-5">
-
-      <!-- Ícone do Usuário com dropdown centralizado -->
+      <!-- Usuário -->
       <div class="relative flex items-center justify-center" id="user-menu-container">
-        <button id="user-icon"
-                class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
+        <button id="user-icon" class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
           <i class="fa-solid fa-user"></i>
         </button>
 
@@ -47,64 +50,62 @@
         <div id="user-dropdown"
              class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 transform
                     w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50">
-          <!-- O JS injeta os links aqui -->
         </div>
       </div>
 
       <!-- Carrinho -->
       <a href="carrinho.html" class="relative text-gray-600 hover:text-blue-600 transition-colors">
-  <i class="fa-solid fa-shopping-cart text-lg"></i>
-  <span id="cart-count"
-    class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center shadow">
-  </span>
-</a>
+        <i class="fa-solid fa-shopping-cart text-lg"></i>
+        <span id="cart-count"
+          class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center shadow">
+        </span>
+      </a>
+    </div>
+  </div>
+</header>
 
-  <script>
-    // Estado inicial (false = visitante, true = logado)
-    let userLoggedIn = false;
+<script>
+  // Estado inicial
+  let userLoggedIn = false;
 
-    const userIcon = document.getElementById('user-icon');
-    const dropdown = document.getElementById('user-dropdown');
+  const userIcon = document.getElementById('user-icon');
+  const dropdown = document.getElementById('user-dropdown');
 
-    // Função para renderizar o menu conforme estado
-    function renderMenu() {
-      dropdown.innerHTML = userLoggedIn
-        ? `
-          <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minha conta</a>
-          <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minhas compras</a>
-          <hr class="my-1">
-          <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
-        `
-        : `
-          <a href="login.html" class="block px-10 py-5 hover:bg-gray-100 text-gray-700">Entrar ou Cadastrar-se</a>
-        `;
+  // Renderiza menu
+  function renderMenu() {
+    dropdown.innerHTML = userLoggedIn
+      ? `
+        <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minha conta</a>
+        <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minhas compras</a>
+        <hr class="my-1">
+        <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
+      `
+      : `
+        <a href="login.html" class="block px-10 py-5 hover:bg-gray-100 text-gray-700 text-center">
+          Entrar ou Cadastrar-se
+        </a>
+      `;
+  }
+
+  userIcon.addEventListener('click', () => {
+    dropdown.classList.toggle('hidden');
+    renderMenu();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#user-menu-container')) {
+      dropdown.classList.add('hidden');
     }
+  });
 
-    // Exibe / oculta o dropdown ao clicar no ícone
-    userIcon.addEventListener('click', () => {
-      dropdown.classList.toggle('hidden');
-      renderMenu();
-    });
-
-    // Fecha o menu se clicar fora
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('#user-menu-container')) {
-        dropdown.classList.add('hidden');
-      }
-    });
-
-    // Simula login/logout
-    document.addEventListener('click', (e) => {
-      if (e.target.id === 'logout-btn') {
-        userLoggedIn = false;
-        dropdown.classList.add('hidden');
-        alert('Você saiu da conta.');
-      }
-    });
-
-    // Exemplo: se quiser simular login automático (remova depois)
-    // userLoggedIn = true;
-  </script>
+  document.addEventListener('click', (e) => {
+    if (e.target.id === 'logout-btn') {
+      userLoggedIn = false;
+      dropdown.classList.add('hidden');
+      alert('Você saiu da conta.');
+    }
+  });
+</script>
 </header>
 
 <!-- Hero -->
