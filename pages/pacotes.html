@@ -347,6 +347,24 @@
       window.location.href = `pages/resumo.html?pacote=${pacote}`;
     });
   });
+
+  
+document.addEventListener("DOMContentLoaded", () => {
+  const cartCountEl = document.getElementById("cart-count");
+  if (!cartCountEl) return;
+
+  // Recupera o carrinho do localStorage
+  const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+
+  // Atualiza o contador
+  if (carrinho.length > 0) {
+    cartCountEl.textContent = carrinho.length;
+    cartCountEl.classList.remove("hidden");
+  } else {
+    cartCountEl.classList.add("hidden");
+  }
+});
+</script>
 </script>
 
 </body>

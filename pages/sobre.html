@@ -46,23 +46,82 @@
 </a>
     </a>
 
-      <!-- Nav -->
-      <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-700">
-        <a href="../index.html" class="hover:text-primary">Home</a>
-        <a href="tickets.html" class="hover:text-primary">Tickets</a>
-        <a href="pacotes.html" class="hover:text-primary">Pacotes</a>
-      </nav>
+      <!-- Navegação principal -->
+    <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-700">
+      <a href="../index.html" class="hover:text-blue-600 transition-colors">Home</a>
+      <a href="tickets.html" class="text-blue-600 font-semibold border-b-2 border-blue-600 pb-1">Tickets</a>
+      <a href="pacotes.html" class="hover:text-blue-600 transition-colors">Pacotes</a>
+      <a href="sobre.html" class="hover:text-blue-600 transition-colors">Sobre</a>
+    </nav>
 
-      <!-- Icons -->
-      <div class="flex items-center space-x-4">
-        <a href="pages/login.html">
-          <i class="fa-regular fa-user text-gray-600 text-lg hover:text-primary transition-colors"></i>
-        </a>
-        <a href="pages/carrinho.html">
-          <i class="fa-solid fa-shopping-cart text-gray-600 text-lg hover:text-primary transition-colors"></i>
-        </a>
+    <!-- Área da direita -->
+    <div class="flex items-center space-x-5">
+      <!-- Usuário -->
+      <div class="relative flex items-center justify-center" id="user-menu-container">
+        <button id="user-icon" class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
+          <i class="fa-solid fa-user"></i>
+        </button>
+
+        <!-- Dropdown -->
+        <div id="user-dropdown"
+             class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 transform
+                    w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50">
+        </div>
       </div>
+
+      <!-- Carrinho -->
+      <a href="carrinho.html" class="relative text-gray-600 hover:text-blue-600 transition-colors">
+        <i class="fa-solid fa-shopping-cart text-lg"></i>
+        <span id="cart-count"
+          class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center shadow">
+        </span>
+      </a>
     </div>
+  </div>
+</header>
+
+<script>
+  // Estado inicial
+  let userLoggedIn = false;
+
+  const userIcon = document.getElementById('user-icon');
+  const dropdown = document.getElementById('user-dropdown');
+
+  // Renderiza menu
+  function renderMenu() {
+    dropdown.innerHTML = userLoggedIn
+      ? `
+        <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minha conta</a>
+        <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minhas compras</a>
+        <hr class="my-1">
+        <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
+      `
+      : `
+        <a href="login.html" class="block px-10 py-5 hover:bg-gray-100 text-gray-700 text-center">
+          Entrar ou Cadastrar-se
+        </a>
+      `;
+  }
+
+  userIcon.addEventListener('click', () => {
+    dropdown.classList.toggle('hidden');
+    renderMenu();
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#user-menu-container')) {
+      dropdown.classList.add('hidden');
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (e.target.id === 'logout-btn') {
+      userLoggedIn = false;
+      dropdown.classList.add('hidden');
+      alert('Você saiu da conta.');
+    }
+  });
+</script>
   </header>
 
 <style>
@@ -77,7 +136,7 @@
   }
 </style>
 
-<<!-- Hero Section -->
+
 <!-- Hero Section -->
 <section id="hero" class="relative h-[600px] overflow-hidden">
   <!-- Imagem de fundo -->
@@ -294,6 +353,24 @@
         </div>
     </div>
 </footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const cartCountEl = document.getElementById("cart-count");
+  if (!cartCountEl) return;
+
+  // Recupera o carrinho do localStorage
+  const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+
+  // Atualiza o contador
+  if (carrinho.length > 0) {
+    cartCountEl.textContent = carrinho.length;
+    cartCountEl.classList.remove("hidden");
+  } else {
+    cartCountEl.classList.add("hidden");
+  }
+});
+</script>
 
 </body>
 </html>
