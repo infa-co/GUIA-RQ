@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <base href="./">
+  <base href="/GUIA-RQ/">
+  <script>
+  if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
+    document.querySelector("base").setAttribute("href", "./");
+  } else {
+    document.querySelector("base").setAttribute("href", "/GUIA-RQ/");
+  }
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ESSA LINHA É CRUCIAL -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -144,7 +151,8 @@
 
 <section id="packages-section" class="py-12 px-4">
     <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Escolha seu pacote de experiências e economize mais</h2>
-    <div class="flex flex-nowrap overflow-x-auto space-x-4 pb-4 snap-x snap-mandatory scroll-smooth md:overflow-visible md:grid md:grid-cols-3 md:gap-6 md:space-x-0 md:justify-center">
+    <div class="flex flex-nowrap overflow-x-auto space-x-4 pb-4 snap-x snap-mandatory scroll-smooth 
+            md:grid md:grid-cols-3 md:gap-8 md:overflow-visible md:space-x-0 md:justify-center max-w-6xl mx-auto">
         <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg card-hover relative">
             <img class="w-full h-48 object-cover rounded-t-xl " src="assets/images/entrada.jpeg" alt="compass and mountain exploration theme, adventure travel" />
             <div class="absolute top-4 left-4">
@@ -220,7 +228,8 @@
 <section id="featured-tickets" class="py-12 px-4">
     <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Tickets em Destaque - Retorno de 100% sobre o valor pago
  </h2>
-    <div class="flex flex-nowrap overflow-x-auto space-x-4 pb-4 snap-x snap-mandatory scroll-smooth md:overflow-visible md:grid md:grid-cols-4 md:gap-6 md:space-x-0 md:justify-center">
+    <div class="flex flex-nowrap overflow-x-auto space-x-4 pb-4 snap-x snap-mandatory scroll-smooth 
+            md:grid md:grid-cols-4 md:gap-8 md:overflow-visible md:space-x-0 md:justify-center max-w-7xl mx-auto">
         <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg card-hover">
             <img class="w-full h-48 object-cover rounded-t-xl" src="assets/images/forno-e-serra.jpeg" alt="Pizzaria Forno e Serra">
             <div class="p-4">
