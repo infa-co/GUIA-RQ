@@ -1,114 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-<head> <base href="./">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        ::-webkit-scrollbar { display: none;}
-        * { font-family: 'Inter', sans-serif; }
-        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .carousel { scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
-        .carousel::-webkit-scrollbar { display: none; }
-    </style>
+  <base href="./">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ESSA LINHA É CRUCIAL -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    window.FontAwesomeConfig = { autoReplaceSvg: 'nest' };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    ::-webkit-scrollbar { display: none; }
+    * { font-family: 'Inter', sans-serif; }
+    .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    .carousel { scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
+    .carousel::-webkit-scrollbar { display: none; }
+  </style>
 </head>
 <body class="bg-gray-50">
 
-<header id="header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50">
-  <div class="px-4 py-3 flex items-center justify-between">
+<header id="header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50 py-2">
+  <div class="px-4 py-2 flex items-center justify-between">
 
     <!-- Logo -->
-    <a href="index.html" class="text-xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
-      Guia RQ
+    <a href="index.html" class="flex items-center">
+      <img src="assets/images/guia-rancho-queimado-logo-sem-fundo.png"
+           alt="Logo Guia RQ"
+           class="h-12 sm:h-14 w-auto hover:opacity-90 transition-opacity">
     </a>
 
-    <!-- Navegação -->
-    <nav class="flex space-x-6 text-sm font-medium text-gray-700">
+    <!-- Navegação Desktop (ESCONDIDA no mobile) -->
+    <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-700">
       <a href="index.html" class="hover:text-blue-600">Home</a>
       <a href="pages/tickets.html" class="hover:text-blue-600">Tickets</a>
       <a href="pages/pacotes.html" class="hover:text-blue-600">Pacotes</a>
       <a href="pages/sobre.html" class="hover:text-blue-600">Sobre</a>
     </nav>
 
-    <!-- Área da direita (usuário + carrinho) -->
+    <!-- Lado direito -->
     <div class="flex items-center space-x-5">
 
-      <!-- Ícone do Usuário com dropdown centralizado -->
+      <!-- Usuário -->
       <div class="relative flex items-center justify-center" id="user-menu-container">
-        <button id="user-icon"
-                class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
+        <button id="user-icon" class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
           <i class="fa-solid fa-user"></i>
         </button>
-
-        <!-- Dropdown -->
         <div id="user-dropdown"
              class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 transform
                     w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50">
-          <!-- O JS injeta os links aqui -->
+          <!-- JS injeta aqui -->
         </div>
       </div>
 
       <!-- Carrinho -->
       <a href="pages/carrinho.html" class="relative text-gray-600 hover:text-blue-600 transition-colors">
-  <i class="fa-solid fa-shopping-cart text-lg"></i>
-  <span id="cart-count"
-    class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center shadow">
-  </span>
-</a>
+        <i class="fa-solid fa-shopping-cart text-lg"></i>
+        <span id="cart-count"
+              class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center shadow"></span>
+      </a>
 
-  <script>
-    // Estado inicial (false = visitante, true = logado)
-    let userLoggedIn = false;
+      <!-- Botão Hambúrguer (SÓ no mobile) -->
+      <button id="menu-btn" class="md:hidden text-gray-700 text-2xl focus:outline-none">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </div>
 
-    const userIcon = document.getElementById('user-icon');
-    const dropdown = document.getElementById('user-dropdown');
+  <!-- Menu Mobile (toggle) -->
+  <div id="mobile-menu" class="hidden md:hidden flex-col bg-white border-t border-gray-100">
+    <a href="index.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600">Home</a>
+    <a href="pages/tickets.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600">Tickets</a>
+    <a href="pages/pacotes.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600">Pacotes</a>
+    <a href="pages/sobre.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600">Sobre</a>
+  </div>
 
-    // Função para renderizar o menu conforme estado
-    function renderMenu() {
-      dropdown.innerHTML = userLoggedIn
-        ? `
-          <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minha conta</a>
-          <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minhas compras</a>
-          <hr class="my-1">
-          <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
-        `
-        : `
-          <a href="pages/login.html" class="block px-10 py-5 hover:bg-gray-100 text-gray-700">Entrar ou Cadastrar-se</a>
-        `;
-    }
-
-    // Exibe / oculta o dropdown ao clicar no ícone
-    userIcon.addEventListener('click', () => {
-      dropdown.classList.toggle('hidden');
-      renderMenu();
-    });
-
-    // Fecha o menu se clicar fora
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('#user-menu-container')) {
-        dropdown.classList.add('hidden');
-      }
-    });
-
-    // Simula login/logout
-    document.addEventListener('click', (e) => {
-      if (e.target.id === 'logout-btn') {
-        userLoggedIn = false;
-        dropdown.classList.add('hidden');
-        alert('Você saiu da conta.');
-      }
-    });
-
-    // Exemplo: se quiser simular login automático (remova depois)
-    // userLoggedIn = true;
-  </script>
 </header>
+
 <style>
   .gradient-overlay {
     background: linear-gradient(
@@ -159,7 +129,7 @@
 
 <section id="packages-section" class="py-12 px-4">
     <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Escolha seu pacote de experiências e economize mais</h2>
-    <div class="carousel flex space-x-4 overflow-x-auto pb-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-center max-w-6xl mx-auto">
         <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg card-hover relative">
             <img class="w-full h-48 object-cover rounded-t-xl " src="assets/images/entrada.jpeg" alt="compass and mountain exploration theme, adventure travel" />
             <div class="absolute top-4 left-4">
@@ -235,7 +205,7 @@
 <section id="featured-tickets" class="py-12 px-4">
     <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Tickets em Destaque - Retorno de 100% sobre o valor pago
  </h2>
-    <div class="carousel flex space-x-4 overflow-x-auto pb-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-center max-w-7xl mx-auto">
         <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg card-hover">
             <img class="w-full h-48 object-cover rounded-t-xl" src="assets/images/forno-e-serra.jpeg" alt="Pizzaria Forno e Serra">
             <div class="p-4">
@@ -381,7 +351,7 @@
 
 <section id="testimonials-section" class="py-12 px-4 bg-gray-100">
     <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">O que nossos clientes dizem</h2>
-    <div class="carousel flex space-x-4 overflow-x-auto pb-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center max-w-6xl mx-auto">
         <div class="flex-shrink-0 w-80 bg-white rounded-xl shadow-lg p-6">
             <div class="flex items-center mb-4">
                 <img src="assets/images/1.jpeg" class="w-12 h-12 rounded-full mr-4">
@@ -603,6 +573,58 @@ document.getElementById('bonus-btn')?.addEventListener('click', () => {
     btn.disabled = true;
   }
 })();
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // === Dropdown do usuário ===
+  let userLoggedIn = false;
+  const userIcon = document.getElementById('user-icon');
+  const dropdown = document.getElementById('user-dropdown');
+
+  function renderMenu() {
+    dropdown.innerHTML = userLoggedIn
+      ? `
+        <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minha conta</a>
+        <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minhas compras</a>
+        <hr class="my-1">
+        <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
+      `
+      : `
+        <a href="pages/login.html" class="block px-10 py-5 hover:bg-gray-100 text-gray-700">Entrar ou Cadastrar-se</a>
+      `;
+  }
+
+  if (userIcon) {
+    userIcon.addEventListener('click', () => {
+      dropdown.classList.toggle('hidden');
+      renderMenu();
+    });
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#user-menu-container')) dropdown.classList.add('hidden');
+    if (e.target.id === 'logout-btn') {
+      userLoggedIn = false;
+      dropdown.classList.add('hidden');
+      alert('Você saiu da conta.');
+    }
+  });
+
+  // === Menu Mobile ===
+  const menuBtn = document.getElementById("menu-btn");
+  const mobileMenu = document.getElementById("mobile-menu");
+  let menuOpen = false;
+
+  if (menuBtn) {
+    menuBtn.addEventListener("click", () => {
+      menuOpen = !menuOpen;
+      mobileMenu.classList.toggle("hidden");
+      menuBtn.innerHTML = menuOpen
+        ? '<i class="fa-solid fa-xmark"></i>'
+        : '<i class="fa-solid fa-bars"></i>';
+    });
+  }
+});
 </script>
 
 </body>
