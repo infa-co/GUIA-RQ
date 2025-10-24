@@ -111,8 +111,14 @@
               <p class="text-xs text-gray-600 mt-1">Adicione por R$ 10 </p>
               <div class="flex items-center justify-between mt-3">
                 <span class="text-sm font-semibold text-secondary-green">R$ 10,00</span>
-                <button class="add-upsell bg-primary-blue text-white px-3 py-1.5 rounded-lg text-xs font-medium" data-price="35" data-name="Almoço no Rancho Colonial">Adicionar</button>
-              </div>
+                <!-- UPSELL 1 -->
+<button
+  class="add-upsell bg-primary-blue text-white px-3 py-1.5 rounded-lg text-xs font-medium"
+  data-price="10"
+  data-name="Vale Chopp Bier Haus de 20 Reais"
+>
+  Adicionar
+</button>
             </div>
           </div>
         </div>
@@ -127,7 +133,13 @@
               <p class="text-xs text-gray-600 mt-1">Leve por R$ 69 extra</p>
               <div class="flex items-center justify-between mt-3">
                 <span class="text-sm font-semibold text-secondary-green">R$ 69,00</span>
-                <button class="add-upsell bg-primary-blue text-white px-3 py-1.5 rounded-lg text-xs font-medium" data-price="20" data-name="Café Especial Da Roça">Adicionar</button>
+                <button
+  class="add-upsell bg-primary-blue text-white px-3 py-1.5 rounded-lg text-xs font-medium"
+  data-price="69"
+  data-name="Táboa de Frios Da Roça"
+>
+  Adicionar
+</button>
               </div>
             </div>
           </div>
@@ -233,19 +245,28 @@
     }];
 
     // Monta upsells
-    const upsellsCatalogo = {};
-    const upsellsSelecionados = [];
+const upsellsCatalogo = {};
+const upsellsSelecionados = [];
 
-    addedItems.forEach((item, index) => {
-      const id = `upsell-${index}`;
-      upsellsCatalogo[id] = {
-        nome: item.name,
-        preco: item.price,
-        ativo: true,
-        img: ""
-      };
-      upsellsSelecionados.push(id);
-    });
+addedItems.forEach((item, index) => {
+  const id = `upsell-${index}`;
+
+  // Captura a imagem do upsell correspondente
+  const upsellElement = document.querySelectorAll(".upsell-item")[index];
+  const img = upsellElement
+    ? upsellElement.querySelector("img")?.getAttribute("src") || ""
+    : "";
+
+  // Salva no catálogo
+  upsellsCatalogo[id] = {
+    nome: item.name,
+    preco: item.price,
+    ativo: true,
+    img: img
+  };
+
+  upsellsSelecionados.push(id);
+});
 
     // Calcula resumo
     const subtotal = carrinho.reduce((acc, i) => acc + i.preco * i.qtd, 0);

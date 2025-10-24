@@ -240,175 +240,153 @@
     }
   </script>
   <script>
+
 document.addEventListener("DOMContentLoaded", () => {
   const resumoEl = document.querySelector("#order-content");
+  const checkboxes = document.querySelectorAll("#upsell input[type='checkbox']");
+
+  // 🔹 Recupera dados do localStorage
   const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-  const resumo = JSON.parse(localStorage.getItem("resumoCompra")) || {};
-  const upsells = JSON.parse(localStorage.getItem("upsells")) || {};
+  let resumo = JSON.parse(localStorage.getItem("resumoCompra")) || {};
+  const upsellsCatalogo = JSON.parse(localStorage.getItem("upsells")) || {};
+  let upsellsSelecionados = JSON.parse(localStorage.getItem("upsellsSelecionados")) || [];
 
-  console.log("Carrinho:", carrinho);
-  console.log("Resumo:", resumo);
-  console.log("Upsells:", upsells);
+  const basePath = "../assets/images/";
 
-  // Verifica se há dados válidos
-  if (carrinho.length === 0 || !resumo.totalFinal) {
-    resumoEl.innerHTML = `
-      <div class="p-6 text-center text-gray-600">
-        Nenhum item no carrinho.
-      </div>`;
+  // ==============================
+  // 🔹 MONTA VISUAL DO RESUMO
+  if (carrinho.length === 0) {
+    resumoEl.innerHTML = `<div class='p-6 text-center text-gray-600'>Nenhum item no carrinho.</div>`;
     return;
   }
 
-  // Detecta se está dentro da pasta /pages/
-  const isInPages = window.location.pathname.includes("/pages/");
-  const basePath = isInPages ? "../assets/images/" : "./assets/images/";
-
-  // ================================
-  // 🔹 Monta os itens do carrinho
   const itemsHTML = carrinho.map(item => `
     <div class="flex items-start space-x-3 mb-3">
-      <img 
-        class="w-16 h-16 rounded-lg object-cover" 
-        src="${item.img?.startsWith('..') ? item.img : '../' + item.img}" 
-        onerror="this.src='${basePath}default.jpg';"
-      />
+      <img class="w-16 h-16 rounded-lg object-cover"
+           src="${item.img || basePath + 'default.jpg'}"
+           onerror="this.src='${basePath}default.jpg';" />
       <div class="flex-1 min-w-0">
         <h3 class="font-semibold text-gray-900 text-sm mb-1">${item.nome}</h3>
-        <div class="space-y-1">
-          <div class="flex items-center text-xs text-gray-600">
-            <i class="fa-solid fa-location-dot w-4"></i>
-            <span class="ml-1">${item.local || 'Rancho Queimado'}</span>
-          </div>
-          <div class="flex items-center text-xs text-gray-600">
-            <i class="fa-solid fa-users w-4"></i>
-            <span class="ml-1">${item.qtd} pessoa(s)</span>
-          </div>
-        </div>
+        <div class="text-xs text-gray-600">${item.local || 'Rancho Queimado'}</div>
       </div>
       <span class="text-sm font-medium text-gray-700 whitespace-nowrap">
-        R$ ${(item.preco * item.qtd).toFixed(2)}
+        R$ ${(item.preco * (item.qtd || 1)).toFixed(2)}
       </span>
     </div>
-  `).join('');
+  `).join("");
 
-  // ================================
-// 🔹 Recupera catálogo e lista de upsells selecionados
-const upsellsCatalogo = JSON.parse(localStorage.getItem("upsells")) || {};
-const upsellsSelecionados = JSON.parse(localStorage.getItem("upsellsSelecionados")) || [];
+  // 🔹 Filtra upsells que estavam ativos
+  const upsellsAtivos = upsellsSelecionados
+    .map(id => upsellsCatalogo[id])
+    .filter(Boolean);
 
-// 🔹 Filtra apenas os upsells realmente selecionados
-const upsellsAtivos = upsellsSelecionados
-  .map(id => upsellsCatalogo[id])
-  .filter(Boolean);
-
-const upsellsHTML = upsellsAtivos.length > 0
-  ? upsellsAtivos.map(u => `
-      <div class="flex items-start space-x-3 mb-3 pl-1">
-        <img
-          class="w-14 h-14 rounded-lg object-cover"
-          src="${u.img ? (u.img.startsWith('..') ? u.img : basePath + u.img) : basePath + 'default.jpg'}"
-          onerror="this.src='${basePath}default.jpg';"
-        />
-        <div class="flex-1 min-w-0">
-          <h3 class="font-semibold text-gray-900 text-sm mb-1">+ ${u.nome}</h3>
-          <p class="text-xs text-gray-600">Benefício adicional</p>
-        </div>
-        <span class="text-sm font-medium text-gray-700 whitespace-nowrap">
-          R$ ${u.preco.toFixed(2)}
-        </span>
+  const upsellsHTML = upsellsAtivos.map(u => `
+    <div class="flex items-start space-x-3 mb-3">
+      <img class="w-14 h-14 rounded-lg object-cover"
+           src="${u.img || basePath + 'default.jpg'}"
+           onerror="this.src='${basePath}default.jpg';" />
+      <div class="flex-1">
+        <h4 class="text-sm font-medium text-gray-900 mb-0.5">+ ${u.nome}</h4>
+        <p class="text-xs text-gray-600">Benefício adicional</p>
       </div>
-    `).join('')
-  : '';
+      <span class="text-sm font-medium text-gray-700 whitespace-nowrap">
+        R$ ${u.preco.toFixed(2)}
+      </span>
+    </div>
+  `).join("");
 
-  // ================================
-  // 🔹 Injeta o conteúdo final
+  // 🔹 Soma valores
+  const subtotalCarrinho = carrinho.reduce((acc, i) => acc + i.preco * (i.qtd || 1), 0);
+  const totalUpsells = upsellsAtivos.reduce((acc, u) => acc + u.preco, 0);
+  const taxa = parseFloat(resumo.taxa || 0);
+  const subtotal = subtotalCarrinho + totalUpsells;
+  const totalFinal = subtotal + taxa;
+
+  // 🔹 Renderiza resumo
   resumoEl.innerHTML = `
-    <div class="px-4 py-4">
-      <div class="bg-gray-50 rounded-xl p-4">
-        ${itemsHTML}
-        ${upsellsHTML ? `<div class="mt-2">${upsellsHTML}</div>` : ""}
-        <div class="mt-4 pt-3 border-t border-gray-200 space-y-2">
-  <div class="flex justify-between text-sm">
-    <span class="text-gray-600">Subtotal</span>
-    <span class="text-gray-900 subtotal-valor">R$ ${resumo.subtotal.toFixed(2)}</span>
-  </div>
-  <div class="flex justify-between text-sm">
-    <span class="text-gray-600">Taxa de serviço</span>
-    <span class="text-gray-900 taxa-valor">R$ ${resumo.taxa}</span>
-  </div>
-  <div class="flex justify-between text-base font-semibold pt-2 border-t border-gray-200">
-    <span class="text-gray-900">Total</span>
-    <span class="text-gray-900 total-valor">R$ ${resumo.totalFinal}</span>
-  </div>
-</div>
+    <div class="bg-gray-50 rounded-xl p-4">
+      ${itemsHTML}
+      ${upsellsHTML ? `<div class="mt-2 border-t border-gray-200 pt-3">${upsellsHTML}</div>` : ""}
+      <div class="mt-4 pt-3 border-t border-gray-200 space-y-2">
+        <div class="flex justify-between text-sm">
+          <span class="text-gray-600">Subtotal</span>
+          <span class="text-gray-900 subtotal-valor">R$ ${subtotal.toFixed(2)}</span>
+        </div>
+        <div class="flex justify-between text-sm">
+          <span class="text-gray-600">Taxa de serviço</span>
+          <span class="text-gray-900 taxa-valor">R$ ${taxa.toFixed(2)}</span>
+        </div>
+        <div class="flex justify-between text-base font-semibold pt-2 border-t border-gray-200">
+          <span class="text-gray-900">Total</span>
+          <span class="text-gray-900 total-valor">R$ ${totalFinal.toFixed(2)}</span>
+        </div>
       </div>
     </div>
   `;
-});
 
-document.addEventListener("DOMContentLoaded", () => {
-  const checkboxes = document.querySelectorAll("#upsell input[type='checkbox']");
-  const resumoEl = document.querySelector("#order-content");
-  let resumo = JSON.parse(localStorage.getItem("resumoCompra")) || {};
-  const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-
-  // Define os upsells disponíveis
-  const upsellsDisponiveis = [
-    { id: "seguro_chuva", nome: "Seguro contra chuva", preco: 10 },
-    { id: "desconto_nova", nome: "Desconto 5% em nova reserva", preco: 15 }
-  ];
-
-  // Recupera seleções anteriores
-  let upsellsSelecionados = JSON.parse(localStorage.getItem("upsellsSelecionados")) || [];
-
-  // Atualiza o estado visual dos checkboxes
-  checkboxes.forEach((checkbox, i) => {
-    checkbox.checked = upsellsSelecionados.includes(upsellsDisponiveis[i].id);
-  });
-
-  // Função que recalcula e atualiza o total
-  function atualizarResumo() {
-  // Soma extras dos upsells
-  const totalExtras = upsellsSelecionados
-    .map(id => upsellsDisponiveis.find(u => u.id === id)?.preco || 0)
-    .reduce((a, b) => a + b, 0);
-
-  // Recalcula o subtotal e o total final
-  const subtotalOriginal = parseFloat(resumo.subtotal || 0);
-  const subtotalComUpsells = subtotalOriginal + totalExtras;
-  const taxa = parseFloat(resumo.taxa || 0);
-  const totalFinal = subtotalComUpsells + taxa;
-
-  // Atualiza o objeto e salva no localStorage
-  resumo.subtotal = subtotalComUpsells;
-  resumo.totalFinal = totalFinal;
+  // 🔹 Atualiza localStorage com os valores iniciais corrigidos
+  resumo = { subtotal, taxa, totalFinal };
   localStorage.setItem("resumoCompra", JSON.stringify(resumo));
 
-  // Atualiza visualmente
-  const subtotalEl = resumoEl.querySelector(".subtotal-valor");
-  const taxaEl = resumoEl.querySelector(".taxa-valor");
-  const totalEl = resumoEl.querySelector(".total-valor");
+  // ==============================
+  // 🔹 CHECKBOXES DE UPSELL (DINÂMICOS)
+  // Cada checkbox deve ter os atributos:
+  // data-id, data-nome e data-preco
+  checkboxes.forEach((checkbox, index) => {
+    // Configura atributos se ainda não existirem
+    if (!checkbox.dataset.id) checkbox.dataset.id = `extra-${index + 1}`;
+    if (!checkbox.dataset.nome) checkbox.dataset.nome = checkbox.nextElementSibling?.querySelector("span.font-medium")?.textContent?.trim() || `Extra ${index+1}`;
+    if (!checkbox.dataset.preco) {
+      const precoTexto = checkbox.nextElementSibling?.querySelector("span.bg-green-100")?.textContent || "";
+      const valor = parseFloat(precoTexto.replace(/[^\d,]/g, "").replace(",", "."));
+      checkbox.dataset.preco = isNaN(valor) ? 0 : valor;
+    }
 
-  if (subtotalEl) subtotalEl.textContent = `R$ ${subtotalComUpsells.toFixed(2)}`;
-  if (taxaEl) taxaEl.textContent = `R$ ${taxa.toFixed(2)}`;
-  if (totalEl) totalEl.textContent = `R$ ${totalFinal.toFixed(2)}`;
-}
+    // Marca se já estiver no localStorage
+    if (upsellsSelecionados.includes(checkbox.dataset.id)) {
+      checkbox.checked = true;
+    }
 
-  // Adiciona listeners
-  checkboxes.forEach((checkbox, i) => {
+    // Evento de clique
     checkbox.addEventListener("change", () => {
-      const upsell = upsellsDisponiveis[i];
+      const id = checkbox.dataset.id;
+      const nome = checkbox.dataset.nome;
+      const preco = parseFloat(checkbox.dataset.preco);
+      const img = "../assets/images/default.jpg";
+
       if (checkbox.checked) {
-        if (!upsellsSelecionados.includes(upsell.id)) upsellsSelecionados.push(upsell.id);
+        upsellsCatalogo[id] = { nome, preco, ativo: true, img };
+        upsellsSelecionados.push(id);
       } else {
-        upsellsSelecionados = upsellsSelecionados.filter(id => id !== upsell.id);
+        delete upsellsCatalogo[id];
+        upsellsSelecionados = upsellsSelecionados.filter(u => u !== id);
       }
+
+      localStorage.setItem("upsells", JSON.stringify(upsellsCatalogo));
       localStorage.setItem("upsellsSelecionados", JSON.stringify(upsellsSelecionados));
+
       atualizarResumo();
     });
   });
 
-  atualizarResumo();
+  // ==============================
+  // 🔹 Função para recalcular e atualizar resumo visual
+  function atualizarResumo() {
+    const upsellsAtivosNovos = upsellsSelecionados
+      .map(id => upsellsCatalogo[id])
+      .filter(Boolean);
+
+    const totalExtras = upsellsAtivosNovos.reduce((a, b) => a + b.preco, 0);
+    const subtotalBase = subtotalCarrinho + totalExtras;
+    const totalNovo = subtotalBase + taxa;
+
+    resumo.subtotal = subtotalBase;
+    resumo.totalFinal = totalNovo;
+    localStorage.setItem("resumoCompra", JSON.stringify(resumo));
+
+    document.querySelector(".subtotal-valor").textContent = `R$ ${subtotalBase.toFixed(2)}`;
+    document.querySelector(".total-valor").textContent = `R$ ${totalNovo.toFixed(2)}`;
+  }
 });
 </script>
 </body>
