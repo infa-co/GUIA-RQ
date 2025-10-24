@@ -140,11 +140,11 @@
                         <input type="checkbox" class="mt-1 w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary">
                         <div class="flex-1">
                             <div class="flex items-center space-x-2 mb-1">
-                                <i class="fa-solid fa-umbrella text-primary"></i>
-                                <span class="font-medium text-gray-900 text-sm">Seguro contra chuva</span>
-                                <span class="bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded-full font-medium">+R$ 10</span>
+                                <i class="fa-solid fa-beer-mug-empty"></i>
+                                <span class="font-medium text-gray-900 text-sm">1 Chopp na Bier Haus</span>
+                                <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">+R$ 10</span>
                             </div>
-                            <p class="text-xs text-gray-600">Garante reembolso total em caso de cancelamento por chuva forte</p>
+                            <p class="text-xs text-gray-600">Garanta seu chopp por apenas R$10</p>
                         </div>
                     </div>
                 </div>
@@ -155,8 +155,8 @@
                         <div class="flex-1">
                             <div class="flex items-center space-x-2 mb-1">
                                 <i class="fa-solid fa-percent text-success"></i>
-                                <span class="font-medium text-gray-900 text-sm">Desconto de 5% em nova reserva</span>
-                                <span class="bg-success text-white text-xs px-2 py-0.5 rounded-full font-medium">+R$ 15</span>
+                                <span class="font-medium text-gray-900 text-sm">Leve mais um Ticket surpresa com garantia de 100% de retorno</span>
+                                <span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">+R$ 22</span>
                             </div>
                             <p class="text-xs text-gray-600">Cupom válido por 30 dias para sua próxima experiência no Guia RQ</p>
                         </div>
@@ -328,22 +328,87 @@ const upsellsHTML = upsellsAtivos.length > 0
         ${itemsHTML}
         ${upsellsHTML ? `<div class="mt-2">${upsellsHTML}</div>` : ""}
         <div class="mt-4 pt-3 border-t border-gray-200 space-y-2">
-          <div class="flex justify-between text-sm">
-            <span class="text-gray-600">Subtotal</span>
-            <span class="text-gray-900">R$ ${resumo.subtotal.toFixed(2)}</span>
-          </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-gray-600">Taxa de serviço</span>
-            <span class="text-gray-900">R$ ${resumo.taxa}</span>
-          </div>
-          <div class="flex justify-between text-base font-semibold pt-2 border-t border-gray-200">
-            <span class="text-gray-900">Total</span>
-            <span class="text-gray-900">R$ ${resumo.totalFinal}</span>
-          </div>
-        </div>
+  <div class="flex justify-between text-sm">
+    <span class="text-gray-600">Subtotal</span>
+    <span class="text-gray-900 subtotal-valor">R$ ${resumo.subtotal.toFixed(2)}</span>
+  </div>
+  <div class="flex justify-between text-sm">
+    <span class="text-gray-600">Taxa de serviço</span>
+    <span class="text-gray-900 taxa-valor">R$ ${resumo.taxa}</span>
+  </div>
+  <div class="flex justify-between text-base font-semibold pt-2 border-t border-gray-200">
+    <span class="text-gray-900">Total</span>
+    <span class="text-gray-900 total-valor">R$ ${resumo.totalFinal}</span>
+  </div>
+</div>
       </div>
     </div>
   `;
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const checkboxes = document.querySelectorAll("#upsell input[type='checkbox']");
+  const resumoEl = document.querySelector("#order-content");
+  let resumo = JSON.parse(localStorage.getItem("resumoCompra")) || {};
+  const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+
+  // Define os upsells disponíveis
+  const upsellsDisponiveis = [
+    { id: "seguro_chuva", nome: "Seguro contra chuva", preco: 10 },
+    { id: "desconto_nova", nome: "Desconto 5% em nova reserva", preco: 15 }
+  ];
+
+  // Recupera seleções anteriores
+  let upsellsSelecionados = JSON.parse(localStorage.getItem("upsellsSelecionados")) || [];
+
+  // Atualiza o estado visual dos checkboxes
+  checkboxes.forEach((checkbox, i) => {
+    checkbox.checked = upsellsSelecionados.includes(upsellsDisponiveis[i].id);
+  });
+
+  // Função que recalcula e atualiza o total
+  function atualizarResumo() {
+  // Soma extras dos upsells
+  const totalExtras = upsellsSelecionados
+    .map(id => upsellsDisponiveis.find(u => u.id === id)?.preco || 0)
+    .reduce((a, b) => a + b, 0);
+
+  // Recalcula o subtotal e o total final
+  const subtotalOriginal = parseFloat(resumo.subtotal || 0);
+  const subtotalComUpsells = subtotalOriginal + totalExtras;
+  const taxa = parseFloat(resumo.taxa || 0);
+  const totalFinal = subtotalComUpsells + taxa;
+
+  // Atualiza o objeto e salva no localStorage
+  resumo.subtotal = subtotalComUpsells;
+  resumo.totalFinal = totalFinal;
+  localStorage.setItem("resumoCompra", JSON.stringify(resumo));
+
+  // Atualiza visualmente
+  const subtotalEl = resumoEl.querySelector(".subtotal-valor");
+  const taxaEl = resumoEl.querySelector(".taxa-valor");
+  const totalEl = resumoEl.querySelector(".total-valor");
+
+  if (subtotalEl) subtotalEl.textContent = `R$ ${subtotalComUpsells.toFixed(2)}`;
+  if (taxaEl) taxaEl.textContent = `R$ ${taxa.toFixed(2)}`;
+  if (totalEl) totalEl.textContent = `R$ ${totalFinal.toFixed(2)}`;
+}
+
+  // Adiciona listeners
+  checkboxes.forEach((checkbox, i) => {
+    checkbox.addEventListener("change", () => {
+      const upsell = upsellsDisponiveis[i];
+      if (checkbox.checked) {
+        if (!upsellsSelecionados.includes(upsell.id)) upsellsSelecionados.push(upsell.id);
+      } else {
+        upsellsSelecionados = upsellsSelecionados.filter(id => id !== upsell.id);
+      }
+      localStorage.setItem("upsellsSelecionados", JSON.stringify(upsellsSelecionados));
+      atualizarResumo();
+    });
+  });
+
+  atualizarResumo();
 });
 </script>
 </body>
