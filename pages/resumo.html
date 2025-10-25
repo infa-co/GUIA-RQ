@@ -101,24 +101,25 @@
       <h2 class="text-xl font-semibold text-gray-900 mb-4">Aproveite e leve junto com desconto</h2>
 
       <div class="space-y-3">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 upsell-item">
-          <div class="flex items-start space-x-4">
-            <div class="w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
-              <img class="w-full h-full object-cover" src="../assets/images/choop.jpeg" alt="">
-            </div>
-            <div class="flex-1">
-              <h3 class="font-semibold text-gray-900 text-sm leading-tight">Vale Chopp Bier Haus de 20 Reais</h3>
-              <p class="text-xs text-gray-600 mt-1">Adicione por R$ 10 </p>
-              <div class="flex items-center justify-between mt-3">
-                <span class="text-sm font-semibold text-secondary-green">R$ 10,00</span>
-                <!-- UPSELL 1 -->
-<button
-  class="add-upsell bg-primary-blue text-white px-3 py-1.5 rounded-lg text-xs font-medium"
-  data-price="10"
-  data-name="Vale Chopp Bier Haus de 20 Reais"
->
-  Adicionar
-</button>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 upsell-item flex items-center justify-between gap-4">
+  <div class="flex items-center gap-4 flex-1">
+    <div class="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+      <img class="w-full h-full object-cover" src="../assets/images/choop.jpeg" alt="">
+    </div>
+    <div class="flex-1">
+      <h3 class="font-semibold text-gray-900 text-sm leading-tight">Vale Chopp Bier Haus de 20 Reais</h3>
+      <p class="text-xs text-gray-600 mt-1">Adicione por R$ 10</p>
+      <span class="text-sm font-semibold text-secondary-green block mt-1">R$ 10,00</span>
+    </div>
+  </div>
+  <button
+    class="add-upsell bg-primary-blue text-white px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap self-center"
+    data-price="10"
+    data-name="Vale Chopp Bier Haus de 20 Reais"
+  >
+    Adicionar
+  </button>
+</div>
             </div>
           </div>
         </div>
