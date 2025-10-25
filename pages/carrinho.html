@@ -87,6 +87,8 @@ const totalEl = document.getElementById('total');
 const summaryLines = document.getElementById('summary-lines');
 
 let cart = JSON.parse(localStorage.getItem('carrinho')) || [];
+cart = cart.map(i => ({ ...i, qtd: 1 }));
+saveCart();
 // Detecta o caminho base de forma automática
 const isInPages = window.location.pathname.includes("/pages/");
 const basePath = isInPages ? "../assets/images/" : "./assets/images/";
@@ -125,40 +127,32 @@ function renderCart() {
   }
 
   cart.forEach(item => {
+    const imgSrc = (() => {
+      if (item.img?.startsWith('http')) return item.img;                       // http/https
+      if (window.location.hostname.includes('github.io'))                       // GitHub Pages
+        return '/GUIA-RQ/' + String(item.img || '').replace(/^(\.\.\/)+/, '');
+      return (item.img || '').startsWith('../') ? item.img : '../' + (item.img || ''); // local
+    })();
+
     const row = document.createElement('div');
     row.className = "bg-white rounded-xl shadow-sm border p-4 flex gap-4";
     row.innerHTML = `
-      <img 
-  src="${(() => {
-    // Caminho absoluto (http)
-    if (item.img.startsWith('http')) return item.img;
-
-    // Ambiente: GitHub Pages (ex: infa-co.github.io)
-    if (window.location.hostname.includes('github.io')) {
-      return '/GUIA-RQ/' + item.img.replace(/^(\.\.\/)+/, '');
-    }
-
-    // Ambiente: Local (Go Live / localhost)
-    return item.img.startsWith('../') ? item.img : '../' + item.img;
-  })()}"
-  onerror="this.src='${basePath}default.jpg';"
-  class="w-24 h-24 rounded-lg object-cover"
-/>
+      <img src="${imgSrc}" onerror="this.src='${basePath}default.jpg';" class="w-24 h-24 rounded-lg object-cover" />
       <div class="flex-1">
         <div class="flex justify-between">
           <div>
             <h3 class="font-semibold">${item.nome}</h3>
-            <p class="text-sm text-gray-600">${item.local}</p>
+            <p class="text-sm text-gray-600">${item.local || ''}</p>
           </div>
-          <button onclick="removeItem(${item.id})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+          <button onclick="removeItem(${item.id})" class="text-red-500 hover:text-red-700">
+            <i class="fa-solid fa-trash"></i>
+          </button>
         </div>
+
+        <!-- ✅ Quantidade fixa (sem +/−) -->
         <div class="flex justify-between items-center mt-3">
-          <div class="flex items-center gap-2">
-            <button onclick="changeQtd(${item.id}, -1)" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center"><i class="fa-solid fa-minus text-xs"></i></button>
-            <span class="w-8 text-center font-semibold">${item.qtd}</span>
-            <button onclick="changeQtd(${item.id}, 1)" class="w-8 h-8 rounded-full bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center"><i class="fa-solid fa-plus text-xs"></i></button>
-          </div>
-          <p class="font-semibold">${money(item.preco * item.qtd)}</p>
+          <span class="text-sm text-gray-600">Quantidade: 1</span>
+          <p class="font-semibold">${money(item.preco)}</p>
         </div>
       </div>`;
     cartContainer.appendChild(row);
@@ -167,13 +161,6 @@ function renderCart() {
   renderSummary();
 }
 
-function changeQtd(id, delta) {
-  const item = cart.find(i => i.id == id);
-  if (!item) return;
-  item.qtd = Math.max(1, item.qtd + delta);
-  saveCart();
-  renderCart();
-}
 
 function removeItem(id) {
   cart = cart.filter(i => i.id != id);
@@ -186,14 +173,22 @@ function renderSummary() {
   let subtotal = 0;
 
   cart.forEach(i => {
-    subtotal += i.qtd * i.preco;
-    summaryLines.innerHTML += `<div class="flex justify-between text-sm"><span>${i.qtd}× ${i.nome}</span><span>${money(i.qtd * i.preco)}</span></div>`;
+    subtotal += i.preco; // ✅ cada item vale 1
+    summaryLines.innerHTML += `
+      <div class="flex justify-between text-sm">
+        <span>${i.nome}</span>
+        <span>${money(i.preco)}</span>
+      </div>`;
   });
 
   Object.values(upsells).forEach(u => {
     if (u.ativo) {
       subtotal += u.preco;
-      summaryLines.innerHTML += `<div class="flex justify-between text-sm text-gray-700"><span>+ ${u.nome}</span><span>${money(u.preco)}</span></div>`;
+      summaryLines.innerHTML += `
+        <div class="flex justify-between text-sm text-gray-700">
+          <span>+ ${u.nome}</span>
+          <span>${money(u.preco)}</span>
+        </div>`;
     }
   });
 
