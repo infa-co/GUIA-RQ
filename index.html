@@ -1,14 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <base href="/GUIA-RQ/">
-  <script>
-  if (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost") {
-    document.querySelector("base").setAttribute("href", "./");
-  } else {
-    document.querySelector("base").setAttribute("href", "/GUIA-RQ/");
-  }
-</script>
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ESSA LINHA É CRUCIAL -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -50,7 +43,7 @@
     <!-- Logo -->
    
 <a href="index.html" class="flex items-center space-x-2 group">
-  <img src="../assets/images/guia-rancho-queimado-logo-sem-fundo.png"
+  <img src="assets/images/guia-rancho-queimado-logo-sem-fundo.png"
        alt="Logo Guia RQ"
        class="h-12 sm:h-14 w-auto transition-transform group-hover:scale-105">
   <span class="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
@@ -169,7 +162,7 @@
                     <span class="text-2xl font-bold text-blue-600">R$ 50</span>
                     <span class="text-sm text-gray-500 ml-2">(economia de R$ 100)</span>
                 </div>
-                <button onclick="window.location.href='../pages/resumo.html?pacote=explorador'"
+                <button onclick="window.location.href='pages/resumo.html?pacote=explorador'"
   class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
   Escolher Pacote
 </button>
@@ -191,7 +184,7 @@
                     <span class="text-2xl font-bold text-green-500">R$ 70</span>
                     <span class="text-sm text-gray-500 ml-2">(economia de R$ 150)</span>
                 </div>
-                <button onclick="window.location.href='../pages/resumo.html?pacote=aventureiro'"
+                <button onclick="window.location.href='pages/resumo.html?pacote=aventureiro'"
   class="w-full bg-green-500 text-white py-3 rounded-lg font-medium hover:bg-green-600 transition-colors">
   Escolher Pacote
 </button>
@@ -210,7 +203,7 @@
                     <span class="text-2xl font-bold text-purple-600">R$ 110</span>
                     <span class="text-sm text-gray-500 ml-2">(economia de R$ 300+)</span>
                 </div>
-                <button onclick="window.location.href='../pages/resumo.html?pacote=premium'"
+                <button onclick="window.location.href='pages/resumo.html?pacote=premium'"
   class="w-full bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
   Escolher Pacote
 </button>
