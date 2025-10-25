@@ -128,7 +128,7 @@ function renderCart() {
     const row = document.createElement('div');
     row.className = "bg-white rounded-xl shadow-sm border p-4 flex gap-4";
     row.innerHTML = `
-      <img src="${item.img.startsWith('http') ? item.img : (item.img.replace(/^(\.\.\/)+/, ''))}" class="w-24 h-24 rounded-lg object-cover">
+      <img src="../${item.img}" class="w-24 h-24 rounded-lg object-cover">
       <div class="flex-1">
         <div class="flex justify-between">
           <div>
