@@ -262,9 +262,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const itemsHTML = carrinho.map(item => `
     <div class="flex items-start space-x-3 mb-3">
-      <img class="w-16 h-16 rounded-lg object-cover"
-           src="${item.img || basePath + 'default.jpg'}"
-           onerror="this.src='${basePath}default.jpg';" />
+     <img 
+  class="w-16 h-16 rounded-lg object-cover"
+  src="${(() => {
+    if (!item.img) return basePath + 'default.jpg';
+    if (item.img.startsWith('http')) return item.img;
+
+    // GitHub Pages (infa-co.github.io)
+    if (window.location.hostname.includes('github.io')) {
+      return '/GUIA-RQ/' + item.img.replace(/^(\.\.\/)+/, '');
+    }
+
+    // Go Live / Localhost
+    return item.img.startsWith('../') ? item.img : '../' + item.img;
+  })()}"
+  onerror="this.src='${basePath}default.jpg';"
+/>
       <div class="flex-1 min-w-0">
         <h3 class="font-semibold text-gray-900 text-sm mb-1">${item.nome}</h3>
         <div class="text-xs text-gray-600">${item.local || 'Rancho Queimado'}</div>
