@@ -1,8 +1,8 @@
-package Model.Entities;
+package src.main.java.br.com.guiarq.Model.Entities;
 
 import java.util.List;
 
-import Model.Entities.Ticket.TipoTicket;
+import src.main.java.br.com.guiarq.Model.Entities.Ticket.TipoTicket;
 
 public class Usuario {
     private long id;

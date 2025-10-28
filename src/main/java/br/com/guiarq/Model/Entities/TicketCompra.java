@@ -1,4 +1,4 @@
-package Model.Entities;
+package src.main.java.br.com.guiarq.Model.Entities;
 
 import java.sql.Date;
 

@@ -1,4 +1,4 @@
-package Model.Entities;
+package src.main.java.br.com.guiarq.Model.Entities;
 
 public class Ticket {
     private long id;    

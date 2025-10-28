@@ -1,4 +1,4 @@
-package Model.Entities;
+package src.main.java.br.com.guiarq.Model.Entities;
 
 import java.util.List;
 
@@ -40,6 +40,7 @@ public class Parceiro {
             this.endereco = endereco; 
         }else {
             throw new IllegalArgumentException("Endereço não pode ser vazio.");
+        }
     }
     public String getDescricao() {
         return descricao;
