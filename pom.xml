@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.3</version>
+        <version>3.5.0</version>
         <relativePath/>
     </parent>
 
@@ -34,12 +34,6 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- PostgreSQL -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-
         <!-- Criptografia de senha -->
         <dependency>
             <groupId>org.mindrot</groupId>
@@ -47,12 +41,26 @@
             <version>0.4</version>
         </dependency>
 
-        <!-- Testes -->
+        <!-- Testes -->  
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        <!-- In-memory database for tests -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency> 
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+
     </dependencies>
 
     <build>
@@ -60,12 +68,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.3.3</version>
+                <version>3.5.0</version>
                 <configuration>
                     <mainClass>br.com.guiarq.GuiaRQApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>

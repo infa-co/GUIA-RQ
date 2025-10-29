@@ -6,5 +6,5 @@ src\main\java\br\com\guiarq\Model\Dao\UsuarioDAO.class
 src\main\java\br\com\guiarq\Model\Entities\Ticket$TipoTicket.class
 src\main\java\br\com\guiarq\Model\Entities\TicketCompra.class
 src\main\java\br\com\guiarq\Model\Service\Apagar.class
-src\main\java\br\com\guiarq\GuiaRQApplication.class
 src\main\java\br\com\guiarq\Model\Entities\Parceiro.class
+br\com\guiarq\GuiaRQApplication.class

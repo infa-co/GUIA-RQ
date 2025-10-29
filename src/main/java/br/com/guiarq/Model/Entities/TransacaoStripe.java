@@ -1,4 +1,4 @@
-package src.main.java.br.com.guiarq.Model.Entities;
+package br.com.guiarq.Model.Entities;
 
 import java.math.BigDecimal;
 import java.security.Timestamp;
@@ -17,7 +17,7 @@ public class TransacaoStripe {
 
     public long getId() {
         return id;
-    }   
+    }
     public String getStripeTransactionId() {
         return stripeTransactionId;
     }
@@ -40,13 +40,17 @@ public class TransacaoStripe {
         return status;
     }
     public void setStatus(String status) {
-        this.status = status;
+        if(status != null && !status.isEmpty()) {
+            this.status = status;
+        }
     }
     public Timestamp getCriadoEm() {
         return criadoEm;
     }
     public void setCriadoEm(Timestamp criadoEm) {
-        this.criadoEm = criadoEm;
+        if(criadoEm != null) {
+            this.criadoEm = criadoEm;
+        }
     }
     public Timestamp getAtualizadoEm() {
         return atualizadoEm;

@@ -1,5 +1,4 @@
-package src.main.java.br.com.guiarq;
-
+package br.com.guiarq;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package src.main.java.br.com.guiarq.Model.Dao;
+package br.com.guiarq.Model.Dao;
 
 public class UsuarioDAO {
     
