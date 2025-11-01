@@ -104,18 +104,18 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 upsell-item flex items-center justify-between gap-4">
   <div class="flex items-center gap-4 flex-1">
     <div class="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-      <img class="w-full h-full object-cover" src="../assets/images/choop.jpeg" alt="">
+      <img class="w-full h-full object-cover" src="../assets/images/praca2.jpeg" alt="">
     </div>
     <div class="flex-1">
-      <h3 class="font-semibold text-gray-900 text-sm leading-tight">Vale Chopp Bier Haus de 20 Reais</h3>
-      <p class="text-xs text-gray-600 mt-1">Adicione por R$ 10</p>
-      <span class="text-sm font-semibold text-secondary-green block mt-1">R$ 10,00</span>
+      <h3 class="font-semibold text-gray-900 text-sm leading-tight">Descubra Rancho Queimado em 3 dias</h3>
+      <p class="text-xs text-gray-600 mt-1">Adicione por R$ 18</p>
+      <span class="text-sm font-semibold text-secondary-green block mt-1">R$ 18,00</span>
     </div>
   </div>
   <button
     class="add-upsell bg-primary-blue text-white px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap self-center"
-    data-price="10"
-    data-name="Vale Chopp Bier Haus de 20 Reais"
+    data-price="18"
+    data-name="Descubra Rancho Queimado em 3 dias"
   >
     Adicionar
   </button>
@@ -127,17 +127,17 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 upsell-item">
           <div class="flex items-start space-x-4">
             <div class="w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
-              <img class="w-full h-full object-cover" src="../assets/images/taboadefrios.jpeg" alt="">
+              <img class="w-full h-full object-cover" src="../assets/images/praca.jpeg" alt="">
             </div>
             <div class="flex-1">
-              <h3 class="font-semibold text-gray-900 text-sm leading-tight">Táboa de Frios Da Roça</h3>
-              <p class="text-xs text-gray-600 mt-1">Leve por R$ 69 extra</p>
+              <h3 class="font-semibold text-gray-900 text-sm leading-tight">Mapa de Rancho Queimado</h3>
+              <p class="text-xs text-gray-600 mt-1">Leve por R$ 22,50</p>
               <div class="flex items-center justify-between mt-3">
-                <span class="text-sm font-semibold text-secondary-green">R$ 69,00</span>
+                <span class="text-sm font-semibold text-secondary-green">R$ 22,50</span>
                 <button
   class="add-upsell bg-primary-blue text-white px-3 py-1.5 rounded-lg text-xs font-medium"
-  data-price="69"
-  data-name="Táboa de Frios Da Roça"
+  data-price="22,50"
+  data-name="Mapa de Rancho Queimado"
 >
   Adicionar
 </button>
@@ -176,23 +176,26 @@
   const pacote = params.get("pacote");
 
   if (pacote) {
-    const pacotes = {
-      explorador: { nome: "Pacote Explorador", preco: 50.00, img: "../assets/images/entrada.jpeg", desc: "3 tickets - ideal para quem quer conhecer o essencial" },
-      aventureiro: { nome: "Pacote Aventureiro", preco: 70.00, img: "../assets/images/praca.jpeg", desc: "5 tickets - para quem quer aproveitar ao máximo" },
-      premium: { nome: "Pacote Premium", preco: 110.00, img: "../assets/images/praca2.jpeg", desc: "9 tickets - experiência completa" }
-    };
-
-    const pacoteInfo = pacotes[pacote];
-    if (pacoteInfo) {
-      document.getElementById("package-title").textContent = pacoteInfo.nome;
-      document.getElementById("package-price").textContent = `R$ ${pacoteInfo.preco.toFixed(2).replace('.', ',')}`;
-      document.getElementById("total-amount").textContent = `R$ ${pacoteInfo.preco.toFixed(2).replace('.', ',')}`;
-      document.getElementById("final-total").textContent = `R$ ${pacoteInfo.preco.toFixed(2).replace('.', ',')}`;
-      document.getElementById("package-image").src = pacoteInfo.img;
-      document.getElementById("package-description").textContent = pacoteInfo.desc;
-      totalAmount = pacoteInfo.preco;
+  const pacotes = {
+    "rancho-completo": {
+      nome: "Pacote Completo Guia RQ",
+      preco: 77.00,
+      img: "../assets/images/entrada.jpeg",
+      desc: "10 tickets válidos nas principais experiências de Rancho Queimado — com economia de mais de R$230!"
     }
+  };
+
+  const pacoteInfo = pacotes[pacote];
+  if (pacoteInfo) {
+    document.getElementById("package-title").textContent = pacoteInfo.nome;
+    document.getElementById("package-price").textContent = `R$ ${pacoteInfo.preco.toFixed(2).replace('.', ',')}`;
+    document.getElementById("total-amount").textContent = `R$ ${pacoteInfo.preco.toFixed(2).replace('.', ',')}`;
+    document.getElementById("final-total").textContent = `R$ ${pacoteInfo.preco.toFixed(2).replace('.', ',')}`;
+    document.getElementById("package-image").src = pacoteInfo.img;
+    document.getElementById("package-description").textContent = pacoteInfo.desc;
+    totalAmount = pacoteInfo.preco;
   }
+}
 
   // Atualiza total na tela
   function updateTotal() {

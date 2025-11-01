@@ -7,6 +7,15 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease forwards;
+}
+</style>
 </head>
 
 <body class="bg-gray-50 font-[Inter]">
@@ -34,7 +43,7 @@
 </header>
 
 <main class="max-w-6xl mx-auto px-4 py-32">
-  <h1 class="text-2xl font-bold text-center mb-6">Seu carrinho de experiências 🧳</h1>
+  <h1 class="text-2xl font-bold text-center mb-6">Seu carrinho de experiências </h1>
 
   <div class="lg:grid lg:grid-cols-3 lg:gap-8">
     <!-- Itens -->
@@ -116,6 +125,9 @@ function renderCart() {
   cartContainer.innerHTML = '';
 
   if (cart.length === 0) {
+    const existing = document.getElementById("upgrade-message");
+if (existing) existing.remove();
+
     cartContainer.innerHTML = `
       <div class="bg-white p-6 rounded-xl shadow-sm text-center text-gray-700">
         Seu carrinho está vazio 😢<br>
@@ -158,7 +170,13 @@ function renderCart() {
     cartContainer.appendChild(row);
   });
 
+    // Após montar todos os itens, atualiza o resumo normalmente
   renderSummary();
+
+  // 🔹 Exibe sugestão de upgrade somente após o carrinho ser renderizado
+  setTimeout(() => {
+    renderUpgradeSuggestion();
+  }, 0);
 }
 
 
@@ -211,21 +229,71 @@ document.querySelectorAll('[data-upsell]').forEach(btn => {
     }
   };
 
-  // 🔹 Evento de clique
-  btn.onclick = () => {
-    upsells[id].ativo = !upsells[id].ativo;
-    setAdded(upsells[id].ativo);
-    renderSummary();
+  // 🔹 Evento de clique nos botões de upsell
+btn.onclick = () => {
+  // Alterna o estado do upsell (ativo/inativo)
+  upsells[id].ativo = !upsells[id].ativo;
 
-    // 🔹 Salva estado dos upsells no localStorage (agora no momento certo)
-    localStorage.setItem("upsells", JSON.stringify(upsells));
-  };
+  // Atualiza o estilo visual (verde quando ativo)
+  setAdded(upsells[id].ativo);
+
+  // Atualiza o resumo e a mensagem de upgrade
+  renderSummary();
+  renderUpgradeSuggestion();
+
+  // 🔹 Salva o estado atualizado dos upsells no localStorage
+  localStorage.setItem("upsells", JSON.stringify(upsells));
+};
 
   // 🔹 Ao recarregar a página, mantém o estado visual do upsell ativo
   if (upsells[id].ativo) setAdded(true);
 });
 
 renderCart();
+// 🔹 Detecta se deve mostrar a mensagem de upgrade
+function renderUpgradeSuggestion() {
+  const existing = document.getElementById("upgrade-message");
+  if (existing) existing.remove();
+
+  if (cart.length > 0) {
+    const upgrade = document.createElement("div");
+    upgrade.id = "upgrade-message";
+    upgrade.className =
+      "bg-gradient-to-r from-blue-50 to-indigo-100 border border-blue-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4 animate-fadeIn";
+
+    upgrade.innerHTML = `
+      <div class="flex-1">
+        <h3 class="font-semibold text-gray-900 text-lg md:text-xl leading-snug">
+          ✨ Economize mais com o 
+          <a href="./pacotes.html" class="text-blue-600 hover:underline font-semibold">
+            Pacote Completo
+          </a>
+        </h3>
+        <p class="text-sm md:text-base text-gray-700 mt-2">
+          Leve <strong>10 tickets</strong> por apenas 
+          <span class="text-blue-700 font-semibold">R$ 77</span> — 
+          são mais de <strong>R$ 230</strong> em vantagens pagando muito menos!
+        </p>
+      </div>
+
+      <button
+        id="upgrade-btn"
+        class="bg-blue-600 text-white font-semibold px-6 py-3 rounded-xl shadow-md hover:bg-blue-700 transition-all text-sm md:text-base w-full md:w-auto">
+         Fazer upgrade agora!
+      </button>
+    `;
+
+    // 🔹 Encaixa o card dentro da coluna do carrinho
+    const cartSection = document.getElementById("cart-items");
+    cartSection.insertAdjacentElement("beforebegin", upgrade);
+
+    // 🔹 Ação do botão
+    document.getElementById("upgrade-btn").addEventListener("click", () => {
+      localStorage.removeItem("carrinho");
+      window.location.href = "./resumo.html?pacote=rancho-completo";
+    });
+  }
+}
 </script>
 
 <script>
