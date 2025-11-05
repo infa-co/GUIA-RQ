@@ -6,8 +6,7 @@ import com.stripe.param.checkout.SessionCreateParams;
 
 public class StripeService {
     public StripeService() {
-        // ⚠️ Troque pela sua chave secreta do Stripe
-        Stripe.apiKey = "rqguiagrupo1@";
+        Stripe.apiKey = "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";
     }
 
     public String criarSessaoCheckout(String nomeTicket, double preco, String successUrl, String cancelUrl) throws Exception {
