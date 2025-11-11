@@ -1,4 +1,4 @@
-package br.com.guiarq.Model.Service;
+/*package br.com.guiarq.Model.Service;
 
 import com.stripe.Stripe;
 import com.stripe.model.checkout.Session;
@@ -37,3 +37,4 @@ public class StripeService {
         return session.getUrl(); // URL do checkout
     }
 }
+*/

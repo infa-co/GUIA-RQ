@@ -1,23 +1,20 @@
 server:
-  port: 8080
-  error:
-    whitelabel:
-      enabled: false   # Desativa a tela branca padrão do Spring Boot
-    path: /error        # Rota global de erro
-    include-message: always
-    include-binding-errors: always
+  port: ${SERVER_PORT:8080}
 
 spring:
-  mvc:
-    static-path-pattern: /**
-    throw-exception-if-no-handler-found: true
-  web:
-    resources:
-      static-locations: classpath:/static/
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
 
-logging:
-  level:
-    root: INFO
-    org.springframework.web: DEBUG
-  file:
-    name: logs/guiarq.log
+stripe:
+  secret-key: ${STRIPE_SECRET_KEY}
+  public-key: ${STRIPE_PUBLIC_KEY}
+  webhook-secret: ${STRIPE_WEBHOOK_SECRET}

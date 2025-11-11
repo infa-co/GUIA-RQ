@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pacotes | Guia RQ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    ::-webkit-scrollbar { display: none; }
+    * { font-family: 'Inter', sans-serif; }
+  </style>
+</head>
+
+<body class="bg-gray-50">
+
+<!-- Header -->
+<header
+    id="header"
+    class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50"
+  >
+    <div class="px-4 py-3 flex items-center justify-between">
+      <!-- Logo -->
+   
+<a href="../index.html" class="flex items-center space-x-2 group">
+  <img src="../assets/images/guia-rancho-queimado-logo-sem-fundo.png"
+       alt="Logo Guia RQ"
+       class="h-12 sm:h-14 w-auto transition-transform group-hover:scale-105">
+  <span class="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+    Guia RQ
+  </span>
+</a>
+
+    <!-- Navegação -->
+    <nav class="flex space-x-6 text-sm font-medium text-gray-700">
+      <a href="../index.html" class="hover:text-blue-600">Home</a>
+      <a href="tickets.html" class="hover:text-blue-600">Tickets</a>
+      <a href="pacotes.html" class="hover:text-blue-600">Pacotes</a>
+      <a href="sobre.html" class="hover:text-blue-600">Sobre</a>
+    </nav>
+
+    <!-- Área da direita (usuário + carrinho) -->
+    <div class="flex items-center space-x-5">
+
+      <!-- Ícone do Usuário com dropdown centralizado -->
+      <div class="relative flex items-center justify-center" id="user-menu-container">
+        <button id="user-icon"
+                class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
+          <i class="fa-solid fa-user"></i>
+        </button>
+
+        <!-- Dropdown -->
+        <div id="user-dropdown"
+             class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 transform
+                    w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50">
+          <!-- O JS injeta os links aqui -->
+        </div>
+      </div>
+
+      <!-- Carrinho -->
+      <a href="carrinho.html" class="relative text-gray-600 hover:text-blue-600 transition-colors">
+  <i class="fa-solid fa-shopping-cart text-lg"></i>
+  <span id="cart-count"
+    class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center shadow">
+  </span>
+</a>
+
+  <script>
+    // Estado inicial (false = visitante, true = logado)
+    let userLoggedIn = false;
+
+    const userIcon = document.getElementById('user-icon');
+    const dropdown = document.getElementById('user-dropdown');
+
+    // Função para renderizar o menu conforme estado
+    function renderMenu() {
+      dropdown.innerHTML = userLoggedIn
+        ? `
+          <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minha conta</a>
+          <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minhas compras</a>
+          <hr class="my-1">
+          <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
+        `
+        : `
+          <a href="pages/login.html" class="block px-10 py-5 hover:bg-gray-100 text-gray-700">Entrar ou Cadastrar-se</a>
+        `;
+    }
+
+    // Exibe / oculta o dropdown ao clicar no ícone
+    userIcon.addEventListener('click', () => {
+      dropdown.classList.toggle('hidden');
+      renderMenu();
+    });
+
+    // Fecha o menu se clicar fora
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#user-menu-container')) {
+        dropdown.classList.add('hidden');
+      }
+    });
+
+    // Simula login/logout
+    document.addEventListener('click', (e) => {
+      if (e.target.id === 'logout-btn') {
+        userLoggedIn = false;
+        dropdown.classList.add('hidden');
+        alert('Você saiu da conta.');
+      }
+    });
+
+    // Exemplo: se quiser simular login automático (remova depois)
+    // userLoggedIn = true;
+  </script>
+</header>
+
+<!-- Hero -->
+<section class="relative h-[420px] mt-16 overflow-hidden">
+  <img src="../assets/images/praça4.jpeg" alt="Vista aérea de Rancho Queimado" class="absolute inset-0 w-full h-full object-cover object-center">
+  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+  <div class="relative flex flex-col justify-center items-center h-full text-center text-white px-6">
+    <h1 class="text-3xl md:text-4xl font-bold mb-4">Compre pacotes da sua preferêcia</h1>
+    <p class="max-w-2xl text-gray-200">Escolha os melhores tickets de Rancho Queimado com descontos exclusivos e validade de até 12 meses.</p>
+  </div>
+</section>
+
+<!-- Tickets Grid -->
+<section id="package-highlight" class="py-16 px-4 bg-gradient-to-b from-blue-50 to-white">
+  <div class="max-w-4xl mx-auto text-center">
+    <h2 class="text-3xl font-extrabold text-gray-800 mb-4">Pacote Guia RQ 🎒</h2>
+    <p class="text-gray-600 text-lg mb-8">
+      Viva o melhor de <strong>Rancho Queimado</strong> em um único pacote!<br>
+      São <strong>R$230 em experiências incríveis</strong> por apenas <span class="text-blue-600 font-semibold">R$ 77</span>.
+    </p>
+
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8 flex flex-col md:flex-row items-center gap-6">
+      <img src="../assets/images/entrada.jpeg" alt="Pacote Rancho Completo"
+           class="w-full md:w-64 h-48 object-cover rounded-xl">
+
+      <div class="flex-1 text-left">
+        <div class="flex items-center justify-between mb-3">
+          <span class="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Mais vendido</span>
+          <span class="text-2xl font-bold text-blue-600">R$ 77</span>
+        </div>
+
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Pacote Completo</h3>
+
+        <ul class="text-gray-700 text-sm space-y-2 mb-4 list-disc list-inside">
+          <li>10 tickets válidos nas principais experiências</li>
+
+          <!-- 🔽 LISTA COMPLETA ESCONDIDA NO MOBILE -->
+          <ul id="ticket-list" class="ml-5 mt-2 text-gray-700 text-sm space-y-1 max-h-0 overflow-hidden transition-all duration-500 md:max-h-none md:overflow-visible">
+            <li>O que você vai ter acesso:</li>
+            <li>🍕 Ticket Pizzaria Forno e Serra • Desconto de R$16</li>
+            <li>🏍️ Ticket RJ Off-Road • Desconto de R$25</li>
+            <li>🏡 Ticket Chalé Encantado • Desconto de R$50</li>
+            <li>☕ Ticket Bergkafee Café Colonial • Desconto de R$15</li>
+            <li>🥗 Ticket Da Roça • Desconto de R$10 a cada R$50 gasto</li>
+            <li>🌿 Ticket Espaço Floresta • Desconto de R$50</li>
+            <li>🍺 Ticket Bierhaus • 10% extra na compra</li>
+            <li>🌄 Ticket Mirante Boa Vista • Desconto de R$30</li>
+            <li>🍷 Ticket Goyah Vinhos • Desconto de R$14</li>
+            <li>🪵 Ticket Atafona • Desconto de R$10</li>
+          </ul>
+
+          <li>Transforme R$77 em mais de R$230 em experiências em Rancho Queimado</li>
+          <li>Uso flexível durante 1 ano</li>
+        </ul>
+
+        <!-- 🔽 BOTÃO MOSTRAR MAIS (somente mobile) -->
+        <button id="toggle-list" 
+          class="md:hidden flex items-center gap-2 text-blue-600 font-semibold text-sm mb-4">
+          <span>Mostrar mais</span>
+          <i class="fa-solid fa-chevron-down transition-transform duration-300"></i>
+        </button>
+
+        <button onclick="window.location.href='../pages/resumo.html?pacote=rancho-completo'"
+  class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
+  Garantir meu pacote completo
+</button>
+      </div>
+    </div>
+
+    <p class="text-sm text-gray-500 mt-4">
+      Cada ticket avulso custa em média R$ 15 — com o pacote, sai por menos de R$ 8!
+    </p>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    const toggleBtn = document.getElementById("toggle-list");
+    const list = document.getElementById("ticket-list");
+    const arrow = toggleBtn.querySelector("i");
+    const text = toggleBtn.querySelector("span");
+
+    toggleBtn.addEventListener("click", () => {
+      const isOpen = list.classList.toggle("max-h-[1000px]");
+      list.classList.toggle("overflow-hidden", !isOpen);
+      arrow.classList.toggle("rotate-180", isOpen);
+      text.textContent = isOpen ? "Mostrar menos" : "Mostrar mais";
+    });
+  </script>
+</section>
+
+
+
+
+<section id="partners" class="py-12 px-4 bg-gray-50">
+  <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">Parceiros Oficiais</h2>
+
+  <!-- container com rolagem horizontal -->
+  <div class="flex flex-nowrap overflow-x-auto space-x-6 pb-4 snap-x snap-mandatory scroll-smooth 
+            md:grid md:grid-cols-4 md:gap-8 md:space-x-0 md:overflow-visible md:justify-center max-w-5xl mx-auto">
+
+    <!-- Forno & Serra -->
+    <a href="https://www.instagram.com/fornoeserraranchoqueimado/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="../assets/images/logopizza.jpeg" alt="Pizzaria Forno e Serra" class="h-28 w-auto object-contain">
+    </a>
+
+    <!-- Da Roça -->
+    <a href="https://www.instagram.com/darocadeli/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="../assets/images/logodaroca.jpeg" alt="Da Roça Delicatessen" class="h-28 w-auto object-contain">
+    </a>
+
+    <!-- Goyah -->
+    <a href="https://www.instagram.com/goyahvinhos/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="../assets/images/logogoyah.jpeg" alt="Goyah Vinhos" class="h-28 w-auto object-contain">
+    </a>
+
+    <!-- Bier Haus -->
+    <a href="https://www.instagram.com/bierhausranchoqueimado/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="../assets/images/logobier.jpeg" alt="Bier Haus" class="h-28 w-auto object-contain">
+    </a>
+
+    <!-- RJ Off-Road -->
+    <a href="https://www.instagram.com/rjoffroadefazendinha/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="../assets/images/logoroad.jpeg" alt="RJ Off-Road" class="h-28 w-auto object-contain">
+    </a>
+
+    <!-- Espaço Floresta -->
+    <a href="https://www.instagram.com/espacoflorestarq/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="../assets/images/logoespaco.jpeg" alt="Espaço Floresta" class="h-28 w-auto object-contain">
+    </a>
+
+    <!-- Berkaffe -->
+    <a href="https://www.instagram.com/bergkaffee_rq/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="../assets/images/logoberk.jpeg" alt="Berkaffe" class="h-28 w-auto object-contain">
+    </a>
+
+    <!-- Chalé Encantado -->
+    <a href="https://www.instagram.com/ochaleranchoqueimado/" target="_blank" rel="noopener noreferrer"
+       class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+      <img src="../assets/images/logochaleencantado.jpeg" alt="Chalé Encantado" class="h-28 w-auto object-contain">
+    </a>
+
+  </div>
+</section>
+
+  <div class="px-6">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Entenda Como Funciona</h2>
+    <div class="flex flex-wrap justify-center gap-10 text-center">
+
+      <!-- Etapa 1 -->
+      <div class="w-56">
+        <div class="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fa-solid fa-mouse-pointer text-yellow-500 text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-gray-900 mb-2">Escolha seus tickets</h3>
+        <p class="text-sm text-gray-600">Selecione os tickets ou pacotes que mais combinam com você</p>
+      </div>
+
+      <!-- Etapa 2 -->
+      <div class="w-56">
+        <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fa-solid fa-mobile-screen-button text-green-600 text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-gray-900 mb-2">Faça o pagamento online</h3>
+        <p class="text-sm text-gray-600">Pagamento seguro via cartão ou PIX</p>
+      </div>
+
+      <!-- Etapa 3 -->
+      <div class="w-56">
+        <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fa-solid fa-qrcode text-blue-500 text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-gray-900 mb-2">Receba os QR Codes</h3>
+        <p class="text-sm text-gray-600">Códigos chegam no seu e-mail instantaneamente</p>
+      </div>
+
+      <!-- Etapa 4 -->
+      <div class="w-56">
+        <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fa-solid fa-check text-green-600 text-2xl"></i>
+        </div>
+        <h3 class="font-semibold text-gray-900 mb-2">Use em até 12 meses</h3>
+        <p class="text-sm text-gray-600">Apresente o QR Code no estabelecimento e aproveite</p>
+    </a>
+      </div>
+   
+
+
+  </div>
+</section>
+
+<!-- Espaço antes do footer -->
+<div class="h-20 md:h-24"></div>
+
+
+
+<footer id="footer" class="bg-gray-900 text-white py-12 px-6 w-screen relative left-1/2 right-1/2 -mx-[50vw]">
+    <div class="space-y-8">
+        <div class="text-center">
+            <h3 class="text-2xl font-bold mb-4">Guia RQ</h3>
+            <p class="text-gray-300 mb-4">Sua porta de entrada para Rancho Queimado</p>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-8 text-sm">
+            <div>
+                <h4 class="font-semibold mb-3">Links Úteis</h4>
+                <ul class="space-y-2 text-gray-300">
+    <li><a href="sobre.html" class="hover:text-white transition-colors">Sobre</a></li>
+    <li><a href="termosdeuso.html" class="hover:text-white transition-colors">Termos de Uso</a></li>
+    <li><a href="politica.html" class="hover:text-white transition-colors">Política de Privacidade</a></li>
+</ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-3">Suporte</h4>
+                <p class="text-gray-300 mb-2">gropoguiarq@gmail.com</p>
+                <div class="flex space-x-4 mt-4">
+  <!-- Link do Instagram -->
+  <a 
+    href="https://www.instagram.com/guiaranchoqueimado/" 
+    target="_blank" 
+    rel="noopener noreferrer" 
+    class="text-gray-400 hover:text-blue-400 cursor-pointer text-2xl"
+  >
+    <i class="fa-brands fa-instagram"></i>
+  </a>
+</div>
+        
+        <div class="text-center text-sm text-gray-400 border-t border-gray-700 pt-6">
+            © 2024 Guia RQ. Todos os direitos reservados.
+        </div>
+    </div>
+</footer>
+<script>
+  document.querySelectorAll("[data-pacote]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const pacote = btn.dataset.pacote;
+      window.location.href = `pages/resumo.html?pacote=${pacote}`;
+    });
+  });
+
+  
+document.addEventListener("DOMContentLoaded", () => {
+  const cartCountEl = document.getElementById("cart-count");
+  if (!cartCountEl) return;
+
+  // Recupera o carrinho do localStorage
+  const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+
+  // Atualiza o contador
+  if (carrinho.length > 0) {
+    cartCountEl.textContent = carrinho.length;
+    cartCountEl.classList.remove("hidden");
+  } else {
+    cartCountEl.classList.add("hidden");
+  }
+});
+</script>
+</script>
+
+</body>
+</html>

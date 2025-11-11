@@ -5,9 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionFactory {
-    private static final String URL = "jdbc:postgresql://localhost:5432/postgres";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "PGCEAVI";
+    private static final String URL = "${DATABASE_URL}";
+    private static final String USER = "${DB_USER}";
+    private static final String PASSWORD = "${DB_PASSWORD}";
 
     public static Connection getConnection() {
         try {

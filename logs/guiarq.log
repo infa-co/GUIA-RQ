@@ -1,0 +1,2 @@
+2025-11-11T01:32:20.315-03:00  WARN 7964 --- [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4h14m57s669ms63µs500ns).
+2025-11-11T01:32:31.428-03:00  WARN 7964 --- [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.PoolBase          : HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@3182ff39 (This connection has been closed.). Possibly consider using a shorter maxLifetime value.
