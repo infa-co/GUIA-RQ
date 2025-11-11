@@ -1,0 +1,57 @@
+############################################
+# 🧠 ARQUIVOS GERAIS DO SISTEMA
+############################################
+
+# Arquivos de ambiente e variáveis privadas
+.env
+application-prod.yml
+application-prod.properties
+
+# Logs e arquivos temporários
+*.log
+logs/
+*.bak
+*.tmp
+
+# Diretórios gerados automaticamente
+target/
+out/
+build/
+bin/
+
+############################################
+# 🧰 CONFIGURAÇÕES DE IDEs (IntelliJ, VSCode)
+############################################
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# VSCode
+.vscode/
+
+# Arquivos de sistema (Windows/macOS/Linux)
+.DS_Store
+Thumbs.db
+
+############################################
+# 🧩 OUTROS PADRÕES SPRING BOOT / MAVEN
+############################################
+
+# Cache do Maven
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+
+# Arquivos de execução locais
+*.class
+*.jar
+*.war
+*.ear
+
+############################################
+# 🧾 LOGS INTERNOS
+############################################
+logs/guiarq.log
