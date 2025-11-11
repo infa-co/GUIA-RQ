@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(classes = GuiaRQApplication.class)
+@SpringBootTest(classes = GuiaRQApplicationTests.class)
 @ActiveProfiles("test")
 class GuiaRQApplicationTests {
 
