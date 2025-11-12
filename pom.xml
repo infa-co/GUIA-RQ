@@ -9,7 +9,6 @@
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <!-- Define o Spring Boot como “pai” do projeto -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -48,14 +47,14 @@
             <version>24.6.0</version>
         </dependency>
 
-        <!-- Logback atualizado (remove CVE) -->
+        <!-- Logback -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.4.14</version>
         </dependency>
 
-        <!-- Criptografia de senha -->
+        <!-- Criptografia -->
         <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
@@ -69,12 +68,31 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- In-memory database for tests -->
+        <!-- H2 (para testes locais) -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- ZXing - Geração de QR Codes -->
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.5.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.5.1</version>
+        </dependency>
+
+        <!-- Envio de e-mails -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
