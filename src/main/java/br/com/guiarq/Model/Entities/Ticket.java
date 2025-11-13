@@ -1,71 +1,91 @@
 package br.com.guiarq.Model.Entities;
 
-public class Ticket {
-    private long id;    
-    private String nome;
-    private TipoTicket tipo;
-    private String descricao;
-    private double precoOrginal;
-    private double precoPromocional;
-    private Parceiro parceiro;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
-    public enum TipoTicket {
-        GASTRONOMIA,
-        AVENTURA,
-        SERRA_EXPERIENCE,
-        AVULSO
-    }
-    public long getId() {
-        return id;
-    }
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        if (!nome.isEmpty() && nome != null) {
-            this.nome = nome;
+@Entity
+@Table(name = "tickets")
+public class Ticket {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "id_publico")
+    private UUID idPublico;
+
+    private String nome;
+    private String tipo;
+    private String descricao;
+
+    @Column(name = "preco_original")
+    private BigDecimal precoOriginal;
+
+    @Column(name = "preco_promocional")
+    private BigDecimal precoPromocional;
+
+    @Column(name = "parceiro_id")
+    private Long parceiroId;
+
+    @Column(name = "data_compra")
+    private LocalDateTime dataCompra;
+
+    @Column(name = "email_cliente")
+    private String emailCliente;
+
+    private String experiencia;
+
+    @Column(name = "nome_cliente")
+    private String nomeCliente;
+
+    private String status;
+
+    @Column(name = "valor_pago")
+    private Double valorPago;
+
+    @Column(name = "qr_token")
+    private UUID qrToken;
+
+    private boolean usado;
+
+    @Column(name = "usado_em")
+    private LocalDateTime usadoEm;
+
+    @Column(name = "compra_id")
+    private UUID compraId;
+
+    @Column(name = "criado_em")
+    private LocalDateTime criadoEm;
+
+    public void setNome(String titulo) {
+        if(this.nome != null) {
+            this.nome = titulo;
+        }else{
+            System.out.println("Falha ao alterar o nome");
         }
     }
-    public TipoTicket getTipo() {
-        return tipo;
-    }
-    public void setTipo(TipoTicket tipo) {
-        this.tipo = tipo;
-    }
-    public String getDescricao() {
-        return descricao;
-    }
     public void setDescricao(String descricao) {
-        if (!descricao.isEmpty() && descricao != null) {
+        if (this.descricao != null) {
             this.descricao = descricao;
         }
     }
+    public void setPrecoOrginal(double preco) {
+        if(preco > 0) {
+            this.precoOriginal = BigDecimal.valueOf(preco);
+        }
+    }
+    public String getNome() {
+        return this.nome;
+    }
+    public String getDescricao() {
+        return this.descricao;
+    }
     public double getPrecoOrginal() {
-        return precoOrginal;
+        return this.precoOriginal.doubleValue();
     }
-    public void setPrecoOrginal(double precoOrginal) {
-        if(precoOrginal > 0){
-            this.precoOrginal = precoOrginal;
-        }
-    }
-    public double getPrecoPromocional() {
-        return precoPromocional;
-    }
-    public void setPrecoPromocional(double precoPromocional) {
-        if(precoPromocional > 0){
-            this.precoPromocional = precoPromocional;
-        }
-    }
-    public Parceiro getParceiro() {
-        return parceiro;
-    }
-    public void setParceiro(Parceiro parceiro) {
-        this.parceiro = parceiro;
-    }
-    public double calcularDesconto() {
-        if (precoOrginal <= 0) {
-            throw new IllegalArgumentException("Preço original deve ser maior que zero.");
-        }
-        return ((precoOrginal - precoPromocional) / precoOrginal) * 100;
+    public Long getId() {
+        return this.id;
     }
 }

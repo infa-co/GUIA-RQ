@@ -2,7 +2,7 @@ package br.com.guiarq.Model.Entities;
 
 import java.util.List;
 
-import br.com.guiarq.Model.Entities.Ticket.TipoTicket;
+import br.com.guiarq.Model.Entities.Ticket;
 
 public class Usuario {
     private long id;
@@ -10,7 +10,6 @@ public class Usuario {
     private String email;
     private String senha;
     private PerfilUsuario perfil;
-    private List<TipoTicket> tickets; 
 
     public enum PerfilUsuario {
         ADMIN,
@@ -54,10 +53,5 @@ public class Usuario {
     public void setPerfil(PerfilUsuario perfil) {
         this.perfil = perfil;
     }
-    public List<TipoTicket> getTickets() {
-        for (TipoTicket ticket : tickets) {
-            return tickets;
-        }
-        return null;
-    }
+
 }

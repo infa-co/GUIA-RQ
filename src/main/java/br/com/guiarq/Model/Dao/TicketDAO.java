@@ -5,6 +5,7 @@ import br.com.guiarq.Model.Entities.Ticket;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TicketDAO {
     public void inserir(Ticket ticket) {
@@ -67,10 +68,6 @@ public class TicketDAO {
             System.err.println("Erro ao registrar compra: " + e.getMessage());
         }
     }
-
-    /**
-     * Registra uma transação Stripe associada à compra do ticket.
-     */
     public void registrarTransacaoStripe(String stripeId, double amount, String currency,
                                          String status, String metadata, int ticketCompraId) {
         String sql = """
@@ -93,5 +90,9 @@ public class TicketDAO {
         } catch (SQLException e) {
             System.err.println("Erro ao registrar transação Stripe: " + e.getMessage());
         }
+    }
+
+    public void registrarCompraComToken(int usuarioId, int ticketId, UUID qrToken) {
+
     }
 }

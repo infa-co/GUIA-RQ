@@ -1,18 +1,34 @@
 package br.com.guiarq.Model.Service;
 
 import br.com.guiarq.Model.Dao.TicketDAO;
+import br.com.guiarq.utils.QrCodeGenerator;
+import br.com.guiarq.utils.EmailSender;
+
 import java.util.UUID;
 
 public class TicketService {
+
     private final TicketDAO ticketDAO = new TicketDAO();
+    private final QrCodeGenerator qrCodeGenerator = new QrCodeGenerator();
+    private final EmailSender emailSender = new EmailSender();
 
-    public String gerarCompra(int usuarioId, int ticketId) {
-        // Gerar código único de validação
-        String codigoValidacao = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    public UUID gerarCompra(int usuarioId, int ticketId, String emailCliente, String nomeTicket) {
 
-        // Registrar compra no banco
-        ticketDAO.registrarCompra(usuarioId, ticketId, codigoValidacao);
+        UUID qrToken = UUID.randomUUID();
 
-        return codigoValidacao;
+        ticketDAO.registrarCompraComToken(usuarioId, ticketId, qrToken);
+
+        String urlValidacao = "https://api.guiaranchoqueimado.com.br/api/validar/" + qrToken;
+
+        byte[] qrCode = qrCodeGenerator.generateQrBytes(urlValidacao);
+
+        emailSender.enviarQRCode(
+                emailCliente,
+                "Seu Ticket do Guia RQ - " + nomeTicket,
+                "Obrigado pela sua compra! Apresente o QR Code no estabelecimento.",
+                qrCode
+        );
+
+        return qrToken;
     }
 }
