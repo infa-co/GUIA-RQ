@@ -16,7 +16,7 @@ public class    StripeService {
 
     @PostConstruct
     public void init() {
-        Stripe.apiKey = stripeApiKey;
+        Stripe.apiKey = System.getenv("STRIPE_SK");
     }
 
     public Session createCheckoutSession(String successUrl, String cancelUrl, Long amount) throws StripeException {
