@@ -13,14 +13,18 @@ import java.util.*;
 public class PaymentController {
 
     public PaymentController() {
-        // ⚠️ Use sua chave secreta de teste real (começa com sk_test_)
-        Stripe.apiKey = "sk_test_xxxxxxxxxxxxxxxxxxxxxxxxx";
+        String stripeKey = System.getenv("STRIPE_SECRET_KEY");
+
+        if (stripeKey == null || stripeKey.isBlank()) {
+            System.err.println("⚠️ Variável STRIPE_SK não definida nas variáveis de ambiente!");
+            throw new RuntimeException("Chave STRIPE_SK ausente. Defina-a antes de iniciar o servidor.");
+        }
+        Stripe.apiKey = stripeKey;
     }
 
     @PostMapping("/create-checkout-session")
     public ResponseEntity<Map<String, Object>> createCheckoutSession(@RequestBody Map<String, Object> payload) {
         try {
-            // ====== MONTA OS DADOS ======
             List<Map<String, Object>> carrinho = (List<Map<String, Object>>) payload.get("carrinho");
             Map<String, Object> resumo = (Map<String, Object>) payload.get("resumo");
 
@@ -34,10 +38,8 @@ public class PaymentController {
                     .mapToDouble(item -> Double.parseDouble(item.get("preco").toString()))
                     .sum();
 
-            // Stripe exige valores em centavos
             long totalEmCentavos = Math.round(total * 100);
 
-            // ====== CRIA OS PARAMETROS ======
             SessionCreateParams params = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.PAYMENT)
                     .setSuccessUrl("http://localhost:8080/pages/sucesso.html")
@@ -60,7 +62,6 @@ public class PaymentController {
                     )
                     .build();
 
-            // ====== CRIA A SESSÃO REAL ======
             Session session = Session.create(params);
 
             return ResponseEntity.ok(Map.of("id", session.getId(), "url", session.getUrl()));
