@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class StripeIntegrationTest {
 
     private static String pk = "sk_test_51SP9kuRJDmp6Dshr7tuQZUWr2ZAabHjVJH01981luuhDNsN7ndMI9MT2QpjUjPJ7tXriHetPZZJYAkTEbn71Phob00C0GeeMif"; // (opcional, apenas se quiser verificar formatação)
-    private static String sk = "pk_test_51SP9kuRJDmp6DshrsgwBmM0XROPEWNRTUepbBEaegIwntWiQZYl2vfl828L4OBN22j7BiheVsHow4lSIrfewrAPh00hkG3HjXu";
+    private static String sk = "sk_test_51SP9kuRJDmp6Dshr7tuQZUWr2ZAabHjVJH01981luuhDNsN7ndMI9MT2QpjUjPJ7tXriHetPZZJYAkTEbn71Phob00C0GeeMif";
 
     @BeforeAll
     static void setup() {

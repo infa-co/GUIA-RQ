@@ -1,4 +1,4 @@
-/*package br.com.guiarq.Controller;
+package br.com.guiarq.Controller;
 
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
@@ -71,8 +71,6 @@ public class StripeWebhookController {
                             paymentIntent.getAmountReceived() / 100.0,
                             paymentIntent.getStatus());
 
-                    // Aqui você pode atualizar seu banco, ex:
-                    // reservaRepository.confirmarPagamento(paymentIntent.getId());
                 },
                 () -> logger.error("Falha ao desserializar PaymentIntent"));
     }
@@ -86,10 +84,8 @@ public class StripeWebhookController {
                             paymentIntent.getId(),
                             paymentIntent.getLastPaymentError() != null
                                     ? paymentIntent.getLastPaymentError().getMessage()
-                                    : "Desconhecido");
+                                               : "Desconhecido");
 
-                    // Exemplo: atualizar status da reserva para "falhou"
-                    // reservaRepository.marcarFalha(paymentIntent.getId());
                 },
                 () -> logger.error("Falha ao desserializar PaymentIntent"));
     }
@@ -100,4 +96,4 @@ public class StripeWebhookController {
                 obj -> logger.info("Reembolso detectado: {}", obj),
                 () -> logger.error("Falha ao desserializar Charge"));
     }
-}*/
+}
