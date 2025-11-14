@@ -42,8 +42,8 @@ public class PaymentController {
 
             SessionCreateParams params = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl("http://localhost:8080/pages/sucesso.html")
-                    .setCancelUrl("http://localhost:8080/pages/cancelado.html")
+                    .setSuccessUrl("https://guiaranchoqueimado.com.br/pages/sucesso.html")
+                    .setCancelUrl("https://guiaranchoqueimado.com.br/pages/cancelado.html")
                     .addLineItem(
                             SessionCreateParams.LineItem.builder()
                                     .setQuantity(1L)
