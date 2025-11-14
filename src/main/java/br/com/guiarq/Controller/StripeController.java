@@ -27,7 +27,7 @@ public class StripeController {
                         SessionCreateParams.LineItem.builder()
                                 .setQuantity(1L)
                                 .setPriceData(
-                                        SessionCreateParams.LineItem.PriceData.builder()
+                                            SessionCreateParams.LineItem.PriceData.builder()
                                                 .setCurrency("brl")
                                                 .setUnitAmount((long) (request.getAmount() * 100)) // Valor em centavos
                                                 .setProductData(

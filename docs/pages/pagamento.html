@@ -159,22 +159,37 @@
       document.getElementById('card-saved').classList.remove('hidden');
     });
 
-    // ENVIA DADOS PARA O BACKEND E REDIRECIONA PARA STRIPE
+    // 🚀 CORREÇÃO ESSENCIAL (SEM REMOVER NADA DO SEU HTML)
     document.getElementById("pay-btn").addEventListener("click", async () => {
       try {
         const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
         const resumo = JSON.parse(localStorage.getItem("resumoCompra")) || {};
 
-        const response = await fetch("/api/stripe/create-checkout-session", {
+        // 🔥 URL ABSOLUTA — não deixa cair no 405 do GitHub Pages
+        const response = await fetch("https://api.guiaranchoqueimado.com.br/api/stripe/checkout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ carrinho, resumo }),
         });
 
-        const data = await response.json();
-        if (!response.ok || !data.url) throw new Error(data.error || "Erro ao criar sessão.");
+        // 🔥 PROTEÇÃO CONTRA HTML DE ERRO (405/500)
+        const text = await response.text();
 
-        window.location.href = data.url; // Checkout Stripe real
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (err) {
+          console.error("Resposta não é JSON. Conteúdo recebido:", text);
+          throw new Error("O servidor retornou uma resposta inválida.");
+        }
+
+        if (!response.ok || !data.url) {
+          throw new Error(data.error || "Erro ao criar sessão.");
+        }
+
+        // Redireciona para Stripe Checkout
+        window.location.href = data.url;
+
       } catch (err) {
         console.error("Erro:", err);
         alert("Erro ao iniciar pagamento. Verifique o console.");
