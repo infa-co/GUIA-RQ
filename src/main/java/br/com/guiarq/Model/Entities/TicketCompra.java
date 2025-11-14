@@ -6,7 +6,7 @@ public class TicketCompra {
     private long id;
     private Usuario usuario;
     private Ticket ticket;
-    private Date dataCompra;
+    private Date data_compra;
     private String codigoValidacao;
     private boolean usado;
 
@@ -26,11 +26,11 @@ public class TicketCompra {
         this.ticket = ticket;
     }
     public Date getDataCompra() {
-        return dataCompra;
+        return data_compra;
     }
-    public void setDataCompra(Date dataCompra) {
+    /*public void setDataCompra(Date dataCompra) {
         this.dataCompra = dataCompra;
-    }
+    }*/
     public String getCodigoValidacao() {
         return codigoValidacao;
     }
