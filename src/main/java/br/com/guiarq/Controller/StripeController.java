@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/stripe")
 @CrossOrigin(origins = "*")
 public class StripeController {
-    @Value("${STRIPE_SECRET_KEY_}")
+    @Value("${STRIPE_SECRET_KEY}")
     private String stripeSecretKey;
 
     @PostMapping("/checkout")

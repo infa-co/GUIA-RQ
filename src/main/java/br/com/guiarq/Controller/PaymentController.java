@@ -3,8 +3,10 @@ package br.com.guiarq.Controller;
 import com.stripe.Stripe;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.annotation.PostConstruct;
 
 import java.util.*;
 
@@ -12,14 +14,12 @@ import java.util.*;
 @RequestMapping("/api/stripe")
 public class PaymentController {
 
-    public PaymentController() {
-        String stripeKey = System.getenv("STRIPE_SECRET_KEY_");
+    @Value("${stripe.secret-key}")
+    private String stripeSecretKey;
 
-        if (stripeKey == null || stripeKey.isBlank()) {
-            System.err.println("⚠️ Variável STRIPE_SK não definida nas variáveis de ambiente!");
-            throw new RuntimeException("Chave STRIPE_SK ausente. Defina-a antes de iniciar o servidor.");
-        }
-        Stripe.apiKey = stripeKey;
+    @PostConstruct
+    public void init() {
+        Stripe.apiKey = stripeSecretKey;
     }
 
     @PostMapping("/create-checkout-session")
