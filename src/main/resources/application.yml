@@ -15,8 +15,11 @@ spring:
     hikari:
       maximum-pool-size: 5
       connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
 
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     properties:
@@ -25,7 +28,30 @@ spring:
     show-sql: false
     open-in-view: false
 
+  # Configuração de Email
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME:}
+    password: ${EMAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        transport:
+          protocol: smtp
+    default-encoding: UTF-8
+
 stripe:
   secret-key: ${STRIPE_SECRET_KEY}
   public-key: ${STRIPE_PUBLIC_KEY:}
   webhook-secret: ${STRIPE_WEBHOOK_SECRET:}
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.hibernate: WARN
