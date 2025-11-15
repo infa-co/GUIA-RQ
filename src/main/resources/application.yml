@@ -1,26 +1,31 @@
 server:
   port: ${PORT:8080}
+  address: 0.0.0.0
 
 spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:prod}
 
   datasource:
-    url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT:5432}/${DATABASE_NAME}?sslmode=require
-    username: ${DATABASE_USER}
-    password: ${DATABASE_PASSWORD}
+    url: ${DATABASE_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
+    hikari:
+      maximum-pool-size: 5
+      connection-timeout: 30000
 
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
+        format_sql: false
+    show-sql: false
+    open-in-view: false
 
 stripe:
   secret-key: ${STRIPE_SECRET_KEY}
-  public-key: ${STRIPE_PUBLIC_KEY:pk_test_51SP9kuRJDmp6DshrsgwBmM0XROPEWNRTUepbBEaegIwntWiQZYl2vfl828L4OBN22j7BiheVsHow4lSIrfewrAPh00hkG3HjXu}
+  public-key: ${STRIPE_PUBLIC_KEY:}
   webhook-secret: ${STRIPE_WEBHOOK_SECRET:}
