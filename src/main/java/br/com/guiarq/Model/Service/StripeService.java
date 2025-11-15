@@ -11,12 +11,12 @@ import jakarta.annotation.PostConstruct;
 @Service
 public class    StripeService {
 
-    @Value("${STRIPE_SECRET_KEY}")
+    @Value("${STRIPE_SECRET_KEY_}")
     private String stripeApiKey;
 
     @PostConstruct
     public void init() {
-        Stripe.apiKey = System.getenv("STRIPE_SECRET_KEY");
+        Stripe.apiKey = System.getenv("STRIPE_SECRET_KEY_");
     }
 
     public Session createCheckoutSession(String successUrl, String cancelUrl, Long amount) throws StripeException {

@@ -13,7 +13,7 @@ import java.util.*;
 public class PaymentController {
 
     public PaymentController() {
-        String stripeKey = System.getenv("STRIPE_SECRET_KEY");
+        String stripeKey = System.getenv("STRIPE_SECRET_KEY_");
 
         if (stripeKey == null || stripeKey.isBlank()) {
             System.err.println("⚠️ Variável STRIPE_SK não definida nas variáveis de ambiente!");
