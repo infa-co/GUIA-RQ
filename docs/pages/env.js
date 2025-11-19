@@ -1,0 +1,1 @@
+window.API_URL = "https://guia-rq-backend.onrender.com";
