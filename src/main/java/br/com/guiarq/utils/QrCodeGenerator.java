@@ -1,30 +1,36 @@
 package br.com.guiarq.utils;
 
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class QrCodeGenerator {
 
-    public static byte[] generateQrBytes(String text) {
+    private static final int WIDTH = 300;
+    private static final int HEIGHT = 300;
 
-        try {
-            int width = 400;
-            int height = 400;
+    public static byte[] generateQrBytes(String text) throws WriterException, IOException {
 
-            BitMatrix matrix = new MultiFormatWriter()
-                    .encode(text, BarcodeFormat.QR_CODE, width, height);
+        QRCodeWriter writer = new QRCodeWriter();
+        BitMatrix bitMatrix = writer.encode(text, BarcodeFormat.QR_CODE, WIDTH, HEIGHT);
 
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            MatrixToImageWriter.writeToStream(matrix, "PNG", baos);
+        BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
-            return baos.toByteArray();
-
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao gerar QR Code", e);
+        for (int x = 0; x < WIDTH; x++) {
+            for (int y = 0; y < HEIGHT; y++) {
+                image.setRGB(x, y, bitMatrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
+            }
         }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(image, "PNG", baos);
+
+        return baos.toByteArray();
     }
 }
