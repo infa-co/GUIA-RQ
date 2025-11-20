@@ -12,7 +12,6 @@ import br.com.guiarq.DTO.CheckoutRequest;
 
 @RestController
 @RequestMapping("/api/stripe")
-@CrossOrigin(origins = "*")
 public class StripeController {
 
     @Value("${STRIPE_SECRET_KEY}")
