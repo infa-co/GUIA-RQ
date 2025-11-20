@@ -15,7 +15,6 @@
 </head>
 <body class="bg-gray-50 overflow-y-auto min-h-screen">
 
-<!-- Cabeçalho -->
 <header id="header" class="bg-white shadow-sm fixed top-0 w-full z-50">
     <div class="px-4 py-3 flex items-center justify-between">
         <a href="../index.html" class="flex items-center space-x-2 group">
@@ -23,21 +22,18 @@
                  alt="Logo Guia RQ"
                  class="h-12 sm:h-14 w-auto transition-transform group-hover:scale-105">
             <span class="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
-          Guia RQ
-        </span>
+                Guia RQ
+            </span>
         </a>
     </div>
 </header>
 
-<!-- Conteúdo -->
 <main id="main-content" class="pt-20 pb-32 overflow-y-auto">
 
-    <!-- Resumo do pedido -->
     <section id="order-summary" class="bg-white border-b border-gray-100">
         <div id="order-content" class="px-4 py-4"></div>
     </section>
 
-    <!-- Dados pessoais -->
     <section id="personal-data" class="px-4 py-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-1">Dados Pessoais</h2>
         <p class="text-sm text-gray-600 mb-4">Preencha seus dados para finalizar a reserva</p>
@@ -48,12 +44,10 @@
         </form>
     </section>
 
-    <!-- Métodos de pagamento -->
     <section id="payment-methods" class="px-4 py-6 bg-white">
         <h2 class="text-lg font-semibold text-gray-900 mb-4">Método de Pagamento</h2>
         <div class="space-y-3">
 
-            <!-- Cartão de Crédito -->
             <div class="payment-option border-2 border-gray-200 rounded-xl p-4 cursor-pointer hover:border-blue-600 transition" onclick="selectPayment('credit', event)">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-3">
@@ -68,7 +62,6 @@
                 </div>
             </div>
 
-            <!-- Formulário do cartão -->
             <div id="credit-card-form" class="hidden mt-4 bg-gray-50 p-4 rounded-xl space-y-3">
                 <input type="text" placeholder="Número do cartão" maxlength="16" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600">
                 <div class="flex space-x-3">
@@ -76,10 +69,11 @@
                     <input type="text" placeholder="CVV" maxlength="3" class="w-1/2 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-600">
                 </div>
                 <button id="save-card" class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition">Salvar Cartão</button>
-                <p id="card-saved" class="hidden text-green-600 text-sm font-medium text-center mt-2"><i class="fa-solid fa-check mr-1"></i> Cartão salvo com sucesso!</p>
+                <p id="card-saved" class="hidden text-green-600 text-sm font-medium text-center mt-2">
+                    <i class="fa-solid fa-check mr-1"></i> Cartão salvo com sucesso!
+                </p>
             </div>
 
-            <!-- PIX -->
             <div class="payment-option border-2 border-gray-200 rounded-xl p-4 cursor-pointer hover:border-blue-600 transition" onclick="selectPayment('pix', event)">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-3">
@@ -94,7 +88,6 @@
                 </div>
             </div>
 
-            <!-- Carteira Digital -->
             <div class="payment-option border-2 border-gray-200 rounded-xl p-4 cursor-pointer hover:border-blue-600 transition" onclick="selectPayment('wallet', event)">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-3">
@@ -112,10 +105,10 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
 
-    <!-- Upsell -->
     <section id="upsell" class="px-4 py-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-1">Antes de finalizar, adicione e ganhe mais benefícios</h2>
         <p class="text-sm text-gray-600 mb-3">Ofertas especiais por tempo limitado</p>
@@ -135,67 +128,61 @@
     </section>
 </main>
 
-<!-- Rodapé fixo -->
 <div id="checkout-footer" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-[60] shadow-lg">
     <button id="pay-btn" class="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold text-base hover:bg-blue-700 transition">
         Finalizar Compra
     </button>
 </div>
 
-<!-- Scripts -->
 <script>
     function selectPayment(type, event) {
-      document.querySelectorAll('.payment-option').forEach(opt => {
-        opt.classList.remove('border-blue-600', 'bg-blue-50');
-        opt.classList.add('border-gray-200');
-      });
-      event.currentTarget.classList.add('border-blue-600', 'bg-blue-50');
-      const cardForm = document.getElementById('credit-card-form');
-      cardForm.classList.toggle('hidden', type !== 'credit');
+        document.querySelectorAll('.payment-option').forEach(opt => {
+            opt.classList.remove('border-blue-600', 'bg-blue-50');
+            opt.classList.add('border-gray-200');
+        });
+        event.currentTarget.classList.add('border-blue-600', 'bg-blue-50');
+        document.getElementById('credit-card-form').classList.toggle('hidden', type !== 'credit');
     }
 
     document.getElementById('save-card').addEventListener('click', e => {
-      e.preventDefault();
-      localStorage.setItem('cardSaved', 'true');
-      document.getElementById('card-saved').classList.remove('hidden');
+        e.preventDefault();
+        localStorage.setItem('cardSaved', 'true');
+        document.getElementById('card-saved').classList.remove('hidden');
     });
 
-    // 🚀 CORREÇÃO ESSENCIAL (SEM REMOVER NADA DO SEU HTML)
     document.getElementById("pay-btn").addEventListener("click", async () => {
-      try {
-        const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-        const resumo = JSON.parse(localStorage.getItem("resumoCompra")) || {};
-
-        // 🔥 URL ABSOLUTA — não deixa cair no 405 do GitHub Pages
-        const response = await fetch(`${window.API_URL}/stripe/checkout`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ carrinho, resumo }),
-        });
-
-        // 🔥 PROTEÇÃO CONTRA HTML DE ERRO (405/500)
-        const text = await response.text();
-
-        let data;
         try {
-          data = JSON.parse(text);
+            const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+            const resumo = JSON.parse(localStorage.getItem("resumoCompra")) || {};
+
+            const response = await fetch(`${window.API_URL}/api/stripe/checkout`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ carrinho, resumo })
+            });
+
+            const text = await response.text();
+
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (err) {
+                console.error("Resposta inválida:", text);
+                throw new Error("Resposta inválida do servidor.");
+            }
+
+            if (!response.ok || !data.url) {
+                throw new Error(data.error || "Erro ao criar sessão.");
+            }
+
+            window.location.href = data.url;
+
         } catch (err) {
-          console.error("Resposta não é JSON. Conteúdo recebido:", text);
-          throw new Error("O servidor retornou uma resposta inválida.");
+            console.error("Erro ao iniciar pagamento:", err);
+            alert("Erro ao iniciar pagamento. Verifique o console.");
         }
-
-        if (!response.ok || !data.url) {
-          throw new Error(data.error || "Erro ao criar sessão.");
-        }
-
-        // Redireciona para Stripe Checkout
-        window.location.href = data.url;
-
-      } catch (err) {
-        console.error("Erro:", err);
-        alert("Erro ao iniciar pagamento. Verifique o console.");
-      }
     });
 </script>
+
 </body>
 </html>
