@@ -3,48 +3,40 @@ package br.com.guiarq.Model.Service;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
-import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import jakarta.annotation.PostConstruct;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class StripeService {
 
     @Value("${stripe.secret-key}")
-    private String stripeApiKey;
-
-    @PostConstruct
-    public void init() {
-        if (stripeApiKey == null || stripeApiKey.isBlank()) {
-            throw new RuntimeException("❌ STRIPE_SECRET_KEY não configurada!");
-        }
-        Stripe.apiKey = stripeApiKey;
-        System.out.println("✅ Stripe API inicializada com sucesso!");
-    }
+    private String secretKey;
 
     public Session createCheckoutSession(String successUrl, String cancelUrl, Long amount) throws StripeException {
-        SessionCreateParams params = SessionCreateParams.builder()
-                .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl(successUrl)
-                .setCancelUrl(cancelUrl)
-                .addLineItem(
-                        SessionCreateParams.LineItem.builder()
-                                .setQuantity(1L)
-                                .setPriceData(
-                                        SessionCreateParams.LineItem.PriceData.builder()
-                                                .setCurrency("brl")
-                                                .setUnitAmount(amount)
-                                                .setProductData(
-                                                        SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                                .setName("Ticket Guia RQ")
-                                                                .build()
-                                                )
-                                                .build()
-                                )
-                                .build()
-                )
-                .build();
+
+        Stripe.apiKey = secretKey;
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("mode", "payment");
+        params.put("success_url", successUrl);
+        params.put("cancel_url", cancelUrl);
+
+        Map<String, Object> lineItem = new HashMap<>();
+        lineItem.put("quantity", 1);
+
+        Map<String, Object> priceData = new HashMap<>();
+        priceData.put("currency", "brl");
+        priceData.put("unit_amount", amount);
+
+        priceData.put("product_data", Map.of("name", "Guia Rancho Queimado - Ticket"));
+
+        lineItem.put("price_data", priceData);
+
+        params.put("line_items", Arrays.asList(lineItem));
 
         return Session.create(params);
     }
