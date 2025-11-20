@@ -16,7 +16,7 @@ public class TicketDAO {
 
             stmt.setString(1, ticket.getNome());
             stmt.setString(2, ticket.getDescricao());
-            stmt.setDouble(3, ticket.getPrecoOrginal());
+            stmt.setDouble(3, ticket.getPrecoOriginal());
             stmt.setLong(4, ticket.getId());
             stmt.executeUpdate();
 
@@ -95,4 +95,29 @@ public class TicketDAO {
     public void registrarCompraComToken(int usuarioId, int ticketId, UUID qrToken) {
 
     }
+    public Ticket buscarPorId(Long id) {
+        String sql = "SELECT * FROM tickets WHERE id = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Ticket ticket = new Ticket();
+                ticket.setId(rs.getLong("id"));
+                ticket.setNome(rs.getString("nome"));
+                ticket.setDescricao(rs.getString("descricao"));
+                ticket.setPrecoOriginal(rs.getBigDecimal("preco_original"));
+                return ticket;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Erro ao buscar ticket: " + e.getMessage());
+        }
+
+        return null;
+    }
+
 }

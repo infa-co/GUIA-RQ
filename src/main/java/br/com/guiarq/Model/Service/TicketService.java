@@ -1,6 +1,7 @@
 package br.com.guiarq.Model.Service;
 
 import br.com.guiarq.Model.Dao.TicketDAO;
+import br.com.guiarq.Model.Entities.Ticket;
 import br.com.guiarq.utils.QrCodeGenerator;
 import br.com.guiarq.utils.EmailSender;
 
@@ -8,7 +9,7 @@ import java.util.UUID;
 
 public class TicketService {
 
-    private final TicketDAO ticketDAO = new TicketDAO();
+    private static final TicketDAO ticketDAO = new TicketDAO();
     private final QrCodeService qrCodeService = new QrCodeService();
     private final EmailSender emailSender = new EmailSender();
 
@@ -30,4 +31,8 @@ public class TicketService {
         );
         return qrToken;
     }
+    public static Ticket buscarTicket(Long id) {
+        return ticketDAO.buscarPorId(id);
+    }
+
 }

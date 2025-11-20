@@ -82,10 +82,21 @@ public class Ticket {
     public String getDescricao() {
         return this.descricao;
     }
-    public double getPrecoOrginal() {
+    public double getPrecoOriginal() {
         return this.precoOriginal.doubleValue();
     }
     public Long getId() {
         return this.id;
+    }
+
+    public void setId(long id) {
+        if(this.id != null){
+            this.id = id;
+        }
+    }
+    public void setPrecoOriginal(BigDecimal precoOriginal) {
+        if(this.precoOriginal != null &&  this.precoOriginal != precoOriginal){
+            this.precoOriginal = precoOriginal;
+        }
     }
 }
