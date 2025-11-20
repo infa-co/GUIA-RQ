@@ -1,23 +1,26 @@
 package br.com.guiarq.Controller;
 
-import br.com.guiarq.Model.Dao.ParceiroDAO;
 import br.com.guiarq.Model.Entities.Parceiro;
+import br.com.guiarq.Model.Repository.ParceiroRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
+@RestController
+@RequestMapping("/api/parceiros")
 public class ParceiroController {
-    private final ParceiroDAO parceiroDAO = new ParceiroDAO();
 
-    public void cadastrarParceiro(String nomeFantasia, String cnpj, String endereco, String descricao, String telefone) {
-        Parceiro parceiro = new Parceiro();
-        parceiro.setNomeFantasia(nomeFantasia);
-        parceiro.setCnpj(cnpj);
-        parceiro.setEndereco(endereco);
-        parceiro.setDescricao(descricao);
-        parceiro.setTelefone(telefone);
-        parceiroDAO.inserir(parceiro);
+    @Autowired
+    private ParceiroRepository parceiroRepository;
+
+    @GetMapping("/listar")
+    public List<Parceiro> listar() {
+        return parceiroRepository.findAll();
     }
 
-    public List<Parceiro> listarParceiros() {
-        return parceiroDAO.listarTodos();
+    @PostMapping("/criar")
+    public Parceiro criar(@RequestBody Parceiro parceiro) {
+        return parceiroRepository.save(parceiro);
     }
 }

@@ -1,24 +1,26 @@
 package br.com.guiarq.Controller;
 
-
-import br.com.guiarq.Model.Dao.UsuarioDAO;
 import br.com.guiarq.Model.Entities.Usuario;
+import br.com.guiarq.Model.Repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
 import java.util.List;
 
+@RestController
+@RequestMapping("/api/usuarios")
 public class UsuarioController {
-    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-    public void criarUsuario(String nome, String email, String senha) throws SQLException {
-        Usuario usuario = new Usuario();
-        usuario.setNome(nome);
-        usuario.setEmail(email);
-        usuario.setSenha(senha);
-        usuarioDAO.inserir(usuario);
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @GetMapping("/listar")
+    public List<Usuario> listar() {
+        return usuarioRepository.findAll();
     }
 
-    public List<Usuario> listarUsuarios() {
-        return usuarioDAO.listarTodos();
+    @PostMapping("/criar")
+    public Usuario criar(@RequestBody Usuario usuario) {
+        return usuarioRepository.save(usuario);
     }
 }

@@ -1,57 +1,30 @@
 package br.com.guiarq.Model.Entities;
 
-import java.util.List;
+import jakarta.persistence.*;
 
-import br.com.guiarq.Model.Entities.Ticket;
-
+@Entity
+@Table(name = "usuarios")
 public class Usuario {
-    private long id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String nome;
     private String email;
     private String senha;
-    private PerfilUsuario perfil;
 
-    public enum PerfilUsuario {
-        ADMIN,
-        CLIENTE,
-        PARCEIRO
-    }
-    public long getId() {
-        return id;
-    }  
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        if (!nome.isEmpty() && nome != null) {
-            this.nome = nome;
-        }
-    }
-    public String getEmail() {
-        return email;
-    }  
-    public void setEmail(String email) {
-        if (email.contains("@") && email.contains(".")) {
-            this.email = email;
-        } else {
-            throw new IllegalArgumentException("Email inválido.");
-        }
-    }
-    public String getSenha() {
-        return senha;
-    }
-    public void setSenha(String senha) {
-        if (senha.length() >= 6) {
-            this.senha = senha;
-        } else {
-            throw new IllegalArgumentException("Senha deve ter pelo menos 6 caracteres.");
-        }
-    }
-    public PerfilUsuario getPerfil() {
-        return perfil;
-    }
-    public void setPerfil(PerfilUsuario perfil) {
-        this.perfil = perfil;
-    }
+    public Usuario() {}
 
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
 }
