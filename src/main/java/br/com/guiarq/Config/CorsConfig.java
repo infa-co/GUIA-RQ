@@ -13,17 +13,16 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-
                 registry.addMapping("/**")
                         .allowedOrigins(
                                 "https://guiaranchoqueimado.com.br",
-                                "https://www.guiaranchoqueimado.com.br"
+                                "http://guiaranchoqueimado.com.br"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(false);
+                        .allowCredentials(true)
+                        .maxAge(3600);
             }
         };
     }
 }
-
