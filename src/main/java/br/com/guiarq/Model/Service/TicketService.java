@@ -1,38 +1,50 @@
 package br.com.guiarq.Model.Service;
 
-import br.com.guiarq.Model.Dao.TicketDAO;
 import br.com.guiarq.Model.Entities.Ticket;
-import br.com.guiarq.utils.QrCodeGenerator;
+import br.com.guiarq.Model.Repository.TicketRepository;
 import br.com.guiarq.utils.EmailSender;
+import br.com.guiarq.utils.QrCodeGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.util.List;
 
+@Service
 public class TicketService {
 
-    private static final TicketDAO ticketDAO = new TicketDAO();
-    private final QrCodeService qrCodeService = new QrCodeService();
-    private final EmailSender emailSender = new EmailSender();
+    @Autowired
+    private TicketRepository ticketRepository;
 
-    public UUID gerarCompra(int usuarioId, int ticketId, String emailCliente, String nomeTicket) {
-        UUID qrToken = UUID.randomUUID();
-        ticketDAO.registrarCompraComToken(usuarioId, ticketId, qrToken);
-        String urlValidacao = "https://api.guiaranchoqueimado.com.br/api/validar/" + qrToken;
-        byte[] qrCode;
+    @Autowired
+    private EmailSender emailSender;
+
+    @Autowired
+    private QrCodeGenerator qrCodeGenerator;
+
+    public void processarCompra(Long ticketId, String email, String nomeCliente, String nomeTicket) {
         try {
-            qrCode = qrCodeService.generateQrCodeBytes(urlValidacao, 300, 300);
+            String conteudo = "https://guiaranchoqueimado.com.br/ticket/" + ticketId;
+            byte[] qrBytes = qrCodeGenerator.generateQrCode(conteudo);
+            emailSender.sendTicketEmail(
+                    email,
+                    nomeCliente,
+                    qrBytes,
+                    nomeTicket  // <- último parâmetro do EmailSender
+            );
+
+            System.out.println("✔ COMPRA PROCESSADA COM SUCESSO");
+
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao gerar QR Code", e);
+            e.printStackTrace();
+            System.out.println("❌ ERRO AO PROCESSAR COMPRA");
         }
-        emailSender.enviarQRCode(
-                emailCliente,
-                "Seu Ticket do Guia RQ - " + nomeTicket,
-                "Obrigado pela sua compra! Apresente o QR Code no estabelecimento.",
-                qrCode
-        );
-        return qrToken;
-    }
-    public static Ticket buscarTicket(Long id) {
-        return ticketDAO.buscarPorId(id);
     }
 
+    public void salvar(Ticket t) {
+        ticketRepository.save(t);
+    }
+
+    public List<Ticket> listarTodos() {
+        return ticketRepository.findAll();
+    }
 }

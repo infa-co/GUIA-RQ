@@ -2,12 +2,29 @@ package br.com.guiarq.DTO;
 
 public class CheckoutRequest {
 
-    private Long ticketId;        // ID do ticket selecionado
-    private String email;         // Email do comprador
-    private String nome;          // Nome do comprador
+    private Double amount;
+    private String description;
+    private Long ticketId;
+    private String email;
+    private String nome;
 
-    private double amount;        // Valor total do carrinho
-    private String description;   // Descrição geral
+    public CheckoutRequest() {}
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Long getTicketId() {
         return ticketId;
@@ -31,21 +48,5 @@ public class CheckoutRequest {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }

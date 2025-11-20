@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <title>Meus Tickets - Guia RQ</title>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+
+    <script src="./js/tickets.js"></script>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+
+<!-- HEADER -->
+<header class="bg-white shadow-sm fixed top-0 w-full z-50">
+    <div class="px-4 py-3 flex items-center justify-between">
+        <a href="../index.html" class="flex items-center space-x-2 group">
+            <img src="../assets/images/guia-rancho-queimado-logo-sem-fundo.png"
+                 class="h-10 w-auto transition group-hover:scale-105">
+
+            <span class="text-lg font-semibold text-gray-800 group-hover:text-blue-600 transition">
+                Guia RQ
+            </span>
+        </a>
+    </div>
+</header>
+
+<!-- MAIN -->
+<main class="pt-24 px-4 pb-10">
+
+    <h1 class="text-xl font-semibold text-gray-900">Meus Tickets</h1>
+    <p class="text-sm text-gray-600 mt-1">
+        Digite seu e-mail para encontrar seus tickets comprados.
+    </p>
+
+    <!-- INPUT DE BUSCA -->
+    <div class="mt-6">
+        <input id="emailBusca"
+               type="email"
+               placeholder="seu@email.com"
+               class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-600">
+
+        <button onclick="buscarTickets()"
+                class="w-full mt-3 bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition">
+            Buscar Tickets
+        </button>
+    </div>
+
+    <!-- LOADING -->
+    <div id="loading" class="hidden text-center mt-6">
+        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-blue-600 mx-auto"></div>
+        <p class="text-sm text-gray-600 mt-2">Buscando tickets...</p>
+    </div>
+
+    <!-- LISTA -->
+    <div id="ticketsLista" class="mt-6 space-y-4"></div>
+
+</main>
+
+</body>
+</html>

@@ -1,51 +1,30 @@
 package br.com.guiarq.utils;
 
-import com.resend.Resend;
-import com.resend.services.emails.model.Attachment;
-import com.resend.services.emails.model.CreateEmailOptions;
-import java.util.Base64;
+import jakarta.mail.internet.MimeMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-
+@Component
 public class EmailSender {
 
-    private final Resend resend = new Resend("SUA_API_KEY");
+    @Autowired
+    private JavaMailSender mailSender;
 
-    public void enviarQRCode(String emailDestino, String assunto, String mensagem, byte[] qrCodeBytes) {
+    public void sendTicketEmail(String to, String nome, byte[] qrImage, String qrToken) throws Exception {
 
-        try {
-            // cria o anexo do QR em PNG
-            Attachment qrAttachment = Attachment.builder()
-                    .fileName("ticket.png")
-                    .content(Base64.getEncoder().encodeToString(qrCodeBytes))
-                    .build();
+        MimeMessage msg = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
 
-            String html = """
-                    <div style="font-family: Arial, sans-serif; padding: 20px;">
-                        <h2>Seu Ticket está Pronto!</h2>
-                        <p>%s</p>
-                        
-                        <p>Apresente este QR Code na entrada do evento/passeio:</p>
-                        <img src="cid:ticket.png" style="width: 220px; height: 220px;" />
-                        
-                        <br><br>
-                        <p>Obrigado pela sua compra!</p>
-                        <p><strong>Guia Rancho Queimado</strong></p>
-                    </div>
-                """.formatted(mensagem);
+        helper.setTo(to);
+        helper.setSubject("Seu Ticket - Guia RQ");
+        helper.setText("Olá " + nome + ",\n\nAqui está seu ticket.\n\nApresente este QR Code na entrada.");
 
-            CreateEmailOptions params = CreateEmailOptions.builder()
-                    .from("Ingressos Guia RQ <noreply@SEU_DOMINIO.com>")
-                    .to(emailDestino)
-                    .subject(assunto)
-                    .html(html)
-                    .addAttachment(qrAttachment)
-                    .build();
+        helper.addAttachment("ticket.png", () -> new java.io.ByteArrayInputStream(qrImage));
 
-            resend.emails().send(params);
+        mailSender.send(msg);
 
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao enviar email com QR Code", e);
-        }
+        System.out.println("📨 EMAIL ENVIADO PARA " + to);
     }
 }

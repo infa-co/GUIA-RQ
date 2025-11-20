@@ -28,9 +28,6 @@ public class TicketCompra {
     public Date getDataCompra() {
         return data_compra;
     }
-    /*public void setDataCompra(Date dataCompra) {
-        this.dataCompra = dataCompra;
-    }*/
     public String getCodigoValidacao() {
         return codigoValidacao;
     }

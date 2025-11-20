@@ -1,28 +1,46 @@
 package br.com.guiarq.Controller;
 
-import br.com.guiarq.utils.QrCodeGenerator;
-import com.google.zxing.WriterException;
-import org.springframework.http.HttpHeaders;
+import br.com.guiarq.Model.Entities.Ticket;
+import br.com.guiarq.Model.Repository.TicketRepository;
+import br.com.guiarq.Model.Service.QrCodeService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/qr")
 public class QrCodeController {
 
-    @GetMapping("/{ticketId}")
-    public ResponseEntity<byte[]> gerarQr(@PathVariable String ticketId)
-            throws WriterException, IOException {
+    private final QrCodeService qrCodeService;
+    private final TicketRepository ticketRepository;
 
-        String conteudo = "https://guiaranchoqueimado.com.br/ticket/" + ticketId;
-        byte[] qrBytes = QrCodeGenerator.generateQrBytes(conteudo);
+    public QrCodeController(QrCodeService qrCodeService, TicketRepository ticketRepository) {
+        this.qrCodeService = qrCodeService;
+        this.ticketRepository = ticketRepository;
+    }
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"ticket-" + ticketId + ".png\"")
-                .contentType(MediaType.IMAGE_PNG)
-                .body(qrBytes);
+    @GetMapping(value = "/{idPublico}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> gerarQr(@PathVariable String idPublico) throws Exception {
+
+        UUID uuid;
+
+        try {
+            uuid = UUID.fromString(idPublico);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Ticket ticket = ticketRepository.findByIdPublico(uuid).orElse(null);
+
+        if (ticket == null)
+            return ResponseEntity.notFound().build();
+
+        String conteudo = "https://guiaranchoqueimado.com.br/ticket.html?id=" + ticket.getIdPublico();
+
+        byte[] qr = qrCodeService.generateQrCodeBytes(conteudo, 400, 400);
+
+        return ResponseEntity.ok(qr);
     }
 }

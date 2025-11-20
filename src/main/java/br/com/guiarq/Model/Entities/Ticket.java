@@ -59,44 +59,61 @@ public class Ticket {
     @Column(name = "criado_em")
     private LocalDateTime criadoEm;
 
-    public void setNome(String titulo) {
-        if(this.nome != null) {
-            this.nome = titulo;
-        }else{
-            System.out.println("Falha ao alterar o nome");
-        }
-    }
-    public void setDescricao(String descricao) {
-        if (this.descricao != null) {
-            this.descricao = descricao;
-        }
-    }
-    public void setPrecoOrginal(double preco) {
-        if(preco > 0) {
-            this.precoOriginal = BigDecimal.valueOf(preco);
-        }
-    }
-    public String getNome() {
-        return this.nome;
-    }
-    public String getDescricao() {
-        return this.descricao;
-    }
-    public double getPrecoOriginal() {
-        return this.precoOriginal.doubleValue();
-    }
-    public Long getId() {
-        return this.id;
-    }
+    public Ticket() {}
 
-    public void setId(long id) {
-        if(this.id != null){
-            this.id = id;
-        }
-    }
-    public void setPrecoOriginal(BigDecimal precoOriginal) {
-        if(this.precoOriginal != null &&  this.precoOriginal != precoOriginal){
-            this.precoOriginal = precoOriginal;
-        }
-    }
+    public Long getId() { return id; }
+
+    public UUID getIdPublico() { return idPublico; }
+    public void setIdPublico(UUID idPublico) { this.idPublico = idPublico; }
+
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
+
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
+
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+
+    public BigDecimal getPrecoOriginal() { return precoOriginal; }
+    public void setPrecoOriginal(BigDecimal precoOriginal) { this.precoOriginal = precoOriginal; }
+
+    public BigDecimal getPrecoPromocional() { return precoPromocional; }
+    public void setPrecoPromocional(BigDecimal precoPromocional) { this.precoPromocional = precoPromocional; }
+
+    public Long getParceiroId() { return parceiroId; }
+    public void setParceiroId(Long parceiroId) { this.parceiroId = parceiroId; }
+
+    public LocalDateTime getDataCompra() { return dataCompra; }
+    public void setDataCompra(LocalDateTime dataCompra) { this.dataCompra = dataCompra; }
+
+    public String getEmailCliente() { return emailCliente; }
+    public void setEmailCliente(String emailCliente) { this.emailCliente = emailCliente; }
+
+    public String getExperiencia() { return experiencia; }
+    public void setExperiencia(String experiencia) { this.experiencia = experiencia; }
+
+    public String getNomeCliente() { return nomeCliente; }
+    public void setNomeCliente(String nomeCliente) { this.nomeCliente = nomeCliente; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public Double getValorPago() { return valorPago; }
+    public void setValorPago(Double valorPago) { this.valorPago = valorPago; }
+
+    public UUID getQrToken() { return qrToken; }
+    public void setQrToken(UUID qrToken) { this.qrToken = qrToken; }
+
+    public boolean isUsado() { return usado; }
+    public void setUsado(boolean usado) { this.usado = usado; }
+
+    public LocalDateTime getUsadoEm() { return usadoEm; }
+    public void setUsadoEm(LocalDateTime usadoEm) { this.usadoEm = usadoEm; }
+
+    public UUID getCompraId() { return compraId; }
+    public void setCompraId(UUID compraId) { this.compraId = compraId; }
+
+    public LocalDateTime getCriadoEm() { return criadoEm; }
+    public void setCriadoEm(LocalDateTime criadoEm) { this.criadoEm = criadoEm; }
 }

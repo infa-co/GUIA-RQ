@@ -21,23 +21,20 @@ public class StripeController {
     @PostMapping("/checkout")
     public ResponseEntity<?> criarCheckout(@RequestBody CheckoutRequest req) throws Exception {
 
-        // Definir a chave da API Stripe
         Stripe.apiKey = stripeSecretKey;
 
-        // Criar sessão de checkout
         SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
                 .setSuccessUrl("https://guia-rq.com.br/pages/sucesso.html")
                 .setCancelUrl("https://guia-rq.com.br/pages/cancelado.html")
 
-                // Linha única com valor total
                 .addLineItem(
                         SessionCreateParams.LineItem.builder()
                                 .setQuantity(1L)
                                 .setPriceData(
                                         SessionCreateParams.LineItem.PriceData.builder()
                                                 .setCurrency("brl")
-                                                .setUnitAmount((long) (req.getAmount() * 100)) // Stripe usa centavos
+                                                .setUnitAmount((long) (req.getAmount() * 100))
                                                 .setProductData(
                                                         SessionCreateParams.LineItem.PriceData.ProductData.builder()
                                                                 .setName(req.getDescription())
@@ -48,7 +45,6 @@ public class StripeController {
                                 .build()
                 )
 
-                // Metadados importantes para o Webhook
                 .putMetadata("ticketId", req.getTicketId() != null ? req.getTicketId().toString() : "0")
                 .putMetadata("email", req.getEmail())
                 .putMetadata("nome", req.getNome())

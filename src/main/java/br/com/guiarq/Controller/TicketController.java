@@ -1,30 +1,54 @@
 package br.com.guiarq.Controller;
 
-import br.com.guiarq.Model.Dao.TicketDAO;
 import br.com.guiarq.Model.Entities.Ticket;
+import br.com.guiarq.Model.Repository.TicketRepository;
+import br.com.guiarq.Model.Service.TicketService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
 
+@RestController
+@RequestMapping("/api/tickets")
 public class TicketController {
-    private final TicketDAO ticketDAO = new TicketDAO();
 
-    public void criarTicket(String titulo, String descricao, double preco) {
-        Ticket ticket = new Ticket();
-        ticket.setNome(titulo);
-        ticket.setDescricao(descricao);
-        ticket.setPrecoOrginal(preco);
-        ticketDAO.inserir(ticket);
+    @Autowired
+    private TicketService ticketService;
+
+    @Autowired
+    private TicketRepository ticketRepository;
+
+    @PostMapping("/criar")
+    public ResponseEntity<?> criar(@RequestBody Ticket ticket) {
+        ticketService.salvar(ticket);
+        return ResponseEntity.ok("Ticket criado com sucesso.");
     }
 
-    public List<Ticket> listarTickets() {
-        return ticketDAO.listarTodos();
+    @GetMapping("/listar")
+    public ResponseEntity<?> listar() {
+        return ResponseEntity.ok(ticketService.listarTodos());
     }
-    public void registrarCompra(int usuarioId, int ticketId) {
-        String codigoValidacao = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        ticketDAO.registrarCompra(usuarioId, ticketId, codigoValidacao);
+
+    @GetMapping("/por-email")
+    public ResponseEntity<?> listarPorEmail(@RequestParam String email) {
+        List<Ticket> tickets = ticketRepository.findByEmailCliente(email);
+        return ResponseEntity.ok(tickets);
     }
-    public void registrarTransacaoStripe(String stripeId, double amount, String currency,
-                                         String status, String metadata, int ticketCompraId) {
-        ticketDAO.registrarTransacaoStripe(stripeId, amount, currency, status, metadata, ticketCompraId);
+
+    @GetMapping("/ver/{idPublico}")
+    public ResponseEntity<?> verTicket(@PathVariable String idPublico) {
+
+        try {
+            UUID uuid = UUID.fromString(idPublico);
+
+            return ticketRepository.findByIdPublico(uuid)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("ID inválido");
+        }
     }
 }
