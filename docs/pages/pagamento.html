@@ -169,13 +169,13 @@
                 const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
                 const resumo = JSON.parse(localStorage.getItem("resumoCompra")) || {};
 
-                if (!resumo.total || !carrinho.length) {
+                if (!resumo.totalFinal || !carrinho.length) {
                     alert("Erro ao processar compra. Carrinho vazio ou inválido.");
                     return;
                 }
 
                 const payload = {
-                    amount: resumo.total * 100,
+                    amount: resumo.totalFinal * 100,
                     description: "Compra de ingresso(s) - Guia Rancho Queimado",
                     ticketId: carrinho[0]?.id,
                     email: resumo.email || "",
