@@ -14,13 +14,10 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(
-                                "https://guiaranchoqueimado.com.br",
-                                "http://guiaranchoqueimado.com.br"
-                        )
+                        .allowedOriginPatterns("*")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(true)
+                        .allowCredentials(false)  // IMPORTANTE
                         .maxAge(3600);
             }
         };
