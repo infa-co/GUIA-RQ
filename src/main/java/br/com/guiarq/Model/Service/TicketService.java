@@ -7,6 +7,8 @@ import br.com.guiarq.utils.QrCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TicketService {
 
@@ -19,34 +21,39 @@ public class TicketService {
     @Autowired
     private QrCodeGenerator qrCodeGenerator;
 
-    // -----------------------------
-    // USADO PELO WEBHOOK
-    // -----------------------------
-    public void processarCompra(Ticket ticket) {
-        enviarTicketSimples(ticket);
-    }
-
-    // -----------------------------
-    // ENVIO DE TICKET INDIVIDUAL
-    // -----------------------------
-    public void enviarTicketSimples(Ticket ticket) {
+    // ==========================================
+    // 🔵 MÉTODO USADO PELO WEBHOOK (COMPRA)
+    // ==========================================
+    public void processarCompra(Long ticketId, String email, String nomeCliente, String nomeTicket) {
         try {
-            String conteudo = "https://guiaranchoqueimado.com.br/ticket/" + ticket.getIdPublico();
-
+            String conteudo = "https://guiaranchoqueimado.com.br/ticket/" + ticketId;
             byte[] qrBytes = qrCodeGenerator.generateQrCode(conteudo);
-
             emailSender.sendTicketEmail(
-                    ticket.getEmailCliente(),
-                    ticket.getNomeCliente(),
+                    email,
+                    nomeCliente,
                     qrBytes,
-                    ticket.getQrToken().toString()
+                    nomeTicket
             );
 
-            System.out.println("✔ Ticket enviado para " + ticket.getEmailCliente());
+            System.out.println("✔ COMPRA PROCESSADA COM SUCESSO");
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("❌ ERRO AO ENVIAR TICKET POR EMAIL");
+            System.out.println("❌ ERRO AO PROCESSAR COMPRA");
         }
+    }
+
+    // ==========================================
+    // 🔵 RESTORE — MÉTODOS QUE O CONTROLLER USA
+    // ==========================================
+
+    /** Salva um ticket manualmente */
+    public void salvar(Ticket t) {
+        ticketRepository.save(t);
+    }
+
+    /** Lista todos os tickets */
+    public List<Ticket> listarTodos() {
+        return ticketRepository.findAll();
     }
 }
