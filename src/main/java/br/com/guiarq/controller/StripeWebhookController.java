@@ -1,4 +1,4 @@
-package br.com.guiarq.Controller;
+package br.com.guiarq.controller;
 
 import br.com.guiarq.Model.Entities.Ticket;
 import br.com.guiarq.Model.Repository.TicketRepository;

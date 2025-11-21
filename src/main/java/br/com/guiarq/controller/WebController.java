@@ -1,4 +1,4 @@
-package br.com.guiarq.Controller;
+package br.com.guiarq.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

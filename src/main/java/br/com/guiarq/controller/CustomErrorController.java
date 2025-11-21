@@ -1,4 +1,4 @@
-package br.com.guiarq.Controller;
+package br.com.guiarq.controller;
 
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;

@@ -1,4 +1,4 @@
-package br.com.guiarq.Controller;
+package br.com.guiarq.controller;
 
 import br.com.guiarq.DTO.CheckoutRequest;
 import br.com.guiarq.Model.Service.StripeService;
