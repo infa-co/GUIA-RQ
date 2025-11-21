@@ -136,7 +136,6 @@
 </div>
 
 <script>
-
     // Garante API_URL caso env.js não carregue
     if (!window.API_URL) {
         window.API_URL = "https://guia-rq-backend.onrender.com";
@@ -144,29 +143,14 @@
 
     document.addEventListener("DOMContentLoaded", () => {
 
-        // --- Função para mudar UI do método de pagamento ---
-        window.selectPayment = function(type, event) {
-            document.querySelectorAll('.payment-option').forEach(opt => {
-                opt.classList.remove('border-blue-600', 'bg-blue-50');
-                opt.classList.add('border-gray-200');
-            });
+        window.selectPayment = function(type, event) { ... };
 
-            event.currentTarget.classList.add('border-blue-600', 'bg-blue-50');
-            document.getElementById('credit-card-form').classList.toggle('hidden', type !== 'credit');
-        };
+        document.getElementById("save-card").addEventListener("click", ...);
 
-        // --- Salvar cartão ---
-        document.getElementById("save-card").addEventListener("click", (e) => {
-            e.preventDefault();
-            localStorage.setItem("cardSaved", "true");
-            document.getElementById("card-saved").classList.remove("hidden");
-        });
-
-        // --- BOTÃO FINALIZAR COMPRA ---
         document.getElementById("pay-btn").addEventListener("click", async () => {
             try {
                 const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-                const resumo = JSON.parse(localStorage.getItem("resumoCompra")) || {};
+                const resumo   = JSON.parse(localStorage.getItem("resumoCompra")) || {};
 
                 const total = Number(resumo.totalFinal);
 
@@ -174,7 +158,6 @@
                     alert("Erro ao processar compra. Carrinho vazio ou inválido.");
                     return;
                 }
-
 
                 const payload = {
                     amount: total * 100,
@@ -211,8 +194,8 @@
                 alert("Erro ao iniciar pagamento. Verifique o console.");
             }
         });
-
     });
+
 </script>
 </body>
 </html>
