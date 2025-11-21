@@ -1,45 +1,61 @@
 package br.com.guiarq.controller;
 
 import br.com.guiarq.DTO.CheckoutRequest;
-import br.com.guiarq.Model.Service.StripeService;
-import com.stripe.exception.StripeException;
+import com.stripe.Stripe;
 import com.stripe.model.checkout.Session;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import com.stripe.param.checkout.SessionCreateParams;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api/stripe")
 @CrossOrigin(origins = "*")
 public class StripeCheckoutController {
 
-    @Autowired
-    private StripeService stripeService;
+    @Value("${stripe.secret.key}")
+    private String secretKey;
 
-    @PostMapping("/api/stripe/checkout")
-    public ResponseEntity<Map<String, Object>> createCheckout(@RequestBody CheckoutRequest req) throws StripeException {
+    @PostMapping("/create-checkout")
+    public Map<String, Object> createCheckout(@RequestBody CheckoutRequest req) throws Exception {
+
+        Stripe.apiKey = secretKey;
 
         if (req.getAmount() == null || req.getAmount() <= 0) {
-            return ResponseEntity.badRequest()
-                    .body(Map.of("error", "Valor inválido."));
+            throw new IllegalArgumentException("Valor inválido.");
         }
 
-        long amountInCents = Math.round(req.getAmount());
+        Long amountInCents = Math.round(req.getAmount());
 
-        String successUrl = "https://guiaranchoqueimado.com.br/pages/sucesso.html";
-        String cancelUrl  = "https://guiaranchoqueimado.com.br/pages/cancelado.html";
+        SessionCreateParams params = SessionCreateParams.builder()
+                .setMode(SessionCreateParams.Mode.PAYMENT)
+                .setSuccessUrl("https://guiaranchoqueimado.com.br/pages/sucesso.html")
+                .setCancelUrl("https://guiaranchoqueimado.com.br/pages/cancelado.html")
+                .addLineItem(
+                        SessionCreateParams.LineItem.builder()
+                                .setQuantity(1L)
+                                .setPriceData(
+                                        SessionCreateParams.LineItem.PriceData.builder()
+                                                .setCurrency("brl")
+                                                .setUnitAmount(amountInCents)
+                                                .setProductData(
+                                                        SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                                                .setName(req.getDescription())
+                                                                .build()
+                                                )
+                                                .build()
+                                )
+                                .build()
+                )
+                .build();
 
-        Session session = stripeService.createCheckoutSession(
-                successUrl,
-                cancelUrl,
-                amountInCents
-        );
+        Session session = Session.create(params);
 
         Map<String, Object> response = new HashMap<>();
         response.put("url", session.getUrl());
 
-        return ResponseEntity.ok(response);
+        return response;
     }
 }

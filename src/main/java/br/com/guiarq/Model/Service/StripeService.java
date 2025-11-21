@@ -16,23 +16,40 @@ public class StripeService {
     @Value("${stripe.secret-key}")
     private String secretKey;
 
-    public Session createCheckoutSession(String successUrl, String cancelUrl, Long amount) throws StripeException {
+    public Session createCheckoutSession(
+            String successUrl,
+            String cancelUrl,
+            Long amountInCents,
+            String customerEmail,
+            String description
+    ) throws StripeException {
 
         Stripe.apiKey = secretKey;
 
+        // Configurações básicas da sessão
         Map<String, Object> params = new HashMap<>();
         params.put("mode", "payment");
         params.put("success_url", successUrl);
         params.put("cancel_url", cancelUrl);
 
+        // Email do comprador
+        if (customerEmail != null && !customerEmail.isEmpty()) {
+            params.put("customer_email", customerEmail);
+        }
+
+        // Item da compra (preço dinâmico)
         Map<String, Object> lineItem = new HashMap<>();
         lineItem.put("quantity", 1);
 
         Map<String, Object> priceData = new HashMap<>();
         priceData.put("currency", "brl");
-        priceData.put("unit_amount", amount);
+        priceData.put("unit_amount", amountInCents);
 
-        priceData.put("product_data", Map.of("name", "Guia Rancho Queimado - Ticket"));
+        // Nome que vai aparecer no Stripe
+        Map<String, Object> productData = new HashMap<>();
+        productData.put("name", description != null ? description : "Guia Rancho Queimado - Ticket");
+
+        priceData.put("product_data", productData);
 
         lineItem.put("price_data", priceData);
 
