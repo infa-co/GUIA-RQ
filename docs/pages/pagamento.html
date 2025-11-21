@@ -177,7 +177,7 @@
 
 
                 const payload = {
-                    Long amountInContos = Math.round(req.getAmount() * 100,
+                    amount: total * 100,
                     description: "Compra de ingresso(s) - Guia Rancho Queimado",
                     ticketId: carrinho[0]?.id,
                     email: resumo.email || "",
