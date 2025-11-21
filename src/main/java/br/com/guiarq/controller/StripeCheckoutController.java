@@ -21,12 +21,11 @@ public class StripeCheckoutController {
     @PostMapping("/checkout")
     public Map<String, Object> createCheckout(@RequestBody CheckoutRequest req) throws StripeException {
 
-        // Validação básica
         if (req.getAmount() == null || req.getAmount() <= 0) {
             throw new IllegalArgumentException("Valor inválido.");
         }
 
-        Long amountInCents = Math.round(req.getAmount());
+        Long amountInCents = Math.round(req.getAmount() * 100);
 
         String successUrl = "https://guiaranchoqueimado.com.br/pages/sucesso.html";
         String cancelUrl = "https://guiaranchoqueimado.com.br/pages/cancelado.html";
@@ -38,7 +37,8 @@ public class StripeCheckoutController {
         );
 
         Map<String, Object> response = new HashMap<>();
-        response.put("url", session.getUrl()); // link direto para o Stripe Checkout
+        response.put("url", session.getUrl());
+
         return response;
     }
 }
