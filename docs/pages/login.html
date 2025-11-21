@@ -127,46 +127,125 @@
         </div>
     </div>
 </div>
-
-
-
 <script>
-    // Tab switching for login/register
-    document.getElementById('login-tab').addEventListener('click', function() {
-        document.getElementById('login-tab').className = 'flex-1 py-3 text-sm font-medium rounded-lg bg-white text-forest shadow-sm';
-        document.getElementById('register-tab').className = 'flex-1 py-3 text-sm font-medium rounded-lg text-gray-500';
-        document.getElementById('login-fields').classList.remove('hidden');
-        document.getElementById('register-fields').classList.add('hidden');
-        document.getElementById('main-btn').textContent = 'Entrar';
+    const API_URL = "https://guia-rq-backend.onrender.com";
+
+    // ---- Elementos ----
+    const loginTab = document.getElementById("login-tab");
+    const registerTab = document.getElementById("register-tab");
+    const loginFields = document.getElementById("login-fields");
+    const registerFields = document.getElementById("register-fields");
+    const mainBtn = document.getElementById("main-btn");
+
+    // ---- Alternância ENTRE LOGIN E REGISTRO ----
+    loginTab.addEventListener("click", () => {
+        loginTab.className = "flex-1 py-3 text-sm font-medium rounded-lg bg-white text-forest shadow-sm";
+        registerTab.className = "flex-1 py-3 text-sm font-medium rounded-lg text-gray-500";
+        loginFields.classList.remove("hidden");
+        registerFields.classList.add("hidden");
+        mainBtn.textContent = "Entrar";
     });
 
-    document.getElementById('register-tab').addEventListener('click', function() {
-        document.getElementById('register-tab').className = 'flex-1 py-3 text-sm font-medium rounded-lg bg-white text-forest shadow-sm';
-        document.getElementById('login-tab').className = 'flex-1 py-3 text-sm font-medium rounded-lg text-gray-500';
-        document.getElementById('register-fields').classList.remove('hidden');
-        document.getElementById('login-fields').classList.add('hidden');
-        document.getElementById('main-btn').textContent = 'Criar conta';
+    registerTab.addEventListener("click", () => {
+        registerTab.className = "flex-1 py-3 text-sm font-medium rounded-lg bg-white text-forest shadow-sm";
+        loginTab.className = "flex-1 py-3 text-sm font-medium rounded-lg text-gray-500";
+        registerFields.classList.remove("hidden");
+        loginFields.classList.add("hidden");
+        mainBtn.textContent = "Criar conta";
     });
 
-    // Screen navigation simulation
-    document.getElementById('main-btn').addEventListener('click', function() {
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('dashboard-screen').classList.remove('hidden');
+    // ---- EXECUTAR AÇÃO DO BOTÃO PRINCIPAL ----
+    mainBtn.addEventListener("click", async () => {
+        if (mainBtn.textContent === "Entrar") {
+            await fazerLogin();
+        } else {
+            await registrarUsuario();
+        }
     });
 
-    // Show cart screen (for demo purposes)
-    function showCart() {
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('dashboard-screen').classList.add('hidden');
-        document.getElementById('cart-screen').classList.remove('hidden');
+    // ================================
+    //          LOGIN REAL
+    // ================================
+    async function fazerLogin() {
+
+        const email = loginFields.querySelector("input[type='email']").value.trim();
+        const senha = loginFields.querySelector("input[type='password']").value.trim();
+
+        if (!email || !senha) {
+            alert("Preencha e-mail e senha.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/api/auth/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, senha })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.error || "E-mail ou senha incorretos.");
+                return;
+            }
+
+            // Salvar usuário logado
+            localStorage.setItem("usuarioLogado", JSON.stringify(data));
+
+            // Redireciona para home
+            window.location.href = "../index.html";
+
+        } catch (err) {
+            console.error("Erro de login:", err);
+            alert("Falha ao conectar com o servidor.");
+        }
     }
 
-    // Show confirmation screen
-    document.querySelector('#cart-footer button').addEventListener('click', function() {
-        document.getElementById('cart-screen').classList.add('hidden');
-        document.getElementById('confirmation-screen').classList.remove('hidden');
-    });
+    // ================================
+    //      REGISTRO REAL (API)
+    // ================================
+    async function registrarUsuario() {
+
+        const nome = registerFields.querySelector("input[placeholder='Nome completo']").value.trim();
+        const email = registerFields.querySelector("input[placeholder='E-mail']").value.trim();
+        const senha = registerFields.querySelector("input[placeholder='Senha']").value.trim();
+
+        if (!nome || !email || !senha) {
+            alert("Preencha todos os campos.");
+            return;
+        }
+
+        const payload = {
+            nome: nome,
+            email: email,
+            senha: senha
+        };
+
+        try {
+            const response = await fetch(`${API_URL}/api/auth/registrar`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.error || "Erro ao criar conta.");
+                return;
+            }
+
+            alert("Conta criada com sucesso! Faça login.");
+            loginTab.click(); // volta para aba de login
+
+        } catch (err) {
+            console.error("Erro no registro:", err);
+            alert("Falha ao conectar com o servidor.");
+        }
+    }
 </script>
+
 
 </body>
 </html>
