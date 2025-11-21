@@ -14,7 +14,6 @@ public class QrCodeGenerator {
 
     public byte[] generateQrCode(String text) throws Exception {
         QRCodeWriter writer = new QRCodeWriter();
-
         var matrix = writer.encode(text, BarcodeFormat.QR_CODE, 300, 300);
 
         BufferedImage image = MatrixToImageWriter.toBufferedImage(matrix);

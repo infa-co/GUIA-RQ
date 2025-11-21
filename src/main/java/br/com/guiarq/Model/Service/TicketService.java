@@ -7,8 +7,6 @@ import br.com.guiarq.utils.QrCodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class TicketService {
 
@@ -21,30 +19,34 @@ public class TicketService {
     @Autowired
     private QrCodeGenerator qrCodeGenerator;
 
-    public void processarCompra(Long ticketId, String email, String nomeCliente, String nomeTicket) {
+    // -----------------------------
+    // USADO PELO WEBHOOK
+    // -----------------------------
+    public void processarCompra(Ticket ticket) {
+        enviarTicketSimples(ticket);
+    }
+
+    // -----------------------------
+    // ENVIO DE TICKET INDIVIDUAL
+    // -----------------------------
+    public void enviarTicketSimples(Ticket ticket) {
         try {
-            String conteudo = "https://guiaranchoqueimado.com.br/ticket/" + ticketId;
+            String conteudo = "https://guiaranchoqueimado.com.br/ticket/" + ticket.getIdPublico();
+
             byte[] qrBytes = qrCodeGenerator.generateQrCode(conteudo);
+
             emailSender.sendTicketEmail(
-                    email,
-                    nomeCliente,
+                    ticket.getEmailCliente(),
+                    ticket.getNomeCliente(),
                     qrBytes,
-                    nomeTicket  // <- último parâmetro do EmailSender
+                    ticket.getQrToken().toString()
             );
 
-            System.out.println("✔ COMPRA PROCESSADA COM SUCESSO");
+            System.out.println("✔ Ticket enviado para " + ticket.getEmailCliente());
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("❌ ERRO AO PROCESSAR COMPRA");
+            System.out.println("❌ ERRO AO ENVIAR TICKET POR EMAIL");
         }
-    }
-
-    public void salvar(Ticket t) {
-        ticketRepository.save(t);
-    }
-
-    public List<Ticket> listarTodos() {
-        return ticketRepository.findAll();
     }
 }

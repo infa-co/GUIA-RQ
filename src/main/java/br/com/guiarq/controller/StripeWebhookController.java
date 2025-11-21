@@ -44,11 +44,11 @@ public class StripeWebhookController {
 
         try {
             event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
+
         } catch (SignatureVerificationException e) {
-            logger.error("❌ Assinatura inválida do Webhook Stripe", e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid signature");
+
         } catch (Exception e) {
-            logger.error("❌ Erro ao processar Webhook", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Webhook error");
         }
 
@@ -58,13 +58,6 @@ public class StripeWebhookController {
             case "payment_intent.succeeded":
                 processarPagamento(event);
                 break;
-
-            case "payment_intent.payment_failed":
-                logger.warn("⚠ Pagamento falhou.");
-                break;
-
-            default:
-                logger.warn("⚠ Evento não tratado: {}", event.getType());
         }
 
         return ResponseEntity.ok("Webhook OK");
@@ -74,65 +67,49 @@ public class StripeWebhookController {
 
         EventDataObjectDeserializer deserializer = event.getDataObjectDeserializer();
 
-        deserializer.getObject().ifPresentOrElse(obj -> {
+        deserializer.getObject().ifPresent(obj -> {
 
             PaymentIntent pi = (PaymentIntent) obj;
-
             Map<String, String> metadata = pi.getMetadata();
 
             Long ticketId = Long.parseLong(metadata.get("ticketId"));
             String email = metadata.get("email");
             String nome = metadata.get("nome");
 
-            logger.info("💰 PAGAMENTO APROVADO PARA {}", email);
+            Ticket base = ticketRepository.findById(ticketId).orElse(null);
 
-            // Buscar ticket original
-            Ticket ticketBase = ticketRepository.findById(ticketId)
-                    .orElse(null);
-
-            if (ticketBase == null) {
-                logger.error("❌ Ticket base não encontrado para ID {}", ticketId);
+            if (base == null) {
+                logger.error("Ticket base não encontrado.");
                 return;
             }
 
-            // Criar novo ticket gerado pela compra
             Ticket novo = new Ticket();
-            novo.setNome(ticketBase.getNome());
-            novo.setDescricao(ticketBase.getDescricao());
-            novo.setPrecoOriginal(ticketBase.getPrecoOriginal());
-            novo.setPrecoPromocional(ticketBase.getPrecoPromocional());
-            novo.setExperiencia(ticketBase.getExperiencia());
-            novo.setTipo(ticketBase.getTipo());
-            novo.setParceiroId(ticketBase.getParceiroId());
+            novo.setNome(base.getNome());
+            novo.setDescricao(base.getDescricao());
+            novo.setPrecoOriginal(base.getPrecoOriginal());
+            novo.setPrecoPromocional(base.getPrecoPromocional());
+            novo.setExperiencia(base.getExperiencia());
+            novo.setTipo(base.getTipo());
+            novo.setParceiroId(base.getParceiroId());
 
             novo.setEmailCliente(email);
             novo.setNomeCliente(nome);
             novo.setDataCompra(LocalDateTime.now());
 
             novo.setIdPublico(UUID.randomUUID());
-            UUID qr = UUID.randomUUID();
-            novo.setQrToken(qr);
-
+            novo.setQrToken(UUID.randomUUID());
             novo.setCompraId(UUID.randomUUID());
             novo.setStatus("PAGO");
             novo.setUsado(false);
             novo.setCriadoEm(LocalDateTime.now());
-
-            // Valor pago registrado
             novo.setValorPago(pi.getAmountReceived() / 100.0);
 
             ticketRepository.save(novo);
 
             logger.info("🎫 Ticket gerado: {}", novo.getIdPublico());
 
-            // Enviar email com QR
-            ticketService.processarCompra(
-                    novo.getId(),
-                    email,
-                    nome,
-                    novo.getNome()
-            );
+            ticketService.processarCompra(novo);
 
-        }, () -> logger.error("❌ Falhou ao desserializar PaymentIntent"));
+        });
     }
 }
