@@ -3,6 +3,7 @@ package br.com.guiarq.Model.Service;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,12 @@ import java.util.Map;
 
 @Service
 public class StripeService {
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private QrCodeService qrCodeService;
+
 
     @Value("${stripe.secret-key}")
     private String secretKey;
@@ -57,4 +64,24 @@ public class StripeService {
 
         return Session.create(params);
     }
+    public void processarCompra(String email, String codigoValidacao) {
+        try {
+            // gerar QR
+            byte[] qrBytes = qrCodeService.generateQrCodeBytes(codigoValidacao, 300, 300);
+
+            // enviar email
+            emailService.sendTicketEmail(
+                    email,
+                    codigoValidacao,
+                    qrBytes
+            );
+
+            System.out.println("Email de ticket enviado com sucesso para " + email);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao processar compra e enviar ticket", e);
+        }
+    }
+
 }

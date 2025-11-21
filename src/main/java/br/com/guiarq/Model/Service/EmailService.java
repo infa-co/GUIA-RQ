@@ -16,6 +16,10 @@ public class EmailService {
     @Value("${RESEND_API_KEY}")
     private String resendApiKey;
 
+    @Value("${EMAIL_USERNAME}")
+    private String emailFrom;
+
+
     public void sendTicketEmail(String to, String codigoValidacao, byte[] qrCodeBytes) {
 
         Resend resend = new Resend(resendApiKey);
@@ -28,7 +32,7 @@ public class EmailService {
                 .build();
 
         CreateEmailOptions params = CreateEmailOptions.builder()
-                .from("Guia RQ <onboarding@resend.dev>")
+                .from(emailFrom)
                 .to(to)
                 .subject("Seu Ticket – Guia RQ")
                 .html(
