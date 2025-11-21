@@ -108,8 +108,12 @@ public class StripeWebhookController {
 
             logger.info("🎫 Ticket gerado: {}", novo.getIdPublico());
 
-            ticketService.processarCompra(novo);
-
+            ticketService.processarCompra(
+                    novo.getId(),
+                    email,
+                    nome,
+                    novo.getNome()
+            );
         });
     }
 }
