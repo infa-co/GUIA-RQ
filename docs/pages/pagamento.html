@@ -138,13 +138,14 @@
 <!-- SCRIPT FINAL 100% CORRIGIDO -->
 <script>
 
+    // Garante API_URL caso env.js não carregue
     if (!window.API_URL) {
         window.API_URL = "https://guia-rq-backend.onrender.com";
     }
 
     document.addEventListener("DOMContentLoaded", () => {
 
-        // Lógica de seleção de pagamento (UI)
+        // --- Função para mudar UI do método de pagamento ---
         window.selectPayment = function(type, event) {
             document.querySelectorAll('.payment-option').forEach(opt => {
                 opt.classList.remove('border-blue-600', 'bg-blue-50');
@@ -155,14 +156,14 @@
             document.getElementById('credit-card-form').classList.toggle('hidden', type !== 'credit');
         };
 
-        // Salvar cartão
-        document.getElementById("save-card").addEventListener("click", e => {
+        // --- Salvar cartão ---
+        document.getElementById("save-card").addEventListener("click", (e) => {
             e.preventDefault();
             localStorage.setItem("cardSaved", "true");
             document.getElementById("card-saved").classList.remove("hidden");
         });
 
-        // Finalizar compra (Stripe)
+        // --- BOTÃO FINALIZAR COMPRA ---
         document.getElementById("pay-btn").addEventListener("click", async () => {
             try {
                 const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
@@ -211,6 +212,5 @@
 
     });
 </script>
-
 </body>
 </html>
