@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gastronomia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        'bg-light': '#f8f9fa',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>::-webkit-scrollbar { display: none;}</style>
+</head>
+<body class="bg-bg-light font-sans">
+
+
+<header id="header" class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <span class="text-xl font-bold text-gray-900">Guia Rancho Queimado</span>
+            </div>
+            <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                <i class="fas fa-bars text-xl text-gray-700"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+
+<section id="hero-section" class="relative h-[400px] overflow-hidden">
+    <div class="absolute inset-0">
+        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/93464f2e73-3f4c41a7ef2379febbc3.png" alt="elegant restaurant table setting in mountain region, gourmet food, rustic elegant atmosphere, editorial photography style" />
+        <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60"></div>
+    </div>
+    <div class="relative h-full flex flex-col justify-center items-center text-center px-6">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">Gastronomia</h1>
+        <p class="text-lg text-white/95 font-light mb-3 max-w-2xl">Sabores autênticos da serra catarinense</p>
+        <p class="text-sm text-white font-light max-w-xl leading-relaxed">Descubra a rica gastronomia de Rancho Queimado, onde tradição alemã e italiana se encontram com produtos artesanais da região, criando experiências únicas e memoráveis.</p>
+    </div>
+</section>
+
+
+<main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+
+    <div id="establishments-grid" class="grid grid-cols-1 gap-6">
+
+        <article id="card-bier-haus" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/15cf2c3b2f-9f62e6b6bb96d29a2651.png" alt="german beer house exterior, rustic mountain architecture, craft beer bar, cozy atmosphere" />
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Bier Haus</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Cervejaria artesanal com ambiente acolhedor e tradicional, oferecendo rótulos exclusivos produzidos na região com ingredientes selecionados.</p>
+                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                    Ver mais detalhes
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-bergkaffee" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/f242230a74-bf400ee0910b5e58319d.png" alt="mountain coffee shop interior, specialty coffee, cozy cafe atmosphere, artisan pastries display" />
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Bergkaffee</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Cafeteria especializada em cafés especiais e doces artesanais, perfeita para momentos de pausa com vista para as montanhas.</p>
+                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                    Ver mais detalhes
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-rancho-bistro" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/695e57d3a9-604bfa54339f5c014f44.png" alt="elegant bistro restaurant interior, mountain lodge style, fine dining setup, warm lighting" />
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Rancho Bistrô</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Bistrô contemporâneo que combina técnicas modernas com ingredientes regionais, criando pratos sofisticados em ambiente acolhedor.</p>
+                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                    Ver mais detalhes
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-santa-serra" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/a7728391aa-68f34d519c828b65d0f6.png" alt="rustic mountain restaurant exterior, stone and wood architecture, countryside dining" />
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Santa Serra</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Restaurante com culinária caseira e receitas tradicionais da serra, valorizando produtos locais e o sabor autêntico da região.</p>
+                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                    Ver mais detalhes
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-goyah-vinhos" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/5d069a3bd2-8da527ba91c78a030374.png" alt="wine cellar tasting room, wooden barrels, wine bottles display, elegant vineyard atmosphere" />
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Goyah Vinhos</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Vinícola boutique especializada em vinhos de altitude, oferecendo degustações e experiências enogastronômicas únicas.</p>
+                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                    Ver mais detalhes
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-colhe-pague" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/3b112e6c3d-2a87ce02520882890420.png" alt="pick your own farm, strawberry field, fresh produce, family farm experience" />
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Colhe e Pague Léo Schütz</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Experiência de colheita própria de frutas frescas e orgânicas, conectando visitantes diretamente com a produção local.</p>
+                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                    Ver mais detalhes
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-forno-serra" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/88b2ce39c4-c8e1ed535c50385d8fa2.png" alt="wood fired pizza oven, artisan pizzeria interior, rustic italian restaurant" />
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Forno e Serra Pizzaria</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Pizzaria artesanal com forno a lenha, massa fermentada naturalmente e ingredientes premium da região serrana.</p>
+                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                    Ver mais detalhes
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-da-roca" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/93e4177b29-9fc95242d38e008d8425.png" alt="artisan delicatessen shop, gourmet products display, rustic country store interior" />
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Da Roça Delicatéssen</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Delicatessen com produtos artesanais, conservas caseiras, geleias e iguarias típicas da culinária serrana.</p>
+                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                    Ver mais detalhes
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-espaco-floresta" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/4e9a8b4fbe-568406dc7b17a564e9c6.png" alt="forest restaurant outdoor dining, nature surrounded eatery, mountain forest setting" />
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Espaço Floresta</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Restaurante integrado à natureza, oferecendo experiência gastronômica em meio à mata atlântica com pratos regionais.</p>
+                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                    Ver mais detalhes
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-kaufer-cafe" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/06a40176ee-0a1405530140e7a91279.png" alt="charming german cafe exterior, traditional coffee house, mountain village cafe" />
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Käufer Café</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Café colonial tradicional com influência alemã, servindo cafés especiais, bolos caseiros e cucas artesanais.</p>
+                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                    Ver mais detalhes
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-kaufer-queijos" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/456480f13c-ed577462b938660dc1a6.png" alt="artisan cheese shop, cheese aging room, traditional cheesemaking facility" />
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Käufer Queijos Artesanais</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Queijaria artesanal premiada, produzindo queijos de alta qualidade com leite fresco de vacas criadas na propriedade.</p>
+                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                    Ver mais detalhes
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-atafona" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/8c7ef2739f-b4653af132238e5db254.png" alt="elegant countryside restaurant, stone building architecture, fine dining mountain restaurant" />
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Atafona Restaurante</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Restaurante sofisticado com proposta gastronômica contemporânea, destacando ingredientes orgânicos e sustentáveis da região.</p>
+                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                    Ver mais detalhes
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-boca-serra" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/ee5d0afb25-e86a04d1de9ca8c2bae9.png" alt="mountain cheese dairy farm, artisan cheese production, rural cheese factory" />
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Queijaria Boca da Serra</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Queijaria familiar especializada em queijos maturados, oferecendo tours pela produção e degustações guiadas.</p>
+                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                    Ver mais detalhes
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-pacha" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/eed312e28a-91c19ff73ed1fbd7fb65.png" alt="modern mountain cuisine restaurant, contemporary kitchen, farm to table dining" />
+            </div>
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Pacha Cozinha</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Cozinha autoral com foco em técnicas contemporâneas e valorização de produtos locais, criando harmonias surpreendentes.</p>
+                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                    Ver mais detalhes
+                </button>
+            </div>
+        </article>
+    </div>
+</main>
+<footer id="footer" class="bg-white border-t border-gray-200 mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div class="grid grid-cols-1 gap-8">
+            <div>
+                <h4 class="text-lg font-semibold text-gray-900 mb-4">Guia Rancho Queimado</h4>
+                <p class="text-sm text-gray-600 leading-relaxed">Seu guia completo para explorar o melhor de Rancho Queimado: gastronomia, hospedagem, natureza e cultura.</p>
+            </div>
+            <div>
+                <h5 class="text-sm font-semibold text-gray-900 mb-3">Links Rápidos</h5>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-sm text-gray-600 hover:text-primary transition-colors">Início</a></li>
+                    <li><a href="#" class="text-sm text-gray-600 hover:text-primary transition-colors">Gastronomia</a></li>
+                    <li><a href="#" class="text-sm text-gray-600 hover:text-primary transition-colors">Hospedagem</a></li>
+                    <li><a href="#" class="text-sm text-gray-600 hover:text-primary transition-colors">Contato</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="text-sm font-semibold text-gray-900 mb-3">Redes Sociais</h5>
+                <div class="flex gap-4">
+                    <a href="#" class="text-gray-600 hover:text-primary transition-colors">
+                        <i class="fab fa-facebook text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-primary transition-colors">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-primary transition-colors">
+                        <i class="fab fa-whatsapp text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-200 mt-8 pt-8 text-center">
+            <p class="text-sm text-gray-500">&copy; 2024 Guia Rancho Queimado. Todos os direitos reservados.</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

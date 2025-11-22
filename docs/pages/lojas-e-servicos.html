@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lojas e Serviços</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>::-webkit-scrollbar { display: none;}</style>
+</head>
+<body class="font-inter bg-gray-50">
+
+
+<header id="header" class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
+    <div class="px-4 py-3">
+        <div class="flex items-center justify-between mb-3">
+            <div class="text-lg font-bold text-gray-800">
+                Guia Rancho Queimado
+            </div>
+            <button id="menu-toggle" class="text-gray-600">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+    </div>
+
+    <nav id="mobile-menu" class="hidden bg-white border-t border-gray-100">
+        <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 border-b border-gray-100">Início</a>
+        <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 border-b border-gray-100">Gastronomia</a>
+        <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 border-b border-gray-100 font-semibold">Hospedagens</a>
+        <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 border-b border-gray-100">Lojas e Serviços</a>
+        <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Pontos Turísticos</a>
+    </nav>
+</header>
+
+
+<section id="hero-section" class="relative h-[400px] mt-[72px]">
+    <div class="absolute inset-0 overflow-hidden">
+        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/fd99561c83-4e6ffa2f3582d53da548.png" alt="beautiful mountain lodge accommodation in serra catarinense brazil, cozy chalet surrounded by nature, misty mountains, warm lighting, editorial photography" />
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70"></div>
+    </div>
+
+    <div class="relative h-full flex flex-col justify-center items-center text-center px-6">
+        <h1 class="text-4xl font-bold text-white mb-4 leading-tight">Lojas e Serviços</h1>
+        <p class="text-lg text-white/95 max-w-md">Descubra aqui diversas opções de lojas e serviços!</p>
+    </div>
+</section>
+
+
+<main id="main-content" class="px-4 py-8">
+
+    <div id="hospedagens-grid" class="space-y-6">
+
+        <article id="card-chale-bosque" class="bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/5c4dfef625-678772519a0e8aa49901.png" alt="cozy wooden chalet with fireplace and hot tub, surrounded by forest in rancho queimado, warm interior lighting, inviting atmosphere" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé Bosque</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">Aconchegue-se no Chalé do Bosque, o refúgio perfeito em Rancho Queimado. Com lareira, churrasqueira e banheira aquecida, desfrute da natureza ao máximo.</p>
+                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
+                    Ver card e mais informações
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-vale-sonhos-1" class="bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/39f2e1c251-3fde641fe152abafd7cd.png" alt="luxury chalet with panoramic mountain views, swimming pool and jacuzzi, vale de taquaras rancho queimado, modern architecture" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé 1 – Vale dos Sonhos</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">Conforto e beleza no coração do Vale de Taquaras, em Rancho Queimado – SC. Com vistas panorâmicas deslumbrantes, comodidades como piscina, banheira relaxante, Wi-Fi rápido e uma lareira acolhedora.</p>
+                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
+                    Ver card e mais informações
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-casa-sorolla" class="bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/d78f2c5d95-a35827e00d4f7a4c209a.png" alt="artistic boutique house with art gallery interior, nature views, elegant design, rancho queimado, sophisticated ambiance" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-bold text-gray-800 mb-3">Casa Sorolla</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">Descubra o encanto da Casa Sorolla: uma fusão de arte, conforto e natureza, perfeita para uma experiência inesquecível.</p>
+                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
+                    Ver card e mais informações
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-sossego-montanha" class="bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/533e62aabe-19e3568e126af4ac686c.png" alt="mountain retreat chalet with incredible mountain views, serra catarinense, peaceful setting, wooden architecture, sunset lighting" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé Sossego da Montanha</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">Refúgio aconchegante na Serra Catarinense, a 6 min do centro de Rancho Queimado. Conforto, natureza e vista incrível para as montanhas.</p>
+                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
+                    Ver card e mais informações
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-caminho-sol-1" class="bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/d72a7b7eea-7fd6f9c0e0f86584dd28.png" alt="family-friendly chalet for couples with children, mountain landscape rancho queimado, comfortable interior, outdoor deck" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé 1 – Caminho do Sol</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">Um destino encantador com espaço confortável para um casal e duas crianças, cercado pelas belas montanhas de Rancho Queimado.</p>
+                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
+                    Ver card e mais informações
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-caminho-sol-2" class="bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/8bf5508aef-d5758e268fc26a87d317.png" alt="romantic couple chalet with one child accommodation, nature tranquility, rancho queimado mountains, cozy interior" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé 2 – Caminho do Sol</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">Um refúgio perfeito para casais com até uma criança, oferecendo uma combinação única de conforto, natureza e tranquilidade nas paisagens de Rancho Queimado.</p>
+                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
+                    Ver card e mais informações
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-blockhaus" class="bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/08a8733fb0-fdccf7cd8f7d507a83c4.png" alt="exclusive boutique accommodation with unique identity, nature setting rancho queimado, modern design, purposeful retreat" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-bold text-gray-800 mb-3">Blockhaus</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">Hospedagem com identidade, conforto e exclusividade em meio à natureza de Rancho Queimado. Um refúgio pensado para quem busca pausas com propósito e momentos de verdadeira conexão.</p>
+                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
+                    Ver card e mais informações
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-chale-fraisier" class="bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/cf5b6f99e0-393ed46cb4e1aa5ee4c2.png" alt="new chalet in taquaras with jacuzzi and fireplace, 4 people capacity, modern amenities, warm atmosphere" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé Fraisier</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">Nova opção de hospedagem em Taquaras com capacidade para 4 pessoas, banheira de hidromassagem, lareira acolhedora e muito mais.</p>
+                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
+                    Ver card e mais informações
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-chale-pomar" class="bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/c0347aa8e8-3bc5f89f769751219c43.png" alt="charming chalet with orchard views, fireplace bbq and heated bathtub, rancho queimado nature, rustic elegance" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé Pomar</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">Relaxe no Chalé Pomar, um refúgio encantador em Rancho Queimado. Com lareira, churrasqueira e banheira aquecida, desfrute de momentos inesquecíveis em meio à natureza exuberante.</p>
+                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
+                    Ver card e mais informações
+                </button>
+            </div>
+        </article>
+
+
+        <article id="card-vale-sonhos-2" class="bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/13a378eee5-41a19dcc3a3be480063c.png" alt="romantic couples retreat with heated pool and jacuzzi, panoramic mountain views vale de taquaras, luxury chalet" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé 2 – Vale dos Sonhos</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">Um oásis de tranquilidade no Vale de Taquaras. Com piscina aquecida, hidromassagem e vista panorâmica, este chalé é perfeito para casais que desejam uma escapada única em meio à natureza.</p>
+                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
+                    Ver card e mais informações
+                </button>
+            </div>
+        </article>
+    </div>
+</main>
+
+
+<footer id="footer" class="bg-gray-800 text-white mt-12 py-8 px-4">
+    <div class="text-center mb-6">
+        <h3 class="text-xl font-bold mb-2">Guia Rancho Queimado</h3>
+        <p class="text-gray-400 text-sm">Seu guia completo da região</p>
+    </div>
+
+    <nav class="flex flex-col space-y-3 mb-6">
+        <a href="#" class="text-gray-300 hover:text-white text-center text-sm">Início</a>
+        <a href="#" class="text-gray-300 hover:text-white text-center text-sm">Gastronomia</a>
+        <a href="#" class="text-gray-300 hover:text-white text-center text-sm">Hospedagens</a>
+        <a href="#" class="text-gray-300 hover:text-white text-center text-sm">Lojas e Serviços</a>
+        <a href="#" class="text-gray-300 hover:text-white text-center text-sm">Pontos Turísticos</a>
+    </nav>
+
+
+    <div class="flex justify-center space-x-6 mb-6">
+        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <i class="fa-brands fa-facebook text-xl"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <i class="fa-brands fa-instagram text-xl"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <i class="fa-brands fa-whatsapp text-xl"></i>
+        </a>
+    </div>
+
+
+    <div class="text-center text-gray-400 text-xs pt-6 border-t border-gray-700">
+        <p>&copy; 2024 Guia Rancho Queimado. Todos os direitos reservados.</p>
+    </div>
+</footer>
+
+
+<script>
+    window.addEventListener('load', function() {
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuToggle.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+    });
+</script>
+
+
+</body>
+</html>
