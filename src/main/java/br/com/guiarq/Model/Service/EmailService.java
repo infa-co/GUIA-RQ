@@ -2,52 +2,44 @@ package br.com.guiarq.Model.Service;
 
 import com.resend.Resend;
 import com.resend.services.emails.Emails;
-import com.resend.services.emails.model.Attachment;
 import com.resend.services.emails.model.CreateEmailOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.Base64;
-import java.util.List;
 
 @Service
 public class EmailService {
 
     @Value("${RESEND_API_KEY}")
-    private String resendApiKey;
+    private String apiKey;
 
-    @Value("${EMAIL_USERNAME}")
-    private String emailFrom;
+    @Value("${APP_BASE_URL}")
+    private String baseUrl;
 
-
-    public void sendTicketEmail(String to, String codigoValidacao, byte[] qrCodeBytes) {
-
-        Resend resend = new Resend(resendApiKey);
-
-        String base64Qr = Base64.getEncoder().encodeToString(qrCodeBytes);
-
-        Attachment attachment = Attachment.builder()
-                .fileName("ticket.png")
-                .content(base64Qr)
-                .build();
-
-        CreateEmailOptions params = CreateEmailOptions.builder()
-                .from(emailFrom)
-                .to(to)
-                .subject("Seu Ticket – Guia RQ")
-                .html(
-                        "<h2>Seu ticket está pronto! 🎉</h2>" +
-                                "<p><b>Código de validação:</b> " + codigoValidacao + "</p>" +
-                                "<p>Use o QR Code em anexo para validar sua experiência.</p>"
-                )
-                .attachments(List.of(attachment))
-                .build();
+    public void enviarVerificacaoEmail(String emailDestino, String token) {
 
         try {
+            Resend resend = new Resend(apiKey);
+
+            String link = baseUrl + "/api/auth/verify?token=" + token;
+
+            String conteudoHtml =
+                    "<h2>Confirme seu e-mail</h2>" +
+                            "<p>Clique no link abaixo para ativar sua conta:</p>" +
+                            "<a href=\"" + link + "\">Confirmar e-mail</a>" +
+                            "<br><br>" +
+                            "<p>Se você não criou uma conta, ignore esta mensagem.</p>";
+
+            CreateEmailOptions params = CreateEmailOptions.builder()
+                    .from("gropoguiarq@gmail.com")  //ALTERAR DPS para .to("gropoguiarq@gmail.com")
+                    .to("gropoguiarq@gmail.com")
+                    .subject("Confirme seu e-mail")
+                    .html(conteudoHtml)
+                    .build();
+
             resend.emails().send(params);
+
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Erro ao enviar email via Resend", e);
+            throw new RuntimeException("Erro ao enviar e-mail: " + e.getMessage());
         }
     }
 }
