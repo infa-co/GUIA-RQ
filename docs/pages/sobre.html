@@ -405,6 +405,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
+<script>
+    // === Menu Mobile ===
+    document.addEventListener("DOMContentLoaded", () => {
+        const menuBtn = document.getElementById("menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        if (!menuBtn || !mobileMenu) return;
+
+        let menuOpen = false;
+
+        menuBtn.addEventListener("click", () => {
+            menuOpen = !menuOpen;
+            mobileMenu.classList.toggle("hidden");
+
+            menuBtn.innerHTML = menuOpen
+                ? '<i class="fa-solid fa-xmark"></i>'
+                : '<i class="fa-solid fa-bars"></i>';
+        });
+    });
+</script>
 
 </body>
 </html>
