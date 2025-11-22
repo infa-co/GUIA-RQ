@@ -1,13 +1,12 @@
 package br.com.guiarq.Model.Service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 @Service
 public class EmailService {
@@ -18,29 +17,35 @@ public class EmailService {
     @Value("${APP_BASE_URL}")
     private String baseUrl;
 
-    private final String RESEND_URL = "https://api.resend.com/emails";
-
-    private RestTemplate rest = new RestTemplate();
-
-
     // -----------------------------
-    // EMAIL DE VERIFICAÇÃO
+    // ENVIO DE EMAIL DE VERIFICAÇÃO
     // -----------------------------
     public void enviarVerificacaoEmail(String emailDestino, String token) {
 
-        String link = baseUrl + "/api/auth/verify?token=" + token;
+        try {
+            String link = baseUrl + "/api/auth/verify?token=" + token;
 
-        String html = "<h2>Confirme seu e-mail</h2>" +
-                "<p>Clique no link abaixo para ativar sua conta:</p>" +
-                "<a href='" + link + "'>Confirmar e-mail</a>";
+            String json = """
+                    {
+                      "from": "no-reply@guiaranchoqueimado.com.br",
+                      "to": ["%s"],
+                      "subject": "Confirme seu e-mail",
+                      "html": "<h2>Confirme seu e-mail</h2><p>Clique no link abaixo:</p><a href='%s'>Confirmar e-mail</a>"
+                    }
+                    """.formatted(emailDestino, link);
 
-        Map<String, Object> body = new HashMap<>();
-        body.put("from", "no-reply@guiaranchoqueimado.com.br");
-        body.put("to", emailDestino);
-        body.put("subject", "Confirme seu e-mail");
-        body.put("html", html);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://api.resend.com/emails"))
+                    .header("Authorization", "Bearer " + apiKey)
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
 
-        enviar(body);
+            HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao enviar email: " + e.getMessage());
+        }
     }
 
 
@@ -48,37 +53,35 @@ public class EmailService {
     // ENVIO DO TICKET COM QR CODE
     // -----------------------------
     public void sendTicketEmail(String emailDestino, String codigo, byte[] qrBytes) {
+        try {
+            String base64Qr = java.util.Base64.getEncoder().encodeToString(qrBytes);
 
-        String html = "<h2>Seu Ticket – Guia Rancho Queimado</h2>" +
-                "<p><strong>Código:</strong> " + codigo + "</p>" +
-                "<p>O QR Code está anexado neste e-mail.</p>";
+            String json = """
+                    {
+                      "from": "no-reply@guiaranchoqueimado.com.br",
+                      "to": ["%s"],
+                      "subject": "Seu Ticket – Guia Rancho Queimado",
+                      "html": "<h2>Seu Ticket</h2><p>Código: %s</p>",
+                      "attachments": [
+                        {
+                          "filename": "ticket-qrcode.png",
+                          "content": "%s"
+                        }
+                      ]
+                    }
+                    """.formatted(emailDestino, codigo, base64Qr);
 
-        Map<String, Object> attachment = new HashMap<>();
-        attachment.put("filename", "ticket.png");
-        attachment.put("content", Base64.getEncoder().encodeToString(qrBytes));
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://api.resend.com/emails"))
+                    .header("Authorization", "Bearer " + apiKey)
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
 
-        Map<String, Object> body = new HashMap<>();
-        body.put("from", "no-reply@guiaranchoqueimado.com.br");
-        body.put("to", emailDestino);
-        body.put("subject", "Seu Ticket – Guia Rancho Queimado");
-        body.put("html", html);
-        body.put("attachments", new Object[]{attachment});
+            HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-        enviar(body);
-    }
-    private void enviar(Map<String, Object> body) {
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(apiKey);
-
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
-
-        ResponseEntity<String> response =
-                rest.exchange(RESEND_URL, HttpMethod.POST, entity, String.class);
-
-        if (!response.getStatusCode().is2xxSuccessful()) {
-            throw new RuntimeException("Erro ao enviar e-mail: " + response.getBody());
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao enviar ticket: " + e.getMessage());
         }
     }
 }
