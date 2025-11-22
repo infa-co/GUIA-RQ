@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PF2TSPV6');</script>
+    <!-- End Google Tag Manager -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bier Haus – Guia Rancho Queimado</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.FontAwesomeConfig = { autoReplaceSvg: 'nest' };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0.15));
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PF2TSPV6"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+
+<!-- ========================= HEADER ========================= -->
+<header id="header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50 py-2">
+    <div class="px-4 py-2 flex items-center justify-between">
+
+        <!-- Logo -->
+        <a href="../../index.html" class="flex items-center space-x-2 group">
+            <img src="../../assets/images/guia-rancho-queimado-logo-sem-fundo.png"
+                 alt="Logo Guia RQ"
+                 class="h-12 sm:h-14 w-auto transition-transform group-hover:scale-105">
+            <span class="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+                Guia RQ
+            </span>
+        </a>
+
+        <!-- Navegação Desktop -->
+        <nav class="hidden md:flex space-x-10 text-sm font-medium text-gray-700">
+            <a href="../../index.html" class="hover:text-blue-600">Início</a>
+            <a href="../gastronomia.html" class="hover:text-blue-600">Gastronomia</a>
+            <a href="../hospedagens.html" class="hover:text-blue-600">Hospedagens</a>
+            <a href="../lojas-e-servicos.html" class="hover:text-blue-600">Lojas e Serviços</a>
+            <a href="../pontos-turisticos.html" class="hover:text-blue-600">Pontos Turísticos</a>
+            <a href="../sobre.html" class="hover:text-blue-600">Sobre</a>
+        </nav>
+
+        <!-- Área direita -->
+        <div class="flex items-center space-x-5">
+
+            <!-- Usuário -->
+            <div class="relative flex items-center justify-center" id="user-menu-container">
+                <button id="user-icon" class="text-gray-600 hover:text-gray-900 text-2xl">
+                    <i class="fa-solid fa-user"></i>
+                </button>
+
+                <div id="user-dropdown"
+                     class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2
+                     w-56 bg-white border border-gray-200 rounded-xl shadow-xl">
+                </div>
+            </div>
+
+            <!-- Carrinho -->
+            <a href="../carrinho.html" class="relative text-gray-600 hover:text-blue-600">
+                <i class="fa-solid fa-shopping-cart text-lg"></i>
+                <span id="cart-count"
+                      class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs
+                      w-5 h-5 rounded-full flex items-center justify-center"></span>
+            </a>
+
+            <!-- Botão mobile -->
+            <button id="menu-btn" class="md:hidden text-gray-700 text-2xl">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Menu Mobile -->
+    <div id="mobile-menu" class="hidden md:hidden flex flex-col bg-white border-t border-gray-100">
+        <a href="../../index.html" class="px-4 py-3 hover:bg-gray-50 border-b">Início</a>
+        <a href="../gastronomia.html" class="px-4 py-3 hover:bg-gray-50 border-b">Gastronomia</a>
+        <a href="../hospedagens.html" class="px-4 py-3 hover:bg-gray-50 border-b">Hospedagens</a>
+        <a href="../lojas-e-servicos.html" class="px-4 py-3 hover:bg-gray-50 border-b">Lojas e Serviços</a>
+        <a href="../pontos-turisticos.html" class="px-4 py-3 hover:bg-gray-50 border-b">Pontos Turísticos</a>
+        <a href="../sobre.html" class="px-4 py-3 hover:bg-gray-50">Sobre</a>
+    </div>
+</header>
+
+<!-- Script menu -->
+<script>
+    document.getElementById("menu-btn").addEventListener("click", () => {
+        document.getElementById("mobile-menu").classList.toggle("hidden");
+    });
+
+    let userLoggedIn = false;
+    const dropdown = document.getElementById("user-dropdown");
+
+    function renderMenu() {
+        dropdown.innerHTML = userLoggedIn
+            ? `
+                <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100">Minha Conta</a>
+                <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100">Minhas Compras</a>
+                <hr class="my-1">
+                <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
+              `
+            : `
+                <a href="../login.html" class="block px-10 py-5 hover:bg-gray-100 text-center">
+                    Entrar ou Cadastrar-se
+                </a>
+              `;
+    }
+
+    document.getElementById("user-icon").addEventListener("click", () => {
+        dropdown.classList.toggle("hidden");
+        renderMenu();
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest("#user-menu-container")) dropdown.classList.add("hidden");
+    });
+</script>
+
+
+<!-- ========================= HERO ========================= -->
+<section class="relative h-[400px] md:h-[500px] mt-20">
+    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/603631ce8b-ec35348fc3ebfa7d1e0a.png"
+         class="w-full h-full object-cover">
+
+    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+
+    <div class="absolute inset-0 flex items-center justify-center">
+        <h1 class="text-white text-4xl md:text-5xl font-bold text-center"
+            style="text-shadow: 0 2px 12px rgba(0,0,0,0.4)">
+            forno e serra Rancho Queimado
+        </h1>
+    </div>
+</section>
+
+<!-- ========================= QUICK INFO ========================= -->
+<section class="max-w-4xl mx-auto px-4 -mt-8 relative z-10">
+    <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">forno e serra Rancho Queimado</h2>
+        <p class="text-lg text-gray-600 mb-6">Gastronomia alemã autêntica com cervejas artesanais.</p>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+            <a href="#" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700">
+                <i class="fa-brands fa-instagram mr-2"></i>
+                Ver Instagram
+            </a>
+
+            <a href="#" class="bg-gray-100 text-gray-800 px-6 py-3 rounded-xl font-semibold hover:bg-gray-200">
+                <i class="fa-solid fa-location-dot mr-2"></i>
+                Ver no Mapa
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ========================= SOBRE / GALERIA / INFO ========================= -->
+<section class="max-w-4xl mx-auto px-4 py-12">
+    <div class="bg-white rounded-2xl shadow-sm p-6 md:p-10">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6">Sobre o Local</h2>
+
+        <p class="text-gray-700 leading-relaxed mb-6">
+            O Bier Haus Rancho Queimado é um refúgio gastronômico que celebra as tradições da culinária alemã.
+        </p>
+
+        <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">História</h3>
+        <p class="text-gray-700 mb-6">
+            Fundado por uma família apaixonada pela cultura germânica...
+        </p>
+
+        <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">Destaques</h3>
+        <p class="text-gray-700 mb-6">Eisbein, kassler, salsichas artesanais...</p>
+
+        <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">Experiência</h3>
+        <p class="text-gray-700">
+            Mais do que um restaurante, é um ponto de encontro...
+        </p>
+    </div>
+</section>
+
+<!-- ========================= GALERIA ========================= -->
+<section class="max-w-6xl mx-auto px-4 py-12">
+    <h2 class="text-3xl font-bold text-center mb-8">Galeria de Fotos</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/596403a31e-f096ad5fbef13a9ef81d.png"
+             class="rounded-xl h-64 object-cover shadow-md">
+        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/3f721bd86f-7baded897fa05163a8b5.png"
+             class="rounded-xl h-64 object-cover shadow-md">
+        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/76ff398015-004681fe6b79ced22461.png"
+             class="rounded-xl h-64 object-cover shadow-md">
+        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/2b570f8226-211060248b9f798ecdc8.png"
+             class="rounded-xl h-64 object-cover shadow-md">
+        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/24243c2541-618e6bbf6f4d8cc4c6a4.png"
+             class="rounded-xl h-64 object-cover shadow-md">
+        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/1f7fce0110-2777e8c7a66bd19067ec.png"
+             class="rounded-xl h-64 object-cover shadow-md">
+    </div>
+</section>
+
+<!-- ========================= INFO PRÁTICA ========================= -->
+<section class="max-w-4xl mx-auto px-4 py-12">
+    <div class="bg-white p-10 rounded-2xl shadow-lg">
+        <h2 class="text-3xl font-bold mb-8">Informações Práticas</h2>
+
+        <div class="space-y-6">
+
+            <div class="flex space-x-4">
+                <div class="bg-blue-100 p-3 rounded-xl">
+                    <i class="fa-solid fa-location-dot text-blue-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold">Endereço</h3>
+                    <p>Rua Principal, 123 – Centro</p>
+                </div>
+            </div>
+
+            <div class="flex space-x-4">
+                <div class="bg-blue-100 p-3 rounded-xl">
+                    <i class="fa-solid fa-clock text-blue-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold">Horários</h3>
+                    <p>Terça a Domingo — 11h30 às 22h</p>
+                </div>
+            </div>
+
+            <div class="flex space-x-4">
+                <div class="bg-blue-100 p-3 rounded-xl">
+                    <i class="fa-brands fa-whatsapp text-blue-600 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold">Contato</h3>
+                    <p>(48) 99999-9999</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ========================= CTA FINAL ========================= -->
+<section class="max-w-4xl mx-auto px-4 py-12">
+    <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-12 rounded-2xl text-center shadow-xl">
+        <h2 class="text-3xl font-bold mb-4">Planeje sua visita</h2>
+        <p class="mb-6">Descubra mais restaurantes, cafés e atrações.</p>
+        <a href="../index.html"
+           class="bg-white text-blue-700 px-8 py-4 rounded-xl font-semibold shadow-md hover:bg-gray-100">
+            Explorar Guia Completo
+        </a>
+    </div>
+</section>
+
+<!-- ========================= FOOTER ========================= -->
+<footer class="bg-gray-900 text-white py-12 px-4">
+    <div class="text-center mb-8">
+        <h3 class="text-2xl font-bold">Guia RQ</h3>
+        <p class="text-gray-400">Seu guia oficial de Rancho Queimado</p>
+    </div>
+
+    <div class="grid grid-cols-2 gap-8 max-w-3xl mx-auto text-sm">
+        <div>
+            <h4 class="font-semibold mb-3">Links úteis</h4>
+            <ul class="space-y-2 text-gray-300">
+                <li>Contato</li>
+                <li>Termos</li>
+                <li>Privacidade</li>
+            </ul>
+        </div>
+
+        <div>
+            <h4 class="font-semibold mb-3">Redes Sociais</h4>
+            <a href="https://www.instagram.com/guiaranchoqueimado/"
+               class="text-gray-300 text-2xl hover:text-blue-400">
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+        </div>
+    </div>
+
+    <p class="text-center text-xs text-gray-500 mt-8">© 2024 Guia RQ</p>
+</footer>
+
+<script>
+    // contador do carrinho
+    document.addEventListener("DOMContentLoaded", () => {
+        const cartCountEl = document.getElementById("cart-count");
+        const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+        if (carrinho.length > 0) {
+            cartCountEl.textContent = carrinho.length;
+            cartCountEl.classList.remove("hidden");
+        }
+    });
+</script>
+
+</body>
+</html>
