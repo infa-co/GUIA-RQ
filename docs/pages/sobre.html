@@ -1,36 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PF2TSPV6');</script>
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PF2TSPV6');</script>
     <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script>
+        window.FontAwesomeConfig = { autoReplaceSvg: 'nest' };
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        ::-webkit-scrollbar { display: none;}
-        body { font-family: 'Inter', sans-serif; }
-    </style>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#2563eb',
-                        secondary: '#10b981',
-                        accent: '#f59e0b',
-                    }
-                }
+        ::-webkit-scrollbar { display: none; }
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .carousel { scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
+        .carousel::-webkit-scrollbar { display: none; }
+        @media (max-width: 768px) {
+            #packages-section .w-80,
+            #featured-tickets .w-80 {
+                scroll-snap-align: center;
             }
         }
-    </script>
+
+        @media (min-width: 769px) {
+            #packages-section > div,
+            #featured-tickets > div {
+                justify-content: center;
+                margin: 0 auto;
+                max-width: 1280px;
+            }
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
 <!-- Google Tag Manager (noscript) -->
@@ -38,57 +47,71 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<!-- Header -->
-<!-- HEADER -->
-  <header
-    id="header"
-    class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50"
-  >
-    <div class="px-4 py-3 flex items-center justify-between">
-      <!-- Logo -->
-   
-<a href="../index.html" class="flex items-center space-x-2 group">
-  <img src="../assets/images/guia-rancho-queimado-logo-sem-fundo.png"
-       alt="Logo Guia RQ"
-       class="h-12 sm:h-14 w-auto transition-transform group-hover:scale-105">
-  <span class="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+<header id="header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50 py-2">
+    <div class="px-4 py-2 flex items-center justify-between">
+
+        <!-- Logo -->
+
+        <a href="../index.html" class="flex items-center space-x-2 group">
+            <img src="../assets/images/guia-rancho-queimado-logo-sem-fundo.png"
+                 alt="Logo Guia RQ"
+                 class="h-12 sm:h-14 w-auto transition-transform group-hover:scale-105">
+            <span class="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
     Guia RQ
   </span>
-</a>
-    </a>
+        </a>
 
-      <!-- Navegação principal -->
-    <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-700">
-      <a href="../index.html" class="hover:text-blue-600 transition-colors">Home</a>
-      <a href="tickets.html" class="text-blue-600 font-semibold border-b-2 border-blue-600 pb-1">Tickets</a>
-      <a href="pacotes.html" class="hover:text-blue-600 transition-colors">Pacotes</a>
-      <a href="sobre.html" class="hover:text-blue-600 transition-colors">Sobre</a>
-    </nav>
+        <!-- Navegação Desktop (ESCONDIDA no mobile) -->
+        <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-700">
+            <nav class="hidden md:flex space-x-10">
+                <a href="../index.html" class="text-gray-700 hover:text-blue-600">Início</a>
+                <a href="gastronomia.html" class="text-gray-700 hover:text-blue-600">Gastronomia</a>
+                <a href="hospedagens.html" class="text-gray-700 hover:text-blue-600">Hospedagens</a>
+                <a href="lojas-e-servicos.html" class="text-gray-700 hover:text-blue-600">Lojas e Serviços</a>
+                <a href="pontos-turisticos.html" class="text-gray-700 hover:text-blue-600">Pontos Turísticos</a>
+                <a href="sobre.html" class="text-gray-700 hover:text-blue-600">Sobre</a>
+            </nav>
+        </nav>
 
-    <!-- Área da direita -->
-    <div class="flex items-center space-x-5">
-      <!-- Usuário -->
-      <div class="relative flex items-center justify-center" id="user-menu-container">
-        <button id="user-icon" class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
-          <i class="fa-solid fa-user"></i>
-        </button>
+        <!-- Lado direito -->
+        <div class="flex items-center space-x-5">
 
-        <!-- Dropdown -->
-        <div id="user-dropdown"
-             class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 transform
+            <!-- Usuário -->
+            <div class="relative flex items-center justify-center" id="user-menu-container">
+                <button id="user-icon" class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
+                    <i class="fa-solid fa-user"></i>
+                </button>
+                <div id="user-dropdown"
+                     class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 transform
                     w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50">
-        </div>
-      </div>
+                    <!-- JS injeta aqui -->
+                </div>
+            </div>
 
-      <!-- Carrinho -->
-      <a href="carrinho.html" class="relative text-gray-600 hover:text-blue-600 transition-colors">
-        <i class="fa-solid fa-shopping-cart text-lg"></i>
-        <span id="cart-count"
-          class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center shadow">
-        </span>
-      </a>
+            <!-- Carrinho -->
+            <a href="carrinho.html" class="relative text-gray-600 hover:text-blue-600 transition-colors">
+                <i class="fa-solid fa-shopping-cart text-lg"></i>
+                <span id="cart-count"
+                      class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center shadow"></span>
+            </a>
+
+            <!-- Botão Hambúrguer (SÓ no mobile) -->
+            <button id="menu-btn" class="md:hidden text-gray-700 text-2xl focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
     </div>
-  </div>
+
+    <!-- Menu Mobile (toggle) -->
+    <div id="mobile-menu" class="hidden md:hidden flex flex-col bg-white border-t border-gray-100">
+        <a href="../index.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 border-b">Início</a>
+        <a href="gastronomia.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 border-b">Gastronomia</a>
+        <a href="hospedagens.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 border-b">Hospedagens</a>
+        <a href="lojas-e-servicos.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 border-b">Lojas e Serviços</a>
+        <a href="pontos-turisticos.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 border-b">Pontos Turísticos</a>
+        <a href="sobre.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50">Sobre</a>
+    </div>
+
 </header>
 
 <script>
@@ -381,6 +404,26 @@ document.addEventListener("DOMContentLoaded", () => {
     cartCountEl.classList.add("hidden");
   }
 });
+</script>
+<script>
+    // === Menu Mobile ===
+    document.addEventListener("DOMContentLoaded", () => {
+        const menuBtn = document.getElementById("menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        if (!menuBtn || !mobileMenu) return;
+
+        let menuOpen = false;
+
+        menuBtn.addEventListener("click", () => {
+            menuOpen = !menuOpen;
+            mobileMenu.classList.toggle("hidden");
+
+            menuBtn.innerHTML = menuOpen
+                ? '<i class="fa-solid fa-xmark"></i>'
+                : '<i class="fa-solid fa-bars"></i>';
+        });
+    });
 </script>
 
 </body>

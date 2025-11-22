@@ -1,47 +1,119 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PF2TSPV6');</script>
+    <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gastronomia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#2563eb',
-                        'bg-light': '#f8f9fa',
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                    }
-                }
+        window.FontAwesomeConfig = { autoReplaceSvg: 'nest' };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .carousel { scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
+        .carousel::-webkit-scrollbar { display: none; }
+        @media (max-width: 768px) {
+            #packages-section .w-80,
+            #featured-tickets .w-80 {
+                scroll-snap-align: center;
             }
         }
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <style>::-webkit-scrollbar { display: none;}</style>
+
+        @media (min-width: 769px) {
+            #packages-section > div,
+            #featured-tickets > div {
+                justify-content: center;
+                margin: 0 auto;
+                max-width: 1280px;
+            }
+        }
+    </style>
 </head>
-<body class="bg-bg-light font-sans">
+<body class="bg-gray-50">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PF2TSPV6"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
+<header id="header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50 py-2">
+    <div class="px-4 py-2 flex items-center justify-between">
 
-<header id="header" class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-        <div class="flex justify-between items-center h-16">
-            <div class="flex items-center">
-                <span class="text-xl font-bold text-gray-900">Guia Rancho Queimado</span>
+        <!-- Logo -->
+
+        <a href="../index.html" class="flex items-center space-x-2 group">
+            <img src="../assets/images/guia-rancho-queimado-logo-sem-fundo.png"
+                 alt="Logo Guia RQ"
+                 class="h-12 sm:h-14 w-auto transition-transform group-hover:scale-105">
+            <span class="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+    Guia RQ
+  </span>
+        </a>
+
+        <!-- Navegação Desktop (ESCONDIDA no mobile) -->
+        <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-700">
+            <nav class="hidden md:flex space-x-10">
+                <a href="../index.html" class="text-gray-700 hover:text-blue-600">Início</a>
+                <a href="gastronomia.html" class="text-gray-700 hover:text-blue-600">Gastronomia</a>
+                <a href="hospedagens.html" class="text-gray-700 hover:text-blue-600">Hospedagens</a>
+                <a href="lojas-e-servicos.html" class="text-gray-700 hover:text-blue-600">Lojas e Serviços</a>
+                <a href="pontos-turisticos.html" class="text-gray-700 hover:text-blue-600">Pontos Turísticos</a>
+                <a href="sobre.html" class="text-gray-700 hover:text-blue-600">Sobre</a>
+            </nav>
+        </nav>
+
+        <!-- Lado direito -->
+        <div class="flex items-center space-x-5">
+
+            <!-- Usuário -->
+            <div class="relative flex items-center justify-center" id="user-menu-container">
+                <button id="user-icon" class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
+                    <i class="fa-solid fa-user"></i>
+                </button>
+                <div id="user-dropdown"
+                     class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 transform
+                    w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50">
+                    <!-- JS injeta aqui -->
+                </div>
             </div>
-            <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                <i class="fas fa-bars text-xl text-gray-700"></i>
+
+            <!-- Carrinho -->
+            <a href="carrinho.html" class="relative text-gray-600 hover:text-blue-600 transition-colors">
+                <i class="fa-solid fa-shopping-cart text-lg"></i>
+                <span id="cart-count"
+                      class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center shadow"></span>
+            </a>
+
+            <!-- Botão Hambúrguer (SÓ no mobile) -->
+            <button id="menu-btn" class="md:hidden text-gray-700 text-2xl focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
             </button>
         </div>
     </div>
+
+    <!-- Menu Mobile (toggle) -->
+    <div id="mobile-menu" class="hidden md:hidden flex flex-col bg-white border-t border-gray-100">
+        <a href="../index.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 border-b">Início</a>
+        <a href="gastronomia.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 border-b">Gastronomia</a>
+        <a href="hospedagens.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 border-b">Hospedagens</a>
+        <a href="lojas-e-servicos.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 border-b">Lojas e Serviços</a>
+        <a href="pontos-turisticos.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 border-b">Pontos Turísticos</a>
+        <a href="sobre.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50">Sobre</a>
+    </div>
+
 </header>
+
 
 
 <section id="hero-section" class="relative h-[400px] overflow-hidden">
@@ -50,7 +122,7 @@
         <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60"></div>
     </div>
     <div class="relative h-full flex flex-col justify-center items-center text-center px-6">
-        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">Gastronomia</h1>
+        <h1 class="text-4xl md:text-5xl font-bold text-yellow-400 mb-4 tracking-tight">Gastronomia</h1>
         <p class="text-lg text-white/95 font-light mb-3 max-w-2xl">Sabores autênticos da serra catarinense</p>
         <p class="text-sm text-white font-light max-w-xl leading-relaxed">Descubra a rica gastronomia de Rancho Queimado, onde tradição alemã e italiana se encontram com produtos artesanais da região, criando experiências únicas e memoráveis.</p>
     </div>
@@ -62,13 +134,23 @@
     <div id="establishments-grid" class="grid grid-cols-1 gap-6">
 
         <article id="card-bier-haus" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/15cf2c3b2f-9f62e6b6bb96d29a2651.png" alt="german beer house exterior, rustic mountain architecture, craft beer bar, cozy atmosphere" />
+            <div class="overflow-hidden h-64 md:h-48 lg:h-56">
+                <img
+                        class="w-full h-full object-cover object-center"
+                        src="../assets/images/images2/bier7.jpeg"
+                        alt="Bier Haus"
+                >
             </div>
+
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Bier Haus</h3>
-                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Cervejaria artesanal com ambiente acolhedor e tradicional, oferecendo rótulos exclusivos produzidos na região com ingredientes selecionados.</p>
-                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">
+                    Aproveite o melhor do chopp, espumante, vinho e muito mais no coração da praça central de Rancho Queimado.
+                </p>
+
+                <button
+                        onclick="window.location.href='./estabelecimentos/bier-haus.html'"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
@@ -82,7 +164,9 @@
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Bergkaffee</h3>
                 <p class="text-gray-600 leading-relaxed mb-5 text-sm">Cafeteria especializada em cafés especiais e doces artesanais, perfeita para momentos de pausa com vista para as montanhas.</p>
-                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                <button
+                        onclick="window.location.href='./estabelecimentos/bergkaffe.html'"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
@@ -96,7 +180,9 @@
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Rancho Bistrô</h3>
                 <p class="text-gray-600 leading-relaxed mb-5 text-sm">Bistrô contemporâneo que combina técnicas modernas com ingredientes regionais, criando pratos sofisticados em ambiente acolhedor.</p>
-                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                <button
+                        onclick="window.location.href='./estabelecimentos/rancho-bistro.html'"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
@@ -110,7 +196,9 @@
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Santa Serra</h3>
                 <p class="text-gray-600 leading-relaxed mb-5 text-sm">Restaurante com culinária caseira e receitas tradicionais da serra, valorizando produtos locais e o sabor autêntico da região.</p>
-                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                <button
+                        onclick="window.location.href='./estabelecimentos/santa.html'"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
@@ -124,7 +212,9 @@
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Goyah Vinhos</h3>
                 <p class="text-gray-600 leading-relaxed mb-5 text-sm">Vinícola boutique especializada em vinhos de altitude, oferecendo degustações e experiências enogastronômicas únicas.</p>
-                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                <button
+                        onclick="window.location.href='./estabelecimentos/goyah.html'"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
@@ -138,7 +228,9 @@
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Colhe e Pague Léo Schütz</h3>
                 <p class="text-gray-600 leading-relaxed mb-5 text-sm">Experiência de colheita própria de frutas frescas e orgânicas, conectando visitantes diretamente com a produção local.</p>
-                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                <button
+                        onclick="window.location.href='./estabelecimentos/colheleos.html'"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
@@ -152,7 +244,9 @@
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Forno e Serra Pizzaria</h3>
                 <p class="text-gray-600 leading-relaxed mb-5 text-sm">Pizzaria artesanal com forno a lenha, massa fermentada naturalmente e ingredientes premium da região serrana.</p>
-                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                <button
+                        onclick="window.location.href='./estabelecimentos/fornop.html'"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
@@ -166,7 +260,9 @@
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Da Roça Delicatéssen</h3>
                 <p class="text-gray-600 leading-relaxed mb-5 text-sm">Delicatessen com produtos artesanais, conservas caseiras, geleias e iguarias típicas da culinária serrana.</p>
-                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                <button
+                        onclick="window.location.href='./estabelecimentos/daroca.hmtl.html'"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
@@ -180,7 +276,9 @@
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Espaço Floresta</h3>
                 <p class="text-gray-600 leading-relaxed mb-5 text-sm">Restaurante integrado à natureza, oferecendo experiência gastronômica em meio à mata atlântica com pratos regionais.</p>
-                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                <button
+                        onclick="window.location.href='./estabelecimentos/espacofloresta.html'"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
@@ -194,7 +292,9 @@
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Käufer Café</h3>
                 <p class="text-gray-600 leading-relaxed mb-5 text-sm">Café colonial tradicional com influência alemã, servindo cafés especiais, bolos caseiros e cucas artesanais.</p>
-                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                <button
+                        onclick="window.location.href='./estabelecimentos/kaufer.html'"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
@@ -208,7 +308,9 @@
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Käufer Queijos Artesanais</h3>
                 <p class="text-gray-600 leading-relaxed mb-5 text-sm">Queijaria artesanal premiada, produzindo queijos de alta qualidade com leite fresco de vacas criadas na propriedade.</p>
-                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                <button
+                        onclick="window.location.href='./estabelecimentos/kauferqueijo.html'"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
@@ -222,7 +324,9 @@
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Atafona Restaurante</h3>
                 <p class="text-gray-600 leading-relaxed mb-5 text-sm">Restaurante sofisticado com proposta gastronômica contemporânea, destacando ingredientes orgânicos e sustentáveis da região.</p>
-                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                <button
+                        onclick="window.location.href='./estabelecimentos/atafona.html'"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
@@ -236,7 +340,9 @@
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Queijaria Boca da Serra</h3>
                 <p class="text-gray-600 leading-relaxed mb-5 text-sm">Queijaria familiar especializada em queijos maturados, oferecendo tours pela produção e degustações guiadas.</p>
-                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                <button
+                        onclick="window.location.href='./estabelecimentos/queijoboca.html'"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
@@ -250,48 +356,132 @@
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Pacha Cozinha</h3>
                 <p class="text-gray-600 leading-relaxed mb-5 text-sm">Cozinha autoral com foco em técnicas contemporâneas e valorização de produtos locais, criando harmonias surpreendentes.</p>
-                <button class="w-full bg-primary hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-colors">
+                <button
+                        onclick="window.location.href='./estabelecimentos/pacha.html'"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
         </article>
     </div>
 </main>
-<footer id="footer" class="bg-white border-t border-gray-200 mt-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div class="grid grid-cols-1 gap-8">
-            <div>
-                <h4 class="text-lg font-semibold text-gray-900 mb-4">Guia Rancho Queimado</h4>
-                <p class="text-sm text-gray-600 leading-relaxed">Seu guia completo para explorar o melhor de Rancho Queimado: gastronomia, hospedagem, natureza e cultura.</p>
-            </div>
-            <div>
-                <h5 class="text-sm font-semibold text-gray-900 mb-3">Links Rápidos</h5>
-                <ul class="space-y-2">
-                    <li><a href="#" class="text-sm text-gray-600 hover:text-primary transition-colors">Início</a></li>
-                    <li><a href="#" class="text-sm text-gray-600 hover:text-primary transition-colors">Gastronomia</a></li>
-                    <li><a href="#" class="text-sm text-gray-600 hover:text-primary transition-colors">Hospedagem</a></li>
-                    <li><a href="#" class="text-sm text-gray-600 hover:text-primary transition-colors">Contato</a></li>
-                </ul>
-            </div>
-            <div>
-                <h5 class="text-sm font-semibold text-gray-900 mb-3">Redes Sociais</h5>
-                <div class="flex gap-4">
-                    <a href="#" class="text-gray-600 hover:text-primary transition-colors">
-                        <i class="fab fa-facebook text-xl"></i>
-                    </a>
-                    <a href="#" class="text-gray-600 hover:text-primary transition-colors">
-                        <i class="fab fa-instagram text-xl"></i>
-                    </a>
-                    <a href="#" class="text-gray-600 hover:text-primary transition-colors">
-                        <i class="fab fa-whatsapp text-xl"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="border-t border-gray-200 mt-8 pt-8 text-center">
-            <p class="text-sm text-gray-500">&copy; 2024 Guia Rancho Queimado. Todos os direitos reservados.</p>
-        </div>
+
+<section id="partners" class="py-12 px-4 bg-gray-50">
+    <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">Parceiros Oficiais</h2>
+
+    <!-- container com rolagem horizontal -->
+    <div class="flex flex-nowrap overflow-x-auto space-x-6 pb-4 snap-x snap-mandatory scroll-smooth
+            md:grid md:grid-cols-4 md:gap-8 md:space-x-0 md:overflow-visible md:justify-center max-w-5xl mx-auto">
+
+        <!-- Forno & Serra -->
+        <a href="https://www.instagram.com/fornoeserraranchoqueimado/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logopizza.jpeg" alt="Pizzaria Forno e Serra" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Atafona -->
+        <a href="https://www.instagram.com/atafonarestauranterq?utm_source=ig_web_button_share_sheet&igsh=MTdxMWQ5a2p0OXFwNA==" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logoatafona.jpg" alt="Atafona Restaurante" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Mirante -->
+        <a href="https://www.instagram.com/miranteboavistaoficial?utm_source=ig_web_button_share_sheet&igsh=MXY5Y2h0YTUxczVhbw==" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logomirante.jpg" alt="Mirante Boa Vista" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Da Roça -->
+        <a href="https://www.instagram.com/darocadeli/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logodaroca.jpeg" alt="Da Roça Delicatessen" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Goyah -->
+        <a href="https://www.instagram.com/goyahvinhos/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logogoyah.jpeg" alt="Goyah Vinhos" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Bier Haus -->
+        <a href="https://www.instagram.com/bierhausranchoqueimado/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logobier.jpeg" alt="Bier Haus" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- RJ Off-Road -->
+        <a href="https://www.instagram.com/rjoffroadefazendinha/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logoroad.jpeg" alt="RJ Off-Road" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Espaço Floresta -->
+        <a href="https://www.instagram.com/espacoflorestarq/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logoespaco.jpeg" alt="Espaço Floresta" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Berkaffe -->
+        <a href="https://www.instagram.com/bergkaffee_rq/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logoberk.jpeg" alt="Berkaffe" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Chalé Encantado -->
+        <a href="https://www.instagram.com/ochaleranchoqueimado/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logochaleencantado.jpeg" alt="Chalé Encantado" class="h-28 w-auto object-contain">
+        </a>
+
     </div>
+</section>
+
+<footer id="footer" class="bg-gray-800 text-white py-12 px-4">
+
+    <!-- Título e descrição -->
+    <div class="space-y-8 text-center">
+        <h3 class="text-2xl font-bold mb-4">Guia RQ</h3>
+        <p class="text-gray-300 mb-4">Sua porta de entrada para Rancho Queimado</p>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid grid-cols-2 gap-8 text-sm mt-10">
+
+        <!-- Coluna 1 -->
+        <div>
+            <h4 class="font-semibold mb-3">Links Úteis</h4>
+            <ul class="space-y-2 text-gray-300">
+                <li><a href="sobre.html" class="hover:text-white transition-colors">Sobre</a></li>
+                <li><a href="termosdeuso.html" class="hover:text-white transition-colors">Termos de Uso</a></li>
+                <li><a href="politica.html" class="hover:text-white transition-colors">Política de Privacidade</a></li>
+            </ul>
+        </div>
+
+        <!-- Coluna 2 -->
+        <div>
+            <h4 class="font-semibold mb-3">Suporte</h4>
+            <p class="text-gray-300 mb-2">gropoguiarq@gmail.com</p>
+            <div class="flex space-x-4 mt-4">
+                <a
+                        href="https://www.instagram.com/guiaranchoqueimado/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-gray-400 hover:text-blue-400 cursor-pointer text-2xl"
+                >
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+            </div>
+        </div>
+
+    </div> <!-- Fim do grid -->
+
+    <!-- Rodapé inferior -->
+    <div class="text-center text-sm text-gray-400 border-t border-gray-700 pt-6 mt-10">
+        © 2024 Guia RQ. Todos os direitos reservados.
+    </div>
+
 </footer>
+
+<
 </body>
 </html>
