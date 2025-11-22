@@ -115,80 +115,122 @@
 </header>
 
 
-<section id="hero-section" class="relative h-[400px] mt-[72px]">
-    <div class="absolute inset-0 overflow-hidden">
-        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/fd99561c83-4e6ffa2f3582d53da548.png" alt="beautiful mountain lodge accommodation in serra catarinense brazil, cozy chalet surrounded by nature, misty mountains, warm lighting, editorial photography" />
-        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70"></div>
-    </div>
+<section class="relative h-[420px] md:h-[520px] w-full overflow-hidden mt-[72px]">
+
+    <!-- IMAGEM DE FUNDO -->
+    <img src="../assets/images/praca3.jpeg"
+         class="absolute inset-0 w-full h-full object-cover object-center brightness-[0.6] md:brightness-[0.45]">
+
+    <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60"></div>
 
     <div class="relative h-full flex flex-col justify-center items-center text-center px-6">
-        <h1 class="text-4xl font-bold text-white mb-4 leading-tight">Hospedagens</h1>
-        <p class="text-lg text-white/95 max-w-md">Descubra aqui diversas opções de hospedagem!</p>
+
+        <!-- TÍTULO -->
+        <h1 class="text-4xl md:text-5xl font-bold text-yellow-400 tracking-tight mb-3 md:mb-4 mt-10 md:mt-0">
+            Hospedagens
+        </h1>
+
+        <!-- SUBTÍTULO -->
+        <p class="text-xl md:text-2xl font-light text-white/95 drop-shadow-lg mb-4 md:mb-6 leading-snug">
+            Escolha sua estadia perfeita em Rancho Queimado
+        </p>
+
+        <!-- PARÁGRAFO -->
+        <p class="text-base md:text-lg text-white/90 font-light drop-shadow-lg max-w-3xl leading-relaxed">
+            Chalés, casas e refúgios exclusivos para você aproveitar a Serra Catarinense com conforto, privacidade e vistas incríveis.
+        </p>
     </div>
 </section>
 
 
-<main id="main-content" class="px-4 py-8">
+<main id="main-content" class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
 
-    <div id="hospedagens-grid" class="space-y-6">
+    <!-- GRID PADRONIZADO: 1 COLUNA MOBILE / 2 DESKTOP -->
+    <div id="hospedagens-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        <article id="card-chale-bosque" class="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/5c4dfef625-678772519a0e8aa49901.png" alt="cozy wooden chalet with fireplace and hot tub, surrounded by forest in rancho queimado, warm interior lighting, inviting atmosphere" />
+        <!-- ===== CARD MODELO (repetido para todos os chalés) ===== -->
+        <!-- Apenas alterei os textos e as imagens conforme o seu código -->
+
+        <!-- CHALÉ BOSQUE -->
+        <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow w-full">
+            <div class="overflow-hidden h-64 md:h-48 lg:h-56">
+                <img class="w-full h-full object-cover"
+                     src="https://storage.googleapis.com/uxpilot-auth.appspot.com/5c4dfef625-678772519a0e8aa49901.png"
+                     alt="Chalé Bosque">
             </div>
-            <div class="p-5">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé Bosque</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-5">Aconchegue-se no Chalé do Bosque, o refúgio perfeito em Rancho Queimado. Com lareira, churrasqueira e banheira aquecida, desfrute da natureza ao máximo.</p>
-                <button
-                        onclick="window.location.href='./estabelecimentos/hospedagens/chalebosque.html'"
+
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Chalé Bosque</h3>
+
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">
+                    Refúgio com lareira, churrasqueira e banheira aquecida, ideal para quem busca conforto em meio à natureza.
+                </p>
+
+                <button onclick="window.location.href='./estabelecimentos/hospedagens/chalebosque.html'"
                         class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
         </article>
 
-
-        <article id="card-vale-sonhos-1" class="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/39f2e1c251-3fde641fe152abafd7cd.png" alt="luxury chalet with panoramic mountain views, swimming pool and jacuzzi, vale de taquaras rancho queimado, modern architecture" />
+        <!-- CHALÉ VALE DOS SONHOS 1 -->
+        <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow w-full">
+            <div class="overflow-hidden h-64 md:h-48 lg:h-56">
+                <img class="w-full h-full object-cover"
+                     src="https://storage.googleapis.com/uxpilot-auth.appspot.com/39f2e1c251-3fde641fe152abafd7cd.png"
+                     alt="Chalé Vale dos Sonhos 1">
             </div>
-            <div class="p-5">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé 1 – Vale dos Sonhos</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-5">Conforto e beleza no coração do Vale de Taquaras, em Rancho Queimado – SC. Com vistas panorâmicas deslumbrantes, comodidades como piscina, banheira relaxante, Wi-Fi rápido e uma lareira acolhedora.</p>
-                <button
-                        onclick="window.location.href='./estabelecimentos/hospedagens/chale1vale.html'"
+
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Chalé 1 – Vale dos Sonhos</h3>
+
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">
+                    Piscina, banheira relaxante, vista panorâmica e total privacidade em Taquaras.
+                </p>
+
+                <button onclick="window.location.href='./estabelecimentos/hospedagens/chale1vale.html'"
                         class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
         </article>
 
-
-        <article id="card-casa-sorolla" class="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/d78f2c5d95-a35827e00d4f7a4c209a.png" alt="artistic boutique house with art gallery interior, nature views, elegant design, rancho queimado, sophisticated ambiance" />
+        <!-- CASA SOROLLA -->
+        <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="overflow-hidden h-64 md:h-48 lg:h-56">
+                <img class="w-full h-full object-cover"
+                     src="https://storage.googleapis.com/uxpilot-auth.appspot.com/d78f2c5d95-a35827e00d4f7a4c209a.png"
+                     alt="Casa Sorolla">
             </div>
-            <div class="p-5">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Casa Sorolla</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-5">Descubra o encanto da Casa Sorolla: uma fusão de arte, conforto e natureza, perfeita para uma experiência inesquecível.</p>
-                <button
-                        onclick="window.location.href='./estabelecimentos/hospedagens/casasorolla.html'"
+
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Casa Sorolla</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">
+                    A fusão perfeita entre arte, natureza e conforto — uma experiência única.
+                </p>
+
+                <button onclick="window.location.href='./estabelecimentos/hospedagens/casasorolla.html'"
                         class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
         </article>
 
-
-        <article id="card-sossego-montanha" class="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/533e62aabe-19e3568e126af4ac686c.png" alt="mountain retreat chalet with incredible mountain views, serra catarinense, peaceful setting, wooden architecture, sunset lighting" />
+        <!-- CHALÉ SOSSEGO DA MONTANHA -->
+        <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+            <div class="overflow-hidden h-64 md:h-48 lg:h-56">
+                <img class="w-full h-full object-cover"
+                     src="https://storage.googleapis.com/uxpilot-auth.appspot.com/533e62aabe-19e3568e126af4ac686c.png"
+                     alt="Chalé Sossego da Montanha">
             </div>
-            <div class="p-5">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé Sossego da Montanha</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-5">Refúgio aconchegante na Serra Catarinense, a 6 min do centro de Rancho Queimado. Conforto, natureza e vista incrível para as montanhas.</p>
-                <button
-                        onclick="window.location.href='./estabelecimentos/hospedagens/chalesossegodamontanha.html'"
+
+            <div class="p-6">
+                <h3 class="text-2xl font-semibold text-gray-900 mb-3">Chalé Sossego da Montanha</h3>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">
+                    Um refúgio com vista deslumbrante, lareira e silêncio absoluto.
+                </p>
+
+                <button onclick="window.location.href='./estabelecimentos/hospedagens/chalesossegodamontanha.html'"
                         class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
