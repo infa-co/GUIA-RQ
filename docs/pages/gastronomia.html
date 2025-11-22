@@ -134,12 +134,20 @@
     <div id="establishments-grid" class="grid grid-cols-1 gap-6">
 
         <article id="card-bier-haus" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/15cf2c3b2f-9f62e6b6bb96d29a2651.png" alt="german beer house exterior, rustic mountain architecture, craft beer bar, cozy atmosphere" />
+            <div class="overflow-hidden h-64 md:h-48 lg:h-56">
+                <img
+                        class="w-full h-full object-cover object-center"
+                        src="../assets/images/images2/bier7.jpeg"
+                        alt="Bier Haus"
+                >
             </div>
+
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Bier Haus</h3>
-                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Cervejaria artesanal com ambiente acolhedor e tradicional, oferecendo rótulos exclusivos produzidos na região com ingredientes selecionados.</p>
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">
+                    Aproveite o melhor do chopp, espumante, vinho e muito mais no coração da praça central de Rancho Queimado.
+                </p>
+
                 <button
                         onclick="window.location.href='./estabelecimentos/bier-haus.html'"
                         class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
@@ -474,75 +482,6 @@
 
 </footer>
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        // === Dropdown do usuário ===
-        let userLoggedIn = false;
-        const userIcon = document.getElementById('user-icon');
-        const dropdown = document.getElementById('user-dropdown');
-
-        function renderMenu() {
-            dropdown.innerHTML = userLoggedIn
-                ? `
-        <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minha conta</a>
-        <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minhas compras</a>
-        <hr class="my-1">
-        <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
-      `
-                : `
-        <a href="login.html" class="block px-10 py-5 hover:bg-gray-100 text-gray-700">Entrar ou Cadastrar-se</a>
-      `;
-        }
-
-        if (userIcon) {
-            userIcon.addEventListener('click', () => {
-                dropdown.classList.toggle('hidden');
-                renderMenu();
-            });
-        }
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('#user-menu-container')) dropdown.classList.add('hidden');
-            if (e.target.id === 'logout-btn') {
-                userLoggedIn = false;
-                dropdown.classList.add('hidden');
-                alert('Você saiu da conta.');
-            }
-        });
-
-        // === Menu Mobile ===
-        const menuBtn = document.getElementById("menu-btn");
-        const mobileMenu = document.getElementById("mobile-menu");
-        let menuOpen = false;
-
-        if (menuBtn) {
-            menuBtn.addEventListener("click", () => {
-                menuOpen = !menuOpen;
-                mobileMenu.classList.toggle("hidden");
-                menuBtn.innerHTML = menuOpen
-                    ? '<i class="fa-solid fa-xmark"></i>'
-                    : '<i class="fa-solid fa-bars"></i>';
-            });
-        }
-    });
-</script>
-<script>
-    function updateCartCount() {
-        const cartCount = document.getElementById('cart-count');
-        const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-
-        if (carrinho.length > 0) {
-            const totalQtd = carrinho.reduce((acc, i) => acc + i.qtd, 0);
-            cartCount.textContent = totalQtd;
-            cartCount.classList.remove('hidden');
-        } else {
-            cartCount.classList.add('hidden');
-        }
-    }
-
-    updateCartCount();
-</script>
-
-
+<
 </body>
 </html>
