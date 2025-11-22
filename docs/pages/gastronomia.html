@@ -30,17 +30,65 @@
 <body class="bg-bg-light font-sans">
 
 
-<header id="header" class="bg-white shadow-sm sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-        <div class="flex justify-between items-center h-16">
-            <div class="flex items-center">
-                <span class="text-xl font-bold text-gray-900">Guia Rancho Queimado</span>
+<header id="header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50 py-2">
+    <div class="px-4 py-2 flex items-center justify-between">
+
+        <!-- Logo -->
+
+        <a href="index.html" class="flex items-center space-x-2 group">
+            <img src="assets/images/guia-rancho-queimado-logo-sem-fundo.png"
+                 alt="Logo Guia RQ"
+                 class="h-12 sm:h-14 w-auto transition-transform group-hover:scale-105">
+            <span class="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+    Guia RQ
+  </span>
+        </a>
+
+        <!-- Navegação Desktop (ESCONDIDA no mobile) -->
+        <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-700">
+            <a href="index.html" class="hover:text-blue-600">Home</a>
+            <!--<a href="pages/tickets.html" class="hover:text-blue-600">Tickets</a>
+            <a href="pages/pacotes.html" class="hover:text-blue-600">Pacotes</a>-->
+            <a href="pages/sobre.html" class="hover:text-blue-600">Sobre</a>
+        </nav>
+
+        <!-- Lado direito -->
+        <div class="flex items-center space-x-5">
+
+            <!-- Usuário -->
+            <div class="relative flex items-center justify-center" id="user-menu-container">
+                <button id="user-icon" class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
+                    <i class="fa-solid fa-user"></i>
+                </button>
+                <div id="user-dropdown"
+                     class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 transform
+                    w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50">
+                    <!-- JS injeta aqui -->
+                </div>
             </div>
-            <button class="p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                <i class="fas fa-bars text-xl text-gray-700"></i>
+
+            <!-- Carrinho -->
+            <a href="pages/carrinho.html" class="relative text-gray-600 hover:text-blue-600 transition-colors">
+                <i class="fa-solid fa-shopping-cart text-lg"></i>
+                <span id="cart-count"
+                      class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center shadow"></span>
+            </a>
+
+            <!-- Botão Hambúrguer (SÓ no mobile) -->
+            <button id="menu-btn" class="md:hidden text-gray-700 text-2xl focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
             </button>
         </div>
     </div>
+
+    <!-- Menu Mobile (toggle) -->
+    <div id="mobile-menu" class="hidden md:hidden flex-col bg-white border-t border-gray-100">
+        <a href="index.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600">Home</a>
+        <a href="pages/tickets.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600">Tickets</a>
+        <a href="pages/pacotes.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600">Pacotes</a>
+        <a href="pages/sobre.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-blue-600">Sobre</a>
+    </div>
+
 </header>
 
 
