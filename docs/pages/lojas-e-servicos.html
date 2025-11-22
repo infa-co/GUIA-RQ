@@ -1,257 +1,439 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PF2TSPV6');</script>
+    <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lojas e Serviços</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'inter': ['Inter', 'sans-serif'],
-                    },
-                }
+        window.FontAwesomeConfig = { autoReplaceSvg: 'nest' };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .carousel { scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
+        .carousel::-webkit-scrollbar { display: none; }
+        @media (max-width: 768px) {
+            #packages-section .w-80,
+            #featured-tickets .w-80 {
+                scroll-snap-align: center;
             }
         }
-    </script>
-    <style>::-webkit-scrollbar { display: none;}</style>
+
+        @media (min-width: 769px) {
+            #packages-section > div,
+            #featured-tickets > div {
+                justify-content: center;
+                margin: 0 auto;
+                max-width: 1280px;
+            }
+        }
+    </style>
 </head>
-<body class="font-inter bg-gray-50">
+<body class="bg-gray-50">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PF2TSPV6"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
+<header id="header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50 py-2">
+    <div class="px-4 py-2 flex items-center justify-between">
 
-<header id="header" class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
-    <div class="px-4 py-3">
-        <div class="flex items-center justify-between mb-3">
-            <div class="text-lg font-bold text-gray-800">
-                Guia Rancho Queimado
+        <!-- Logo -->
+
+        <a href="../index.html" class="flex items-center space-x-2 group">
+            <img src="../assets/images/guia-rancho-queimado-logo-sem-fundo.png"
+                 alt="Logo Guia RQ"
+                 class="h-12 sm:h-14 w-auto transition-transform group-hover:scale-105">
+            <span class="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+    Guia RQ
+  </span>
+        </a>
+
+        <!-- Navegação Desktop (ESCONDIDA no mobile) -->
+        <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-700">
+            <nav class="hidden md:flex space-x-10">
+                <a href="../index.html" class="text-gray-700 hover:text-blue-600">Início</a>
+                <a href="gastronomia.html" class="text-gray-700 hover:text-blue-600">Gastronomia</a>
+                <a href="hospedagens.html" class="text-gray-700 hover:text-blue-600">Hospedagens</a>
+                <a href="lojas-e-servicos.html" class="text-gray-700 hover:text-blue-600">Lojas e Serviços</a>
+                <a href="pontos-turisticos.html" class="text-gray-700 hover:text-blue-600">Pontos Turísticos</a>
+                <a href="sobre.html" class="text-gray-700 hover:text-blue-600">Sobre</a>
+            </nav>
+        </nav>
+
+        <!-- Lado direito -->
+        <div class="flex items-center space-x-5">
+
+            <!-- Usuário -->
+            <div class="relative flex items-center justify-center" id="user-menu-container">
+                <button id="user-icon" class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
+                    <i class="fa-solid fa-user"></i>
+                </button>
+                <div id="user-dropdown"
+                     class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 transform
+                    w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50">
+                    <!-- JS injeta aqui -->
+                </div>
             </div>
-            <button id="menu-toggle" class="text-gray-600">
-                <i class="fa-solid fa-bars text-xl"></i>
+
+            <!-- Carrinho -->
+            <a href="carrinho.html" class="relative text-gray-600 hover:text-blue-600 transition-colors">
+                <i class="fa-solid fa-shopping-cart text-lg"></i>
+                <span id="cart-count"
+                      class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center shadow"></span>
+            </a>
+
+            <!-- Botão Hambúrguer (SÓ no mobile) -->
+            <button id="menu-btn" class="md:hidden text-gray-700 text-2xl focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
             </button>
         </div>
     </div>
 
-    <nav id="mobile-menu" class="hidden bg-white border-t border-gray-100">
-        <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 border-b border-gray-100">Início</a>
-        <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 border-b border-gray-100">Gastronomia</a>
-        <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 border-b border-gray-100 font-semibold">Hospedagens</a>
-        <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50 border-b border-gray-100">Lojas e Serviços</a>
-        <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-50">Pontos Turísticos</a>
-    </nav>
-</header>
-
-
-<section id="hero-section" class="relative h-[400px] mt-[72px]">
-    <div class="absolute inset-0 overflow-hidden">
-        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/fd99561c83-4e6ffa2f3582d53da548.png" alt="beautiful mountain lodge accommodation in serra catarinense brazil, cozy chalet surrounded by nature, misty mountains, warm lighting, editorial photography" />
-        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70"></div>
+    <!-- Menu Mobile (toggle) -->
+    <div id="mobile-menu" class="hidden md:hidden flex-col bg-white border-t border-gray-100">
+        <a href="../index.html" class="text-gray-700 hover:text-blue-600">Início</a>
+        <a href="pages/gastronomia.html" class="text-gray-700 hover:text-blue-600">Gastronomia</a>
+        <a href="pages/hospedagens.html" class="text-gray-700 hover:text-blue-600">Hospedagens</a>
+        <a href="pages/lojas-e-servicos.html" class="text-gray-700 hover:text-blue-600">Lojas e Serviços</a>
+        <a href="pages/pontos-turisticos.html" class="text-gray-700 hover:text-blue-600">Pontos Turísticos</a>
+        <a href="pages/sobre.html" class="text-gray-700 hover:text-blue-600">Sobre</a>
     </div>
 
-    <div class="relative h-full flex flex-col justify-center items-center text-center px-6">
-        <h1 class="text-4xl font-bold text-white mb-4 leading-tight">Lojas e Serviços</h1>
-        <p class="text-lg text-white/95 max-w-md">Descubra aqui diversas opções de lojas e serviços!</p>
+</header>
+
+<main id="main-content" class="pt-16">
+    <section id="hero-section" class="relative h-[400px] overflow-hidden">
+        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/321537718b-77ca2595b1cfe594124c.png" alt="Beautiful mountain landscape of Rancho Queimado Brazil, scenic nature view with green hills and blue sky, editorial photography" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent"></div>
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+            <h1 class="text-white text-3xl font-bold mb-3">Lojas e Serviços</h1>
+            <p class="text-white text-base font-light max-w-md">Descubra aqui nossas opções de lojas e serviços diversos!</p>
+        </div>
+    </section>
+
+    <section id="services-grid" class="max-w-7xl mx-auto px-4 py-12">
+
+        <article id="service-card-1" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/acd617cbad-3fef230a6796204916a9.png" alt="Off-road UTV quadricycle adventure trail in nature, action sports, Brazilian countryside" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-semibold text-gray-900 mb-3">RJ Off-Road & Fazendinha</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">Explore trilhas emocionantes de quadriciclo e UTV, interaja com os animais da fazendinha e aproveite momentos inesquecíveis em meio à natureza de Rancho Queimado. Agende seu passeio!</p>
+                <button class="w-full bg-gray-900 text-white py-3 rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors">Ver mais</button>
+            </div>
+        </article>
+
+        <article id="service-card-2" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/e5ce92373c-f67d52a9a0ca747b385c.png" alt="Relaxing spa massage therapy session, wellness treatment, natural holistic healing environment" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-semibold text-gray-900 mb-3">Home Spa Leonardo Schütz</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">Desfrute do serviço de Home Spa com @leonardoschutznaturologo. Massagens e terapias naturais em locais de hospedagem e residências. Flexibilidade de horários.</p>
+                <button class="w-full bg-gray-900 text-white py-3 rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors">Ver mais</button>
+            </div>
+        </article>
+
+        <article id="service-card-3" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/030bfeea63-cd016c2a24c8b79a80af.png" alt="Traditional accordion player performing German folk music, cultural event, festive atmosphere" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-semibold text-gray-900 mb-3">Gaiteiro Leonardo Schütz</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">Surpreenda seus convidados com um gaiteiro em seu evento! Leonardo Schütz traz músicas típicas da cultura alemã, gaúcha e sertanejo antigo, proporcionando uma experiência diferenciada e única. Garanta momentos memoráveis em seu encontro com amigos, família e aniversários.</p>
+                <button class="w-full bg-gray-900 text-white py-3 rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors">Ver mais</button>
+            </div>
+        </article>
+
+        <article id="service-card-4" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/9d308b7581-a75dc25e23d626fa146a.png" alt="Modern real estate property houses and land for sale, Brazilian countryside real estate" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-semibold text-gray-900 mb-3">Eric Belém Imobiliária</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">A Imobiliária Eric Belém, em Rancho Queimado/SC, é especializada em imóveis, chácaras, casas, terrenos e lotes residenciais e comerciais. Eles oferecem consultoria, avaliação e excelente atendimento.</p>
+                <button class="w-full bg-gray-900 text-white py-3 rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors">Ver mais</button>
+            </div>
+        </article>
+
+        <article id="service-card-5" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/14c52c85c0-6d6ebcd9b5a30cbf5f16.png" alt="Pure mineral water spring source in nature, crystal clear water, natural hydration" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-semibold text-gray-900 mb-3">Água Santa Rita</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">A Estância Hidromineral Santa Rita de Cássia é conhecida por sua água mineral de qualidade. Considerada uma das melhores do sul do Brasil, é parada obrigatória para quem visita Rancho Queimado.</p>
+                <button class="w-full bg-gray-900 text-white py-3 rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors">Ver mais</button>
+            </div>
+        </article>
+
+        <article id="service-card-6" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/6043b1eef7-5a81f47d132fad72544a.png" alt="Modern pharmacy interior with health products and beauty items, clean professional environment" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-semibold text-gray-900 mb-3">AC Farma</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">Excelência em Cuidados com a Saúde, Diversidade em Produtos de Beleza, Economia Através do Cartão Fidelidade e um Atendimento Sempre Pronto para Você.</p>
+                <button class="w-full bg-gray-900 text-white py-3 rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors">Ver mais</button>
+            </div>
+        </article>
+
+        <article id="service-card-7" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/6cefb7a4d9-8d77ef42a0d00ef8055e.png" alt="Modern supermarket interior with fresh produce and wine section, clean organized retail space" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-semibold text-gray-900 mb-3">Supermercado Bunn</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">Variedade, frutas fresquinhas direto do produtor e uma seleção incrível na adega — sempre com preços justos.</p>
+                <button class="w-full bg-gray-900 text-white py-3 rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors">Ver mais</button>
+            </div>
+        </article>
+
+        <article id="service-card-8" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/f93970ed7c-8c9d226e2dc7af5dcddd.png" alt="Modern architecture design blueprints and building plans, contemporary residential design" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-semibold text-gray-900 mb-3">A+M Arquitetura</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">Transformando suas ideias em projetos únicos e acolhedores. Serviços personalizados desde a concepção até a execução, acompanhando cada etapa.</p>
+                <button class="w-full bg-gray-900 text-white py-3 rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors">Ver mais</button>
+            </div>
+        </article>
+
+        <article id="service-card-9" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/dab40bd38e-62c744f812ab79eb0e0f.png" alt="Professional off-road vehicles UTVs and ATVs showroom, motorsports equipment" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-semibold text-gray-900 mb-3">Divisão4 MotorSports</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">Especialistas em UTVs, quadriciclos, motos e veículos off-road. Atendimento especializado e equipamentos de alta performance.</p>
+                <button class="w-full bg-gray-900 text-white py-3 rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors">Ver mais</button>
+            </div>
+        </article>
+
+        <article id="service-card-10" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/ef9d973e35-28bb1d806737f92c389e.png" alt="Professional electrician working on electrical installation, technical service maintenance" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-semibold text-gray-900 mb-3">Rancho Queimado Instalações</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">Serviços profissionais de instalação elétrica, manutenção e suporte técnico para residências e empresas de Rancho Queimado.</p>
+                <button class="w-full bg-gray-900 text-white py-3 rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors">Ver mais</button>
+            </div>
+        </article>
+
+        <article id="service-card-11" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+            <div class="h-56 overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/970380fd26-18f66dd3b2a275689c40.png" alt="Luxury interior design with custom furniture and premium home decor, elegant living space" />
+            </div>
+            <div class="p-5">
+                <h2 class="text-xl font-semibold text-gray-900 mb-3">Paulinho Home Decor</h2>
+                <p class="text-gray-600 text-sm leading-relaxed mb-4">Decoração residencial premium: móveis planejados, design acolhedor e soluções feitas sob medida para sua casa.</p>
+                <button class="w-full bg-gray-900 text-white py-3 rounded-lg font-medium text-sm hover:bg-gray-800 transition-colors">Ver mais</button>
+            </div>
+        </article>
+
+    </section>
+</main>
+
+<section id="partners" class="py-12 px-4 bg-gray-50">
+    <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">Parceiros Oficiais</h2>
+
+    <!-- container com rolagem horizontal -->
+    <div class="flex flex-nowrap overflow-x-auto space-x-6 pb-4 snap-x snap-mandatory scroll-smooth
+            md:grid md:grid-cols-4 md:gap-8 md:space-x-0 md:overflow-visible md:justify-center max-w-5xl mx-auto">
+
+        <!-- Forno & Serra -->
+        <a href="https://www.instagram.com/fornoeserraranchoqueimado/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logopizza.jpeg" alt="Pizzaria Forno e Serra" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Atafona -->
+        <a href="https://www.instagram.com/atafonarestauranterq?utm_source=ig_web_button_share_sheet&igsh=MTdxMWQ5a2p0OXFwNA==" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logoatafona.jpg" alt="Atafona Restaurante" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Mirante -->
+        <a href="https://www.instagram.com/miranteboavistaoficial?utm_source=ig_web_button_share_sheet&igsh=MXY5Y2h0YTUxczVhbw==" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logomirante.jpg" alt="Mirante Boa Vista" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Da Roça -->
+        <a href="https://www.instagram.com/darocadeli/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logodaroca.jpeg" alt="Da Roça Delicatessen" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Goyah -->
+        <a href="https://www.instagram.com/goyahvinhos/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logogoyah.jpeg" alt="Goyah Vinhos" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Bier Haus -->
+        <a href="https://www.instagram.com/bierhausranchoqueimado/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logobier.jpeg" alt="Bier Haus" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- RJ Off-Road -->
+        <a href="https://www.instagram.com/rjoffroadefazendinha/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logoroad.jpeg" alt="RJ Off-Road" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Espaço Floresta -->
+        <a href="https://www.instagram.com/espacoflorestarq/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logoespaco.jpeg" alt="Espaço Floresta" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Berkaffe -->
+        <a href="https://www.instagram.com/bergkaffee_rq/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logoberk.jpeg" alt="Berkaffe" class="h-28 w-auto object-contain">
+        </a>
+
+        <!-- Chalé Encantado -->
+        <a href="https://www.instagram.com/ochaleranchoqueimado/" target="_blank" rel="noopener noreferrer"
+           class="bg-white rounded-xl shadow-md flex justify-center items-center w-40 h-40 flex-shrink-0 snap-start hover:scale-105 transition-transform duration-300">
+            <img src="../assets/images/logochaleencantado.jpeg" alt="Chalé Encantado" class="h-28 w-auto object-contain">
+        </a>
+
     </div>
 </section>
 
+<footer id="footer" class="bg-gray-800 text-white py-12 px-4">
 
-<main id="main-content" class="px-4 py-8">
-
-    <div id="hospedagens-grid" class="space-y-6">
-
-        <article id="card-chale-bosque" class="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/5c4dfef625-678772519a0e8aa49901.png" alt="cozy wooden chalet with fireplace and hot tub, surrounded by forest in rancho queimado, warm interior lighting, inviting atmosphere" />
-            </div>
-            <div class="p-5">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé Bosque</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-5">Aconchegue-se no Chalé do Bosque, o refúgio perfeito em Rancho Queimado. Com lareira, churrasqueira e banheira aquecida, desfrute da natureza ao máximo.</p>
-                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
-                    Ver card e mais informações
-                </button>
-            </div>
-        </article>
-
-
-        <article id="card-vale-sonhos-1" class="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/39f2e1c251-3fde641fe152abafd7cd.png" alt="luxury chalet with panoramic mountain views, swimming pool and jacuzzi, vale de taquaras rancho queimado, modern architecture" />
-            </div>
-            <div class="p-5">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé 1 – Vale dos Sonhos</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-5">Conforto e beleza no coração do Vale de Taquaras, em Rancho Queimado – SC. Com vistas panorâmicas deslumbrantes, comodidades como piscina, banheira relaxante, Wi-Fi rápido e uma lareira acolhedora.</p>
-                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
-                    Ver card e mais informações
-                </button>
-            </div>
-        </article>
-
-
-        <article id="card-casa-sorolla" class="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/d78f2c5d95-a35827e00d4f7a4c209a.png" alt="artistic boutique house with art gallery interior, nature views, elegant design, rancho queimado, sophisticated ambiance" />
-            </div>
-            <div class="p-5">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Casa Sorolla</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-5">Descubra o encanto da Casa Sorolla: uma fusão de arte, conforto e natureza, perfeita para uma experiência inesquecível.</p>
-                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
-                    Ver card e mais informações
-                </button>
-            </div>
-        </article>
-
-
-        <article id="card-sossego-montanha" class="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/533e62aabe-19e3568e126af4ac686c.png" alt="mountain retreat chalet with incredible mountain views, serra catarinense, peaceful setting, wooden architecture, sunset lighting" />
-            </div>
-            <div class="p-5">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé Sossego da Montanha</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-5">Refúgio aconchegante na Serra Catarinense, a 6 min do centro de Rancho Queimado. Conforto, natureza e vista incrível para as montanhas.</p>
-                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
-                    Ver card e mais informações
-                </button>
-            </div>
-        </article>
-
-
-        <article id="card-caminho-sol-1" class="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/d72a7b7eea-7fd6f9c0e0f86584dd28.png" alt="family-friendly chalet for couples with children, mountain landscape rancho queimado, comfortable interior, outdoor deck" />
-            </div>
-            <div class="p-5">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé 1 – Caminho do Sol</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-5">Um destino encantador com espaço confortável para um casal e duas crianças, cercado pelas belas montanhas de Rancho Queimado.</p>
-                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
-                    Ver card e mais informações
-                </button>
-            </div>
-        </article>
-
-
-        <article id="card-caminho-sol-2" class="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/8bf5508aef-d5758e268fc26a87d317.png" alt="romantic couple chalet with one child accommodation, nature tranquility, rancho queimado mountains, cozy interior" />
-            </div>
-            <div class="p-5">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé 2 – Caminho do Sol</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-5">Um refúgio perfeito para casais com até uma criança, oferecendo uma combinação única de conforto, natureza e tranquilidade nas paisagens de Rancho Queimado.</p>
-                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
-                    Ver card e mais informações
-                </button>
-            </div>
-        </article>
-
-
-        <article id="card-blockhaus" class="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/08a8733fb0-fdccf7cd8f7d507a83c4.png" alt="exclusive boutique accommodation with unique identity, nature setting rancho queimado, modern design, purposeful retreat" />
-            </div>
-            <div class="p-5">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Blockhaus</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-5">Hospedagem com identidade, conforto e exclusividade em meio à natureza de Rancho Queimado. Um refúgio pensado para quem busca pausas com propósito e momentos de verdadeira conexão.</p>
-                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
-                    Ver card e mais informações
-                </button>
-            </div>
-        </article>
-
-
-        <article id="card-chale-fraisier" class="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/cf5b6f99e0-393ed46cb4e1aa5ee4c2.png" alt="new chalet in taquaras with jacuzzi and fireplace, 4 people capacity, modern amenities, warm atmosphere" />
-            </div>
-            <div class="p-5">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé Fraisier</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-5">Nova opção de hospedagem em Taquaras com capacidade para 4 pessoas, banheira de hidromassagem, lareira acolhedora e muito mais.</p>
-                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
-                    Ver card e mais informações
-                </button>
-            </div>
-        </article>
-
-
-        <article id="card-chale-pomar" class="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/c0347aa8e8-3bc5f89f769751219c43.png" alt="charming chalet with orchard views, fireplace bbq and heated bathtub, rancho queimado nature, rustic elegance" />
-            </div>
-            <div class="p-5">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé Pomar</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-5">Relaxe no Chalé Pomar, um refúgio encantador em Rancho Queimado. Com lareira, churrasqueira e banheira aquecida, desfrute de momentos inesquecíveis em meio à natureza exuberante.</p>
-                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
-                    Ver card e mais informações
-                </button>
-            </div>
-        </article>
-
-
-        <article id="card-vale-sonhos-2" class="bg-white rounded-2xl shadow-md overflow-hidden">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/13a378eee5-41a19dcc3a3be480063c.png" alt="romantic couples retreat with heated pool and jacuzzi, panoramic mountain views vale de taquaras, luxury chalet" />
-            </div>
-            <div class="p-5">
-                <h2 class="text-xl font-bold text-gray-800 mb-3">Chalé 2 – Vale dos Sonhos</h2>
-                <p class="text-gray-600 text-sm leading-relaxed mb-5">Um oásis de tranquilidade no Vale de Taquaras. Com piscina aquecida, hidromassagem e vista panorâmica, este chalé é perfeito para casais que desejam uma escapada única em meio à natureza.</p>
-                <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
-                    Ver card e mais informações
-                </button>
-            </div>
-        </article>
-    </div>
-</main>
-
-
-<footer id="footer" class="bg-gray-800 text-white mt-12 py-8 px-4">
-    <div class="text-center mb-6">
-        <h3 class="text-xl font-bold mb-2">Guia Rancho Queimado</h3>
-        <p class="text-gray-400 text-sm">Seu guia completo da região</p>
+    <!-- Título e descrição -->
+    <div class="space-y-8 text-center">
+        <h3 class="text-2xl font-bold mb-4">Guia RQ</h3>
+        <p class="text-gray-300 mb-4">Sua porta de entrada para Rancho Queimado</p>
     </div>
 
-    <nav class="flex flex-col space-y-3 mb-6">
-        <a href="#" class="text-gray-300 hover:text-white text-center text-sm">Início</a>
-        <a href="#" class="text-gray-300 hover:text-white text-center text-sm">Gastronomia</a>
-        <a href="#" class="text-gray-300 hover:text-white text-center text-sm">Hospedagens</a>
-        <a href="#" class="text-gray-300 hover:text-white text-center text-sm">Lojas e Serviços</a>
-        <a href="#" class="text-gray-300 hover:text-white text-center text-sm">Pontos Turísticos</a>
-    </nav>
+    <!-- Grid -->
+    <div class="grid grid-cols-2 gap-8 text-sm mt-10">
 
+        <!-- Coluna 1 -->
+        <div>
+            <h4 class="font-semibold mb-3">Links Úteis</h4>
+            <ul class="space-y-2 text-gray-300">
+                <li><a href="sobre.html" class="hover:text-white transition-colors">Sobre</a></li>
+                <li><a href="termosdeuso.html" class="hover:text-white transition-colors">Termos de Uso</a></li>
+                <li><a href="politica.html" class="hover:text-white transition-colors">Política de Privacidade</a></li>
+            </ul>
+        </div>
 
-    <div class="flex justify-center space-x-6 mb-6">
-        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-            <i class="fa-brands fa-facebook text-xl"></i>
-        </a>
-        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-            <i class="fa-brands fa-instagram text-xl"></i>
-        </a>
-        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-            <i class="fa-brands fa-whatsapp text-xl"></i>
-        </a>
+        <!-- Coluna 2 -->
+        <div>
+            <h4 class="font-semibold mb-3">Suporte</h4>
+            <p class="text-gray-300 mb-2">gropoguiarq@gmail.com</p>
+            <div class="flex space-x-4 mt-4">
+                <a
+                        href="https://www.instagram.com/guiaranchoqueimado/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-gray-400 hover:text-blue-400 cursor-pointer text-2xl"
+                >
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+            </div>
+        </div>
+
+    </div> <!-- Fim do grid -->
+
+    <!-- Rodapé inferior -->
+    <div class="text-center text-sm text-gray-400 border-t border-gray-700 pt-6 mt-10">
+        © 2024 Guia RQ. Todos os direitos reservados.
     </div>
 
-
-    <div class="text-center text-gray-400 text-xs pt-6 border-t border-gray-700">
-        <p>&copy; 2024 Guia Rancho Queimado. Todos os direitos reservados.</p>
-    </div>
 </footer>
 
-
 <script>
-    window.addEventListener('load', function() {
-        const menuToggle = document.getElementById('menu-toggle');
-        const mobileMenu = document.getElementById('mobile-menu');
+    document.addEventListener("DOMContentLoaded", () => {
+        // === Dropdown do usuário ===
+        let userLoggedIn = false;
+        const userIcon = document.getElementById('user-icon');
+        const dropdown = document.getElementById('user-dropdown');
 
-        menuToggle.addEventListener('click', function() {
-            mobileMenu.classList.toggle('hidden');
+        function renderMenu() {
+            dropdown.innerHTML = userLoggedIn
+                ? `
+        <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minha conta</a>
+        <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minhas compras</a>
+        <hr class="my-1">
+        <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
+      `
+                : `
+        <a href="login.html" class="block px-10 py-5 hover:bg-gray-100 text-gray-700">Entrar ou Cadastrar-se</a>
+      `;
+        }
+
+        if (userIcon) {
+            userIcon.addEventListener('click', () => {
+                dropdown.classList.toggle('hidden');
+                renderMenu();
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#user-menu-container')) dropdown.classList.add('hidden');
+            if (e.target.id === 'logout-btn') {
+                userLoggedIn = false;
+                dropdown.classList.add('hidden');
+                alert('Você saiu da conta.');
+            }
         });
+
+        // === Menu Mobile ===
+        const menuBtn = document.getElementById("menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+        let menuOpen = false;
+
+        if (menuBtn) {
+            menuBtn.addEventListener("click", () => {
+                menuOpen = !menuOpen;
+                mobileMenu.classList.toggle("hidden");
+                menuBtn.innerHTML = menuOpen
+                    ? '<i class="fa-solid fa-xmark"></i>'
+                    : '<i class="fa-solid fa-bars"></i>';
+            });
+        }
     });
 </script>
+<script>
+    function updateCartCount() {
+        const cartCount = document.getElementById('cart-count');
+        const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
 
+        if (carrinho.length > 0) {
+            const totalQtd = carrinho.reduce((acc, i) => acc + i.qtd, 0);
+            cartCount.textContent = totalQtd;
+            cartCount.classList.remove('hidden');
+        } else {
+            cartCount.classList.add('hidden');
+        }
+    }
+
+    updateCartCount();
+</script>
 
 </body>
 </html>
