@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estabelecimento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-blue': '#2563EB',
+                        'bg-light': '#F7F7F7',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>::-webkit-scrollbar { display: none;}</style>
+</head>
+<body class="font-inter bg-bg-light">
+
+
+<header id="header" class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-mountain text-brand-blue text-2xl"></i>
+            <span class="text-xl font-bold text-gray-900">Guia Rancho Queimado</span>
+        </div>
+        <button class="md:hidden">
+            <i class="fa-solid fa-bars text-2xl text-gray-700"></i>
+        </button>
+        <nav class="hidden md:flex items-center space-x-8">
+            <a href="#" class="text-gray-700 hover:text-brand-blue font-medium transition">Início</a>
+            <a href="#" class="text-gray-700 hover:text-brand-blue font-medium transition">Hospedagens</a>
+            <a href="#" class="text-gray-700 hover:text-brand-blue font-medium transition">Gastronomia</a>
+            <a href="#" class="text-gray-700 hover:text-brand-blue font-medium transition">Turismo</a>
+            <a href="#" class="text-gray-700 hover:text-brand-blue font-medium transition">Serviços</a>
+        </nav>
+    </div>
+</header>
+
+
+<main id="main-content">
+
+
+    <section id="hero-section" class="relative h-[400px] md:h-[500px] overflow-hidden">
+        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/603631ce8b-ec35348fc3ebfa7d1e0a.png" alt="modern rustic restaurant exterior in mountain town, warm lighting, inviting atmosphere, professional photography" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+            <h1 class="text-white text-4xl md:text-5xl font-bold text-center px-4" style="text-shadow: 0 2px 12px rgba(0,0,0,0.4)">Bier Haus Rancho Queimado</h1>
+        </div>
+    </section>
+
+
+    <section id="quick-info" class="max-w-4xl mx-auto px-4 -mt-8 relative z-10">
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Bier Haus Rancho Queimado</h2>
+            <p class="text-lg text-gray-600 mb-6">Gastronomia alemã autêntica com cervejas artesanais em ambiente acolhedor</p>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <a href="#" class="inline-flex items-center justify-center bg-brand-blue text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md">
+                    <i class="fa-brands fa-instagram mr-2"></i>
+                    Ver Instagram
+                </a>
+                <a href="#" class="inline-flex items-center justify-center bg-gray-100 text-gray-800 px-6 py-3 rounded-xl font-semibold hover:bg-gray-200 transition">
+                    <i class="fa-solid fa-location-dot mr-2"></i>
+                    Ver no Mapa
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="about-section" class="max-w-4xl mx-auto px-4 py-12 md:py-16">
+        <div class="bg-white rounded-2xl shadow-sm p-6 md:p-10">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">Sobre o Local</h2>
+
+            <div class="prose prose-lg max-w-none">
+                <p class="text-gray-700 leading-relaxed mb-6">
+                    O Bier Haus Rancho Queimado é um refúgio gastronômico que celebra as tradições da culinária alemã em plena serra catarinense. Localizado no coração de Rancho Queimado, o estabelecimento oferece uma experiência autêntica que combina sabores tradicionais com o charme acolhedor das montanhas.
+                </p>
+
+                <h3 class="text-xl md:text-2xl font-bold text-gray-900 mt-8 mb-4">História</h3>
+                <p class="text-gray-700 leading-relaxed mb-6">
+                    Fundado por uma família apaixonada pela cultura germânica, o Bier Haus nasceu do desejo de compartilhar a riqueza da gastronomia alemã com moradores e visitantes da região. Cada receita é preparada com ingredientes selecionados, respeitando as técnicas tradicionais passadas por gerações.
+                </p>
+
+                <h3 class="text-xl md:text-2xl font-bold text-gray-900 mt-8 mb-4">Destaques</h3>
+                <p class="text-gray-700 leading-relaxed mb-6">
+                    O cardápio apresenta clássicos como eisbein, kassler, salsichas artesanais e o famoso chucrute caseiro. A carta de cervejas artesanais é cuidadosamente selecionada, oferecendo rótulos especiais que harmonizam perfeitamente com cada prato. O ambiente rústico e aconchegante, com lareira e decoração típica, transporta os visitantes para uma genuína cervejaria alemã.
+                </p>
+
+                <h3 class="text-xl md:text-2xl font-bold text-gray-900 mt-8 mb-4">Experiência</h3>
+                <p class="text-gray-700 leading-relaxed mb-6">
+                    Mais do que um restaurante, o Bier Haus é um ponto de encontro onde amigos e famílias se reúnem para desfrutar de boa comida, cervejas de qualidade e momentos memoráveis. O atendimento caloroso e a atmosfera descontraída fazem de cada visita uma experiência especial, seja para um almoço tranquilo ou um jantar festivo.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="gallery-section" class="max-w-6xl mx-auto px-4 py-12 md:py-16">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8 text-center">Galeria de Fotos</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="gallery-item rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer h-64">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/596403a31e-f096ad5fbef13a9ef81d.png" alt="german restaurant interior with wooden tables and cozy atmosphere, warm lighting" />
+            </div>
+            <div class="gallery-item rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer h-64">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/3f721bd86f-7baded897fa05163a8b5.png" alt="traditional german food platter with sausages and sauerkraut, professional food photography" />
+            </div>
+            <div class="gallery-item rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer h-64">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/76ff398015-004681fe6b79ced22461.png" alt="craft beer selection on wooden bar, artisanal brewery atmosphere" />
+            </div>
+            <div class="gallery-item rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer h-64">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/2b570f8226-211060248b9f798ecdc8.png" alt="german eisbein dish with potatoes, gourmet presentation, restaurant setting" />
+            </div>
+            <div class="gallery-item rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer h-64">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/24243c2541-618e6bbf6f4d8cc4c6a4.png" alt="rustic fireplace in cozy restaurant, mountain lodge ambiance" />
+            </div>
+            <div class="gallery-item rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105 cursor-pointer h-64">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/1f7fce0110-2777e8c7a66bd19067ec.png" alt="outdoor dining area with mountain views, sunset lighting, inviting atmosphere" />
+            </div>
+        </div>
+    </section>
+
+
+    <section id="practical-info" class="max-w-4xl mx-auto px-4 py-12 md:py-16">
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-10">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Informações Práticas</h2>
+
+            <div class="space-y-6">
+                <div class="flex items-start space-x-4">
+                    <div class="bg-brand-blue/10 rounded-xl p-3 mt-1">
+                        <i class="fa-solid fa-location-dot text-brand-blue text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-1">Endereço</h3>
+                        <p class="text-gray-600">Rua Principal, 123 - Centro<br>Rancho Queimado - SC, 88450-000</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-4">
+                    <div class="bg-brand-blue/10 rounded-xl p-3 mt-1">
+                        <i class="fa-solid fa-clock text-brand-blue text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-1">Horário de Funcionamento</h3>
+                        <p class="text-gray-600">Terça a Domingo: 11h30 às 15h00 e 18h00 às 22h00<br>Segunda-feira: Fechado</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start space-x-4">
+                    <div class="bg-brand-blue/10 rounded-xl p-3 mt-1">
+                        <i class="fa-brands fa-whatsapp text-brand-blue text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-1">Contato</h3>
+                        <a href="tel:+5548999999999" class="text-brand-blue hover:underline font-medium">(48) 99999-9999</a>
+                        <p class="text-gray-600 text-sm mt-1">WhatsApp disponível</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-8 border-t border-gray-200">
+                <a href="#" class="inline-flex items-center justify-center w-full bg-brand-blue text-white px-6 py-4 rounded-xl font-semibold hover:bg-blue-700 transition shadow-md">
+                    <i class="fa-solid fa-map-location-dot mr-2 text-lg"></i>
+                    Abrir no Google Maps
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="cta-section" class="max-w-4xl mx-auto px-4 py-12 md:py-16">
+        <div class="bg-gradient-to-br from-brand-blue to-blue-700 rounded-2xl shadow-xl p-8 md:p-12 text-center">
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">Planeje sua Visita</h2>
+            <p class="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">Descubra mais estabelecimentos, pontos turísticos e experiências únicas em Rancho Queimado</p>
+            <a href="#" class="inline-flex items-center justify-center bg-white text-brand-blue px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition shadow-lg">
+                <i class="fa-solid fa-compass mr-2"></i>
+                Explorar Guia Completo
+            </a>
+        </div>
+    </section>
+
+
+</main>
+
+
+<footer id="footer" class="bg-gray-900 text-white mt-16">
+    <div class="max-w-7xl mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+                <div class="flex items-center space-x-2 mb-4">
+                    <i class="fa-solid fa-mountain text-brand-blue text-2xl"></i>
+                    <span class="text-xl font-bold">Guia Rancho Queimado</span>
+                </div>
+                <p class="text-gray-400 text-sm">Seu guia completo para descobrir o melhor de Rancho Queimado</p>
+            </div>
+
+            <div>
+                <h3 class="font-semibold mb-4">Explore</h3>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-white transition">Hospedagens</a></li>
+                    <li><a href="#" class="hover:text-white transition">Gastronomia</a></li>
+                    <li><a href="#" class="hover:text-white transition">Pontos Turísticos</a></li>
+                    <li><a href="#" class="hover:text-white transition">Serviços</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="font-semibold mb-4">Informações</h3>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-white transition">Sobre</a></li>
+                    <li><a href="#" class="hover:text-white transition">Contato</a></li>
+                    <li><a href="#" class="hover:text-white transition">Anuncie Aqui</a></li>
+                    <li><a href="#" class="hover:text-white transition">Política de Privacidade</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="font-semibold mb-4">Redes Sociais</h3>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fa-brands fa-facebook text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fa-brands fa-instagram text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition">
+                        <i class="fa-brands fa-whatsapp text-2xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
+            <p>&copy; 2024 Guia Rancho Queimado. Todos os direitos reservados.</p>
+        </div>
+    </div>
+</footer>
+
+
+</body>
+</html>
