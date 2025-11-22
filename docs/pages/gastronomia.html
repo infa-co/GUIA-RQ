@@ -116,40 +116,55 @@
 
 
 
-<section id="hero-section" class="relative h-[400px] overflow-hidden">
-    <div class="absolute inset-0">
-        <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/93464f2e73-3f4c41a7ef2379febbc3.png" alt="elegant restaurant table setting in mountain region, gourmet food, rustic elegant atmosphere, editorial photography style" />
-        <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60"></div>
-    </div>
+<section class="relative h-[420px] md:h-[520px] w-full overflow-hidden">
+
+    <!-- IMAGEM DE FUNDO -->
+    <img src="../assets/images/praca3.jpeg<section class="relative h-[400px] md:h-[500px] mt-20">
+
+    <img src="../assets/images/praca3.jpeg"
+         class="absolute inset-0 w-full h-full object-cover object-center brightness-[0.6] md:brightness-[0.45]">
+
+    <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60"></div>
+
     <div class="relative h-full flex flex-col justify-center items-center text-center px-6">
-        <h1 class="text-4xl md:text-5xl font-bold text-yellow-400 mb-4 tracking-tight">Gastronomia</h1>
-        <p class="text-lg text-white/95 font-light mb-3 max-w-2xl">Sabores autênticos da serra catarinense</p>
-        <p class="text-sm text-white font-light max-w-xl leading-relaxed">Descubra a rica gastronomia de Rancho Queimado, onde tradição alemã e italiana se encontram com produtos artesanais da região, criando experiências únicas e memoráveis.</p>
+
+        <!-- Título -->
+        <h1 class="text-4xl md:text-5xl font-bold text-yellow-400 tracking-tight mb-3 md:mb-4 mt-10 md:mt-0">
+            Gastronomia
+        </h1>
+
+        <!-- Subtitulo mais branco -->
+        <p class="text-xl md:text-2xl font-light text-white/95 drop-shadow-lg mb-4 md:mb-6 leading-snug">
+            Sabores autênticos da serra catarinense
+        </p>
+
+        <!-- Parágrafo mais branco -->
+        <p class="text-base md:text-lg text-white/90 font-light drop-shadow-lg max-w-3xl leading-relaxed">
+            Descubra a rica gastronomia de Rancho Queimado, onde tradição alemã e italiana se encontram com ingredientes frescos da região, criando experiências únicas e memoráveis.
+        </p>
     </div>
 </section>
 
+<main id="main-content" class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
 
-<main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+    <!-- GRID RESPONSIVO: 1 COLUNA NO MOBILE / 2 NO DESKTOP -->
+    <div id="establishments-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-    <div id="establishments-grid" class="grid grid-cols-1 gap-6">
-
-        <article id="card-bier-haus" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+        <!-- ===== CARD 1 ===== -->
+        <article id="card-bier-haus" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow w-full">
             <div class="overflow-hidden h-64 md:h-48 lg:h-56">
-                <img
-                        class="w-full h-full object-cover object-center"
-                        src="../assets/images/images2/bier7.jpeg"
-                        alt="Bier Haus"
-                >
+                <img class="w-full h-full object-cover object-center"
+                     src="../assets/images/images2/bier7.jpeg" alt="Bier Haus">
             </div>
 
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Bier Haus</h3>
+
                 <p class="text-gray-600 leading-relaxed mb-5 text-sm">
                     Aproveite o melhor do chopp, espumante, vinho e muito mais no coração da praça central de Rancho Queimado.
                 </p>
 
-                <button
-                        onclick="window.location.href='./estabelecimentos/bier-haus.html'"
+                <button onclick="window.location.href='./estabelecimentos/bier-haus.html'"
                         class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
@@ -157,25 +172,32 @@
         </article>
 
 
-        <article id="card-bergkaffee" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/f242230a74-bf400ee0910b5e58319d.png" alt="mountain coffee shop interior, specialty coffee, cozy cafe atmosphere, artisan pastries display" />
+        <!-- ===== CARD 2 ===== -->
+        <article id="card-bergkaffee" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow w-full">
+            <div class="overflow-hidden h-64 md:h-48 lg:h-56">
+                <img class="w-full h-full object-cover"
+                     src="../assets/images/berg.jpg" alt="Bergkaffee">
             </div>
+
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Bergkaffee</h3>
-                <p class="text-gray-600 leading-relaxed mb-5 text-sm">Cafeteria especializada em cafés especiais e doces artesanais, perfeita para momentos de pausa com vista para as montanhas.</p>
-                <button
-                        onclick="window.location.href='./estabelecimentos/bergkaffe.html'"
+
+                <p class="text-gray-600 leading-relaxed mb-5 text-sm">
+                    Cafeteria especializada em cafés especiais e doces artesanais, perfeita para momentos de pausa com vista para as montanhas.
+                </p>
+
+                <button onclick="window.location.href='./estabelecimentos/bergkaffe.html'"
                         class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
                     Ver mais detalhes
                 </button>
             </div>
         </article>
+
 
 
         <article id="card-rancho-bistro" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/695e57d3a9-604bfa54339f5c014f44.png" alt="elegant bistro restaurant interior, mountain lodge style, fine dining setup, warm lighting" />
+                <img class="w-full h-full object-cover" src="../assets/images/images2/img_23.png" alt="elegant bistro restaurant interior, mountain lodge style, fine dining setup, warm lighting" />
             </div>
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Rancho Bistrô</h3>
@@ -191,7 +213,7 @@
 
         <article id="card-santa-serra" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/a7728391aa-68f34d519c828b65d0f6.png" alt="rustic mountain restaurant exterior, stone and wood architecture, countryside dining" />
+                <img class="w-full h-full object-cover" src="../assets/images/images2/img_31.png" alt="rustic mountain restaurant exterior, stone and wood architecture, countryside dining" />
             </div>
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Santa Serra</h3>
@@ -207,7 +229,7 @@
 
         <article id="card-goyah-vinhos" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/5d069a3bd2-8da527ba91c78a030374.png" alt="wine cellar tasting room, wooden barrels, wine bottles display, elegant vineyard atmosphere" />
+                <img class="w-full h-full object-cover" src="../assets/images/goyah.jpg" alt="wine cellar tasting room, wooden barrels, wine bottles display, elegant vineyard atmosphere" />
             </div>
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Goyah Vinhos</h3>
@@ -223,7 +245,7 @@
 
         <article id="card-colhe-pague" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/3b112e6c3d-2a87ce02520882890420.png" alt="pick your own farm, strawberry field, fresh produce, family farm experience" />
+                <img class="w-full h-full object-cover" src="../assets/images/images2/img_32.png" alt="pick your own farm, strawberry field, fresh produce, family farm experience" />
             </div>
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Colhe e Pague Léo Schütz</h3>
@@ -239,7 +261,7 @@
 
         <article id="card-forno-serra" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/88b2ce39c4-c8e1ed535c50385d8fa2.png" alt="wood fired pizza oven, artisan pizzeria interior, rustic italian restaurant" />
+                <img class="w-full h-full object-cover" src="../assets/images/forno-e-serra.jpeg" alt="wood fired pizza oven, artisan pizzeria interior, rustic italian restaurant" />
             </div>
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Forno e Serra Pizzaria</h3>
@@ -255,7 +277,7 @@
 
         <article id="card-da-roca" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/93e4177b29-9fc95242d38e008d8425.png" alt="artisan delicatessen shop, gourmet products display, rustic country store interior" />
+                <img class="w-full h-full object-cover" src="../assets/images/daroca.jpg" alt="artisan delicatessen shop, gourmet products display, rustic country store interior" />
             </div>
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Da Roça Delicatéssen</h3>
@@ -271,7 +293,7 @@
 
         <article id="card-espaco-floresta" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/4e9a8b4fbe-568406dc7b17a564e9c6.png" alt="forest restaurant outdoor dining, nature surrounded eatery, mountain forest setting" />
+                <img class="w-full h-full object-cover" src="../assets/images/espaco.jpg" alt="forest restaurant outdoor dining, nature surrounded eatery, mountain forest setting" />
             </div>
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Espaço Floresta</h3>
@@ -287,7 +309,7 @@
 
         <article id="card-kaufer-cafe" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/06a40176ee-0a1405530140e7a91279.png" alt="charming german cafe exterior, traditional coffee house, mountain village cafe" />
+                <img class="w-full h-full object-cover" src="../assets/images/images2/img_13.png" alt="charming german cafe exterior, traditional coffee house, mountain village cafe" />
             </div>
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Käufer Café</h3>
@@ -303,7 +325,7 @@
 
         <article id="card-kaufer-queijos" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/456480f13c-ed577462b938660dc1a6.png" alt="artisan cheese shop, cheese aging room, traditional cheesemaking facility" />
+                <img class="w-full h-full object-cover" src="../assets/images/images2/img_14.png" alt="artisan cheese shop, cheese aging room, traditional cheesemaking facility" />
             </div>
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Käufer Queijos Artesanais</h3>
@@ -319,7 +341,7 @@
 
         <article id="card-atafona" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/8c7ef2739f-b4653af132238e5db254.png" alt="elegant countryside restaurant, stone building architecture, fine dining mountain restaurant" />
+                <img class="w-full h-full object-cover" src="../assets/images/atafona.jpg" alt="elegant countryside restaurant, stone building architecture, fine dining mountain restaurant" />
             </div>
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Atafona Restaurante</h3>
@@ -335,7 +357,7 @@
 
         <article id="card-boca-serra" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/ee5d0afb25-e86a04d1de9ca8c2bae9.png" alt="mountain cheese dairy farm, artisan cheese production, rural cheese factory" />
+                <img class="w-full h-full object-cover" src="../assets/images/images2/img_34.png" alt="mountain cheese dairy farm, artisan cheese production, rural cheese factory" />
             </div>
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Queijaria Boca da Serra</h3>
@@ -351,7 +373,7 @@
 
         <article id="card-pacha" class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/eed312e28a-91c19ff73ed1fbd7fb65.png" alt="modern mountain cuisine restaurant, contemporary kitchen, farm to table dining" />
+                <img class="w-full h-full object-cover" src="../assets/images/images2/img_18.png" alt="modern mountain cuisine restaurant, contemporary kitchen, farm to table dining" />
             </div>
             <div class="p-6">
                 <h3 class="text-2xl font-semibold text-gray-900 mb-3">Pacha Cozinha</h3>
