@@ -1,4 +1,4 @@
-package br.com.guiarq;
+/**package br.com.guiarq;
 
 import com.resend.Resend;
 import com.resend.services.emails.model.Attachment;
@@ -52,3 +52,4 @@ public class TesteResendDireto {
         }
     }
 }
+**/

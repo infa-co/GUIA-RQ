@@ -1,4 +1,4 @@
-package br.com.guiarq.utils;
+/**package br.com.guiarq.utils;
 
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,3 +36,4 @@ public class EmailSender {
         System.out.println("📨 EMAIL ENVIADO PARA " + to);
     }
 }
+**/
