@@ -7,26 +7,18 @@
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-PF2TSPV6');</script>
-    <!-- End Google Tag Manager -->
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bier Haus – Guia Rancho Queimado</title>
+    <title>Chalé 1 - Vale dos Sonhos Estalagem – Guia Rancho Queimado</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        window.FontAwesomeConfig = { autoReplaceSvg: 'nest' };
-    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
-
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         ::-webkit-scrollbar { display: none; }
         * { font-family: 'Inter', sans-serif; }
-        .gradient-overlay {
-            background: linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0.15));
-        }
     </style>
 </head>
 
@@ -34,8 +26,6 @@
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PF2TSPV6"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
 
 <!-- ========================= HEADER ========================= -->
 <header id="header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50 py-2">
@@ -44,9 +34,9 @@
         <!-- Logo -->
         <a href="../../../index.html" class="flex items-center space-x-2 group">
             <img src="../../../assets/images/guia-rancho-queimado-logo-sem-fundo.png"
-                 alt="Logo Guia RQ"
-                 class="h-12 sm:h-14 w-auto transition-transform group-hover:scale-105">
-            <span class="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+                 class="h-12 sm:h-14 w-auto transition-transform group-hover:scale-105"
+                 alt="Logo Guia RQ">
+            <span class="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition">
                 Guia RQ
             </span>
         </a>
@@ -61,30 +51,25 @@
             <a href="../../sobre.html" class="hover:text-blue-600">Sobre</a>
         </nav>
 
-        <!-- Área direita -->
+        <!-- Icones -->
         <div class="flex items-center space-x-5">
-
             <!-- Usuário -->
-            <div class="relative flex items-center justify-center" id="user-menu-container">
+            <div class="relative" id="user-menu-container">
                 <button id="user-icon" class="text-gray-600 hover:text-gray-900 text-2xl">
                     <i class="fa-solid fa-user"></i>
                 </button>
-
                 <div id="user-dropdown"
-                     class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2
-                     w-56 bg-white border border-gray-200 rounded-xl shadow-xl">
-                </div>
+                     class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 w-56 bg-white border border-gray-200 rounded-xl shadow-xl"></div>
             </div>
 
             <!-- Carrinho -->
             <a href="../../carrinho.html" class="relative text-gray-600 hover:text-blue-600">
                 <i class="fa-solid fa-shopping-cart text-lg"></i>
                 <span id="cart-count"
-                      class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs
-                      w-5 h-5 rounded-full flex items-center justify-center"></span>
+                      class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"></span>
             </a>
 
-            <!-- Botão mobile -->
+            <!-- Menu Mobile -->
             <button id="menu-btn" class="md:hidden text-gray-700 text-2xl">
                 <i class="fa-solid fa-bars"></i>
             </button>
@@ -102,7 +87,6 @@
     </div>
 </header>
 
-<!-- Script menu -->
 <script>
     document.getElementById("menu-btn").addEventListener("click", () => {
         document.getElementById("mobile-menu").classList.toggle("hidden");
@@ -116,11 +100,11 @@
             ? `
                 <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100">Minha Conta</a>
                 <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100">Minhas Compras</a>
-                <hr class="my-1">
+                <hr>
                 <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
               `
             : `
-                <a href="../login.html" class="block px-10 py-5 hover:bg-gray-100 text-center">
+                <a href="../../login.html" class="block px-10 py-5 hover:bg-gray-100 text-center">
                     Entrar ou Cadastrar-se
                 </a>
               `;
@@ -136,10 +120,9 @@
     });
 </script>
 
-
 <!-- ========================= HERO ========================= -->
 <section class="relative h-[400px] md:h-[500px] mt-20">
-    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/603631ce8b-ec35348fc3ebfa7d1e0a.png"
+    <img src="../../../assets/images/images2/img_71.png"
          class="w-full h-full object-cover">
 
     <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
@@ -147,7 +130,7 @@
     <div class="absolute inset-0 flex items-center justify-center">
         <h1 class="text-white text-4xl md:text-5xl font-bold text-center"
             style="text-shadow: 0 2px 12px rgba(0,0,0,0.4)">
-            chale 1 valw Rancho Queimado
+            Chalé Vale dos Sonhos
         </h1>
     </div>
 </section>
@@ -155,44 +138,56 @@
 <!-- ========================= QUICK INFO ========================= -->
 <section class="max-w-4xl mx-auto px-4 -mt-8 relative z-10">
     <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">chale 1 vale Rancho Queimado</h2>
-        <p class="text-lg text-gray-600 mb-6">Gastronomia alemã autêntica com cervejas artesanais.</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Chalé 1 - Vale dos Sonhos Estalagem</h2>
+        <p class="text-lg text-gray-600 mb-6">Experimente o refúgio perfeito no Chalé 2</p>
 
         <div class="flex flex-col sm:flex-row gap-3">
-            <a href="#" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700">
-                <i class="fa-brands fa-instagram mr-2"></i>
-                Ver Instagram
+
+            <a href="https://www.instagram.com/valedossonhosestalagem/"
+               target="_blank"
+               class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition flex items-center justify-center">
+                <i class="fa-brands fa-instagram mr-2"></i> Ver Instagram
             </a>
 
-            <a href="#" class="bg-gray-100 text-gray-800 px-6 py-3 rounded-xl font-semibold hover:bg-gray-200">
-                <i class="fa-solid fa-location-dot mr-2"></i>
-                Ver no Mapa
+            <a href="https://maps.app.goo.gl/ag8qVXuRZW9Vg2T48"
+               target="_blank"
+               class="bg-gray-100 text-gray-800 px-6 py-3 rounded-xl font-semibold hover:bg-gray-200 transition flex items-center justify-center">
+                <i class="fa-solid fa-location-dot mr-2"></i> Ver no Mapa
             </a>
+
         </div>
     </div>
 </section>
 
-<!-- ========================= SOBRE / GALERIA / INFO ========================= -->
+<!-- ========================= SOBRE ========================= -->
 <section class="max-w-4xl mx-auto px-4 py-12">
     <div class="bg-white rounded-2xl shadow-sm p-6 md:p-10">
+
         <h2 class="text-3xl font-bold text-gray-900 mb-6">Sobre o Local</h2>
+        <p class="text-gray-700 leading-relaxed mb-8">
+            Chalé 1 - Vale dos Sonhos
 
-        <p class="text-gray-700 leading-relaxed mb-6">
-            O Bier Haus Rancho Queimado é um refúgio gastronômico que celebra as tradições da culinária alemã.
+            Experimente o refúgio perfeito no Chalé 2, situado no pitoresco Vale dos Sonhos, em Rancho Queimado - SC. Este aconchegante chalé acomoda confortavelmente 6 hóspedes, proporcionando uma estadia inesquecível.        </p>
+
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Destaques</h3>
+        <p class="text-gray-700 leading-relaxed mb-8">
+            Localização Privilegiada: O chalé/cabana está situado em um pitoresco vale de Taquaras, oferecendo vistas panorâmicas deslumbrantes, cercado pela majestosa beleza das araucárias.
+            Conexão com a Natureza: Os visitantes estarão imersos na natureza, com uma lagoa repleta de vida selvagem e uma cachoeira serena dentro da propriedade, perfeitas para explorar e relaxar.
+            Atrações nas Proximidades: Além disso, o bairro oferece uma variedade de atrações, incluindo museus cativantes, cafés coloniais autênticos e um restaurante típico tropeiro para apreciar a culinária local.
         </p>
 
-        <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">História</h3>
-        <p class="text-gray-700 mb-6">
-            Fundado por uma família apaixonada pela cultura germânica...
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Comodidades:</h3>
+        <p class="text-gray-700 leading-relaxed">
+            Dois Quartos Espaçosos
+            Piscina Aquecida com Borda Infinita
+            Hidromassagem e Banheira
+            Lareira Aconchegante
+            Cozinha Totalmente Equipada
+            Churrasqueira ao Ar Livre
+            Chuveiro com Aquecimento a Gás
+            Smart TV com Netflix
         </p>
 
-        <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">Destaques</h3>
-        <p class="text-gray-700 mb-6">Eisbein, kassler, salsichas artesanais...</p>
-
-        <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">Experiência</h3>
-        <p class="text-gray-700">
-            Mais do que um restaurante, é um ponto de encontro...
-        </p>
     </div>
 </section>
 
@@ -200,19 +195,20 @@
 <section class="max-w-6xl mx-auto px-4 py-12">
     <h2 class="text-3xl font-bold text-center mb-8">Galeria de Fotos</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/596403a31e-f096ad5fbef13a9ef81d.png"
-             class="rounded-xl h-64 object-cover shadow-md">
-        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/3f721bd86f-7baded897fa05163a8b5.png"
-             class="rounded-xl h-64 object-cover shadow-md">
-        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/76ff398015-004681fe6b79ced22461.png"
-             class="rounded-xl h-64 object-cover shadow-md">
-        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/2b570f8226-211060248b9f798ecdc8.png"
-             class="rounded-xl h-64 object-cover shadow-md">
-        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/24243c2541-618e6bbf6f4d8cc4c6a4.png"
-             class="rounded-xl h-64 object-cover shadow-md">
-        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/1f7fce0110-2777e8c7a66bd19067ec.png"
-             class="rounded-xl h-64 object-cover shadow-md">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+
+        <div class="w-full aspect-[3/4] overflow-hidden rounded-xl shadow-md">
+            <img src="../../../assets/images/images2/img_66.png" class="w-full h-full object-cover object-center">
+        </div>
+
+        <div class="w-full aspect-[3/4] overflow-hidden rounded-xl shadow-md">
+            <img src="../../../assets/images/images2/img_68.png" class="w-full h-full object-cover object-center">
+        </div>
+
+        <div class="w-full aspect-[3/4] overflow-hidden rounded-xl shadow-md">
+            <img src="../../../assets/images/images2/img_69.png" class="w-full h-full object-cover object-center">
+        </div>
+
     </div>
 </section>
 
@@ -229,19 +225,10 @@
                 </div>
                 <div>
                     <h3 class="font-semibold">Endereço</h3>
-                    <p>Rua Principal, 123 – Centro</p>
+                    <p> Taquaras, Rancho Queimado</p>
                 </div>
             </div>
 
-            <div class="flex space-x-4">
-                <div class="bg-blue-100 p-3 rounded-xl">
-                    <i class="fa-solid fa-clock text-blue-600 text-xl"></i>
-                </div>
-                <div>
-                    <h3 class="font-semibold">Horários</h3>
-                    <p>Terça a Domingo — 11h30 às 22h</p>
-                </div>
-            </div>
 
             <div class="flex space-x-4">
                 <div class="bg-blue-100 p-3 rounded-xl">
@@ -249,23 +236,11 @@
                 </div>
                 <div>
                     <h3 class="font-semibold">Contato</h3>
-                    <p>(48) 99999-9999</p>
+                    <p>(48)99624-8702</p>
                 </div>
             </div>
 
         </div>
-    </div>
-</section>
-
-<!-- ========================= CTA FINAL ========================= -->
-<section class="max-w-4xl mx-auto px-4 py-12">
-    <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-12 rounded-2xl text-center shadow-xl">
-        <h2 class="text-3xl font-bold mb-4">Planeje sua visita</h2>
-        <p class="mb-6">Descubra mais restaurantes, cafés e atrações.</p>
-        <a href="../index.html"
-           class="bg-white text-blue-700 px-8 py-4 rounded-xl font-semibold shadow-md hover:bg-gray-100">
-            Explorar Guia Completo
-        </a>
     </div>
 </section>
 
@@ -280,9 +255,9 @@
         <div>
             <h4 class="font-semibold mb-3">Links úteis</h4>
             <ul class="space-y-2 text-gray-300">
-                <li>Contato</li>
-                <li>Termos</li>
-                <li>Privacidade</li>
+                <li><a class="hover:text-white">Contato</a></li>
+                <li><a class="hover:text-white">Termos</a></li>
+                <li><a class="hover:text-white">Privacidade</a></li>
             </ul>
         </div>
 
@@ -299,7 +274,6 @@
 </footer>
 
 <script>
-    // contador do carrinho
     document.addEventListener("DOMContentLoaded", () => {
         const cartCountEl = document.getElementById("cart-count");
         const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
