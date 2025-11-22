@@ -42,4 +42,8 @@ public class EmailService {
             throw new RuntimeException("Erro ao enviar e-mail: " + e.getMessage());
         }
     }
+    public void sendTicketEmail(String emailDestino, String nome, byte[] pdfBytes) {
+        System.out.println("sendTicketEmail chamado, mas ainda não implementado com Resend.");
+    }
+
 }
