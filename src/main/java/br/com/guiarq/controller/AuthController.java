@@ -2,48 +2,74 @@ package br.com.guiarq.controller;
 
 import br.com.guiarq.Model.Entities.Usuario;
 import br.com.guiarq.Model.Repository.UsuarioRepository;
-import br.com.guiarq.Model.Service.AuthService;
+import br.com.guiarq.Model.Service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin("*")
 public class AuthController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private EmailService emailService;
+
+    @PostMapping("/login")
+    public Map<String, Object> login(@RequestBody Map<String, String> body) {
+
+        String email = body.get("email");
+        String senha = body.get("senha");
+
+        Usuario usuario = usuarioRepository.findByEmail(email);
+
+        return Map.of(
+                "success", usuario != null && usuario.getSenha().equals(senha)
+        );
+    }
+
+    @PostMapping("/enviar-verificacao")
+    public ResponseEntity<?> enviarVerificacao(@RequestParam String email) {
+
+        Usuario usuario = usuarioRepository.findByEmail(email);
+
+        if (usuario == null) {
+            return ResponseEntity.badRequest().body("Usuário não encontrado");
+        }
+
+        String token = UUID.randomUUID().toString();
+
+        usuario.setTokenVerificacao(token);
+        usuarioRepository.save(usuario);
+
+        emailService.enviarVerificacaoEmail(email, token);
+
+        return ResponseEntity.ok("E-mail de verificação enviado");
+    }
+
     @GetMapping("/verify")
     public ResponseEntity<Void> verifyEmail(@RequestParam String token) {
-        try {
 
-            Usuario usuario = usuarioRepository.findByTokenVerificacao(token);
+        Usuario usuario = usuarioRepository.findByTokenVerificacao(token);
 
-            if (usuario == null) {
-                return ResponseEntity.status(302)
-                        .location(URI.create("https://guiaranchoqueimado.com.br/pages/erro-email-confirmado.html"))
-                        .build();
-            }
-
-            usuario.setVerificado(true);
-            usuario.setTokenVerificacao(null);
-            usuarioRepository.save(usuario);
-
-            return ResponseEntity.status(302)
-                    .location(URI.create("https://guiaranchoqueimado.com.br/pages/email-confirmado.html"))
-                    .build();
-
-        } catch (Exception e) {
+        if (usuario == null) {
             return ResponseEntity.status(302)
                     .location(URI.create("https://guiaranchoqueimado.com.br/pages/erro-email-confirmado.html"))
                     .build();
         }
-    }
 
+        usuario.setVerificado(true);
+        usuario.setTokenVerificacao(null);
+        usuarioRepository.save(usuario);
+
+        return ResponseEntity.status(302)
+                .location(URI.create("https://guiaranchoqueimado.com.br/pages/email-confirmado.html"))
+                .build();
+    }
 }
