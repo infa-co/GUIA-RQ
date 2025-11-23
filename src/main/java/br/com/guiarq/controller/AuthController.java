@@ -17,12 +17,12 @@ import java.util.Map;
 public class AuthController {
 
     @Autowired
-    private UsuarioRepository.UsuarioRepositoryInterface usuarioRepository;
+    private UsuarioRepository usuarioRepository;
 
     @GetMapping("/verify")
     public ResponseEntity<Void> verifyEmail(@RequestParam String token) {
-
         try {
+
             Usuario usuario = usuarioRepository.findByTokenVerificacao(token);
 
             if (usuario == null) {
@@ -45,4 +45,5 @@ public class AuthController {
                     .build();
         }
     }
+
 }
