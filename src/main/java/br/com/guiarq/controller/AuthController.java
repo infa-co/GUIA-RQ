@@ -1,45 +1,48 @@
 package br.com.guiarq.controller;
 
 import br.com.guiarq.Model.Entities.Usuario;
+import br.com.guiarq.Model.Repository.UsuarioRepository;
 import br.com.guiarq.Model.Service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "*")
+@CrossOrigin("*")
 public class AuthController {
 
     @Autowired
-    private AuthService authService;
+    private UsuarioRepository.UsuarioRepositoryInterface usuarioRepository;
 
-    @PostMapping("/registrar")
-    public Map<String, Object> registrar(@RequestBody Usuario usuario) {
+    @GetMapping("/verify")
+    public ResponseEntity<Void> verifyEmail(@RequestParam String token) {
 
-        Usuario novo = authService.registrarUsuario(usuario);
-        Map<String, Object> response = new HashMap<>();
-        response.put("id", novo.getId());
-        response.put("nome", novo.getNome());
-        response.put("email", novo.getEmail());
+        try {
+            Usuario usuario = usuarioRepository.findByTokenVerificacao(token);
 
-        return response;
-    }
+            if (usuario == null) {
+                return ResponseEntity.status(302)
+                        .location(URI.create("https://guiaranchoqueimado.com.br/pages/erro-email-confirmado.html"))
+                        .build();
+            }
 
-    @PostMapping("/login")
-    public Map<String, Object> login(@RequestBody Map<String, String> body) {
-        String email = body.get("email");
-        String senha = body.get("senha");
+            usuario.setVerificado(true);
+            usuario.setTokenVerificacao(null);
+            usuarioRepository.save(usuario);
 
-        Usuario user = authService.login(email, senha);
+            return ResponseEntity.status(302)
+                    .location(URI.create("https://guiaranchoqueimado.com.br/pages/email-confirmado.html"))
+                    .build();
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("id", user.getId());
-        response.put("nome", user.getNome());
-        response.put("email", user.getEmail());
-
-        return response;
+        } catch (Exception e) {
+            return ResponseEntity.status(302)
+                    .location(URI.create("https://guiaranchoqueimado.com.br/pages/erro-email-confirmado.html"))
+                    .build();
+        }
     }
 }
