@@ -116,11 +116,9 @@
 
 
 
-<section class="relative h-[420px] md:h-[520px] w-full overflow-hidden">
+<section class="relative h-[420px] md:h-[520px] w-full overflow-hidden mt-[72px]">
 
     <!-- IMAGEM DE FUNDO -->
-    <img src="../assets/images/praca3.jpeg<section class="relative h-[400px] md:h-[500px] mt-20">
-
     <img src="../assets/images/praca3.jpeg"
          class="absolute inset-0 w-full h-full object-cover object-center brightness-[0.6] md:brightness-[0.45]">
 
@@ -128,19 +126,19 @@
 
     <div class="relative h-full flex flex-col justify-center items-center text-center px-6">
 
-        <!-- Título -->
+        <!-- TÍTULO -->
         <h1 class="text-4xl md:text-5xl font-bold text-yellow-400 tracking-tight mb-3 md:mb-4 mt-10 md:mt-0">
             Gastronomia
         </h1>
 
-        <!-- Subtitulo mais branco -->
+        <!-- Subtitulo -->
         <p class="text-xl md:text-2xl font-light text-white/95 drop-shadow-lg mb-4 md:mb-6 leading-snug">
             Sabores autênticos da serra catarinense
         </p>
 
-        <!-- Parágrafo mais branco -->
+        <!-- Parágrafo -->
         <p class="text-base md:text-lg text-white/90 font-light drop-shadow-lg max-w-3xl leading-relaxed">
-            Descubra a rica gastronomia de Rancho Queimado, onde tradição alemã e italiana se encontram com ingredientes frescos da região, criando experiências únicas e memoráveis.
+            Descubra a rica gastronomia de Rancho Queimado, onde tradição alemã e italiana se encontram com ingredientes frescos da região.
         </p>
     </div>
 </section>
@@ -504,6 +502,87 @@
 
 </footer>
 
-<
+
+<script>
+    window.addEventListener('load', function() {
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuToggle.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // === Dropdown do usuário ===
+        let userLoggedIn = false;
+        const userIcon = document.getElementById('user-icon');
+        const dropdown = document.getElementById('user-dropdown');
+
+        function renderMenu() {
+            dropdown.innerHTML = userLoggedIn
+                ? `
+        <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minha conta</a>
+        <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minhas compras</a>
+        <hr class="my-1">
+        <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
+      `
+                : `
+        <a href="login.html" class="block px-10 py-5 hover:bg-gray-100 text-gray-700">Entrar ou Cadastrar-se</a>
+      `;
+        }
+
+        if (userIcon) {
+            userIcon.addEventListener('click', () => {
+                dropdown.classList.toggle('hidden');
+                renderMenu();
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#user-menu-container')) dropdown.classList.add('hidden');
+            if (e.target.id === 'logout-btn') {
+                userLoggedIn = false;
+                dropdown.classList.add('hidden');
+                alert('Você saiu da conta.');
+            }
+        });
+
+        // === Menu Mobile ===
+        const menuBtn = document.getElementById("menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+        let menuOpen = false;
+
+        if (menuBtn) {
+            menuBtn.addEventListener("click", () => {
+                menuOpen = !menuOpen;
+                mobileMenu.classList.toggle("hidden");
+                menuBtn.innerHTML = menuOpen
+                    ? '<i class="fa-solid fa-xmark"></i>'
+                    : '<i class="fa-solid fa-bars"></i>';
+            });
+        }
+    });
+</script>
+<script>
+    function updateCartCount() {
+        const cartCount = document.getElementById('cart-count');
+        const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+
+        if (carrinho.length > 0) {
+            const totalQtd = carrinho.reduce((acc, i) => acc + i.qtd, 0);
+            cartCount.textContent = totalQtd;
+            cartCount.classList.remove('hidden');
+        } else {
+            cartCount.classList.add('hidden');
+        }
+    }
+
+    updateCartCount();
+</script>
+
+
 </body>
 </html>

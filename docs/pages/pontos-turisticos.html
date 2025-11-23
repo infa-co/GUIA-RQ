@@ -114,123 +114,168 @@
 
 </header>
 
-<main id="main-content" class="pt-16">
 
-    <section id="hero-section" class="relative h-[400px] overflow-hidden">
-        <img class="absolute inset-0 w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/e8a6213c02-5d2c2c146d60a508e31c.png" alt="Beautiful mountain landscape view of Rancho Queimado Brazil, scenic overlook, lush green hills, editorial photography" />
-        <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60"></div>
-        <div class="relative h-full flex flex-col justify-end px-5 pb-12">
-            <h1 class="text-white text-3xl font-bold mb-3 leading-tight">Pontos Turísticos</h1>
-            <p class="text-white/95 text-base leading-relaxed max-w-md">Descubra aqui todas as informações sobre os pontos turísticos que você não pode deixar de conhecer</p>
-        </div>
-    </section>
+<section class="relative h-[420px] md:h-[520px] w-full overflow-hidden mt-[72px]">
 
-    <section id="tourist-spots-section" class="px-4 py-8">
+    <!-- IMAGEM DE FUNDO -->
+    <img src="../assets/images/mirante2.jpg"
+         class="absolute inset-0 w-full h-full object-cover object-center brightness-[0.55] md:brightness-[0.45]">
 
-        <article id="spot-boa-vista" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-5">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/28f14872d0-a482ecae92bce81c3573.png" alt="Morro da Boa Vista viewpoint in Rancho Queimado, mountain overlook with BR-282 highway below, aerial perspective, scenic landscape photography" />
-            </div>
-            <div class="p-5">
-                <h3 class="text-brand-green text-xl font-bold mb-3">Boa Vista</h3>
-                <p class="text-gray-600 text-sm leading-relaxed mb-4">O Morro da Boa Vista é um magnífico local do município, situado a altitudes superiores a 1.200 metros, que proporciona vistas deslumbrantes da região e da BR-282 que passa por baixo.</p>
+    <!-- GRADIENTE -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-black/25 to-black/60"></div>
+
+    <!-- CONTEÚDO -->
+    <div class="relative h-full flex flex-col justify-center items-center text-center px-6">
+
+        <!-- TÍTULO -->
+        <h1 class="text-4xl md:text-5xl font-extrabold text-yellow-400 tracking-tight mb-4 drop-shadow-xl">
+            Pontos Turísticos
+        </h1>
+
+        <!-- SUBTÍTULO -->
+        <p class="text-lg md:text-2xl font-light text-white/95 drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)] mb-4 leading-snug">
+            Descubra os principais atrativos de Rancho Queimado
+        </p>
+
+        <!-- TEXTO DESCRITIVO -->
+        <p class="text-base md:text-lg text-white/95 font-light drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)] max-w-3xl leading-relaxed">
+            Explore mirantes, patrimônios históricos, pontos icônicos e lugares que fazem parte da identidade da nossa cidade.
+        </p>
+    </div>
+</section>
+
+
+<section id="tourist-spots-section" class="px-4 py-12">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <!-- Boa Vista -->
+        <article class="bg-white rounded-2xl shadow-md hover:shadow-lg transition card-hover overflow-hidden">
+            <img class="w-full h-52 object-cover"
+                 src="../assets/images/mirante.jpg"
+                 alt="Morro da Boa Vista">
+
+            <div class="p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Boa Vista</h3>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">
+                    O Morro da Boa Vista é um magnífico local do município, situado a altitudes superiores a 1.200 metros, que proporciona vistas deslumbrantes da região e da BR-282 que passa por baixo.
+                </p>
+
                 <button
-                        onclick="window.location.href='./estabelecimentos/pontos-turisticos/boavista.html'"
-                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
-                    Ver mais detalhes
+                        onclick="window.open('https://www.google.com/maps?q=Morro+da+Boa+Vista+Rancho+Queimado', '_blank')"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition">
+                    Ver no mapa
                 </button>
             </div>
         </article>
 
-        <article id="spot-casa-hercilio" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-5">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/f4ee998815-9c33b6388329c35a3a0c.png" alt="Historic Casa Hercílio Luz museum in Taquaras, colonial architecture, heritage building, charming facade, Brazilian historical site" />
-            </div>
-            <div class="p-5">
-                <h3 class="text-brand-green text-xl font-bold mb-3">Casa Hercílio Luz</h3>
-                <p class="text-gray-600 text-sm leading-relaxed mb-4">A Casa Hercílio Luz é um museu que foi a antiga casa de campo do governador Hercílio Luz. O local localizado em Taquaras oferece uma experiência histórica única, com sua arquitetura encantadora e ambientes que testemunharam momentos marcantes.</p>
+
+        <!-- Casa Hercílio Luz -->
+        <article class="bg-white rounded-2xl shadow-md hover:shadow-lg transition card-hover overflow-hidden">
+            <img class="w-full h-52 object-cover"
+                 src="../assets/images/images2/img_119.png"
+                 alt="Casa Hercílio Luz">
+
+            <div class="p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Casa Hercílio Luz</h3>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">
+                    A Casa Hercílio Luz é um museu que foi a antiga casa de campo do governador Hercílio Luz. Localizada em Taquaras, oferece uma experiência histórica única, com sua arquitetura encantadora.
+                </p>
+
                 <button
-                        onclick="window.location.href='./estabelecimentos/pontos-turisticos/casahercilio.html'"
-                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
-                    Ver mais detalhes
+                        onclick="window.open('https://www.google.com/maps?q=Casa+Hercílio+Luz+Taquaras+SC', '_blank')"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition">
+                    Ver no mapa
                 </button>
             </div>
         </article>
 
-        <article id="spot-posto-teofilo" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-5">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/a34caf3286-482a240717963f15fd5d.png" alt="Vintage 1959 gas station Posto Teófilo Schütz in Taquaras, retro architecture, preserved historical building, nostalgic Brazilian petrol station" />
-            </div>
-            <div class="p-5">
-                <h3 class="text-brand-green text-xl font-bold mb-3">Posto Teófilo Schütz</h3>
-                <p class="text-gray-600 text-sm leading-relaxed mb-4">Taquaras, em Rancho Queimado, abriga edificações antigas que pararam no tempo. Um posto de combustíveis inaugurado em 1959, agora uma atração turística, sendo um dos únicos que ainda preserva essa arquitetura.</p>
+
+        <!-- Posto Teófilo Schütz -->
+        <article class="bg-white rounded-2xl shadow-md hover:shadow-lg transition card-hover overflow-hidden">
+            <img class="w-full h-52 object-cover"
+                 src="../assets/images/images2/img_120.png"
+                 alt="Posto Teófilo Schütz">
+
+            <div class="p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Posto Teófilo Schütz</h3>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">
+                    Taquaras abriga edificações antigas que pararam no tempo. O posto de combustíveis inaugurado em 1959 hoje é uma atração turística que preserva sua arquitetura original.
+                </p>
+
                 <button
-                        onclick="window.location.href='./estabelecimentos/pontos-turisticos/postotexaco.html'"
-                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
-                    Ver mais detalhes
+                        onclick="window.open('https://www.google.com/maps?q=Posto+Teófilo+Schütz+Taquaras', '_blank')"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition">
+                    Ver no mapa
                 </button>
             </div>
         </article>
 
-        <article id="spot-praca-coberta" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-5">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/d45d484f2b-a057252e0fcc34fab6fc.png" alt="Covered town square plaza in Rancho Queimado center, outdoor market area, Bier Haus and bistro, community gathering space, Brazilian architecture" />
-            </div>
-            <div class="p-5">
-                <h3 class="text-brand-green text-xl font-bold mb-3">Praça Coberta do Centro</h3>
-                <p class="text-gray-600 text-sm leading-relaxed mb-4">A praça coberta do Centro é o local perfeito, ambiente muito agradável, onde acontece a Feira Agroarte, e tem a Bier Haus e Rancho Bistrô para você curtir muito.</p>
+
+        <!-- Praça Coberta -->
+        <article class="bg-white rounded-2xl shadow-md hover:shadow-lg transition card-hover overflow-hidden">
+            <img class="w-full h-52 object-cover"
+                 src="../assets/images/praca4.jpeg"
+                 alt="Praça Coberta do Centro">
+
+            <div class="p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Praça Coberta do Centro</h3>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">
+                    A praça coberta do Centro é um ambiente muito agradável onde acontece a Feira Agroarte, além de abrigar Bier Haus e Rancho Bistrô.
+                </p>
+
                 <button
-                        onclick="window.location.href='./estabelecimentos/pontos-turisticos/praca.html'"
-                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
-                    Ver mais detalhes
+                        onclick="window.open('https://www.google.com/maps?q=Praça+Coberta+Rancho+Queimado', '_blank')"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition">
+                    Ver no mapa
                 </button>
             </div>
         </article>
 
-        <article id="spot-letreiro" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-5">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/8701ee163d-fc2956268d205f58c6fb.png" alt="ICH LIEBE RANCHO QUEIMADO sign lettering, colorful tourist photo spot, town square landmark, Brazilian mountain town signage" />
-            </div>
-            <div class="p-5">
-                <h3 class="text-brand-green text-xl font-bold mb-3">Letreiro da Praça</h3>
-                <p class="text-gray-600 text-sm leading-relaxed mb-4">Se tem um lugar que você não pode deixar de ir para tirar uma foto é o letreiro "ICH LIEBE RANCHO QUEIMADO", que significa "Eu amo Rancho Queimado".</p>
+
+        <!-- Letreiro -->
+        <article class="bg-white rounded-2xl shadow-md hover:shadow-lg transition card-hover overflow-hidden">
+            <img class="w-full h-52 object-cover"
+                 src="../assets/images/praca2.jpeg"
+                 alt="Letreiro da Praça">
+
+            <div class="p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Letreiro da Praça</h3>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">
+                    O letreiro “ICH LIEBE RANCHO QUEIMADO” é parada obrigatória para fotos de quem visita o município.
+                </p>
+
                 <button
-                        onclick="window.location.href='./estabelecimentos/pontos-turisticos/letreiropraca.html'"
-                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
-                    Ver mais detalhes
+                        onclick="window.open('https://www.google.com/maps?q=ICH+LIEBE+RANCHO+QUEIMADO', '_blank')"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition">
+                    Ver no mapa
                 </button>
             </div>
         </article>
 
-        <article id="spot-portal" class="bg-white rounded-2xl shadow-sm overflow-hidden mb-5">
-            <div class="h-56 overflow-hidden">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/611ac62edc-c77a4a38a43b8a7d4b20.png" alt="Portal entrance gate to Rancho Queimado municipality, welcome arch, town entrance landmark, Brazilian countryside gateway" />
-            </div>
-            <div class="p-5">
-                <h3 class="text-brand-green text-xl font-bold mb-3">Portal de Rancho Queimado</h3>
-                <p class="text-gray-600 text-sm leading-relaxed mb-4">Outro local obrigatório para tirar uma foto é o Portal de Rancho Queimado, que é a porta de entrada do nosso município.</p>
+
+        <!-- Portal -->
+        <article class="bg-white rounded-2xl shadow-md hover:shadow-lg transition card-hover overflow-hidden">
+            <img class="w-full h-52 object-cover"
+                 src="../assets/images/entrada.jpeg"
+                 alt="Portal de Rancho Queimado">
+
+            <div class="p-6">
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Portal de Rancho Queimado</h3>
+                <p class="text-gray-600 text-sm leading-relaxed mb-5">
+                    O Portal de Rancho Queimado é a porta de entrada da cidade e um dos pontos mais fotografados pelos visitantes.
+                </p>
+
                 <button
-                        onclick="window.location.href='./estabelecimentos/pontos-turisticos/portal.html'"
-                        class="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-md hover:bg-blue-700 transition">
-                    Ver mais detalhes
+                        onclick="window.open('https://www.google.com/maps?q=Portal+de+Rancho+Queimado', '_blank')"
+                        class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition">
+                    Ver no mapa
                 </button>
             </div>
         </article>
 
-    </section>
+    </div>
+</section>
 
-    <section id="cta-section" class="px-4 py-12 bg-white">
-        <div class="text-center max-w-md mx-auto">
-            <i class="fa-solid fa-map-location-dot text-brand-green text-4xl mb-4"></i>
-            <h2 class="text-brand-green text-2xl font-bold mb-3">Planeje sua visita</h2>
-            <p class="text-gray-600 text-sm leading-relaxed mb-6">Explore todos os pontos turísticos e descubra as maravilhas de Rancho Queimado</p>
-            <button class="w-full bg-brand-green text-white py-3 rounded-xl font-semibold text-sm hover:bg-brand-green/90 transition-colors">
-                Fale conosco
-            </button>
-        </div>
-    </section>
-
-</main>
 <section id="partners" class="py-12 px-4 bg-gray-50">
     <h2 class="text-2xl font-bold text-gray-900 text-center mb-8">Parceiros Oficiais</h2>
 
@@ -347,10 +392,15 @@
 
 </footer>
 
+
 <script>
-    document.getElementById('menu-toggle').addEventListener('click', function() {
-        const menu = document.getElementById('mobile-menu');
-        menu.classList.toggle('hidden');
+    window.addEventListener('load', function() {
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuToggle.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
     });
 </script>
 
@@ -422,6 +472,7 @@
 
     updateCartCount();
 </script>
+
 
 </body>
 </html>
