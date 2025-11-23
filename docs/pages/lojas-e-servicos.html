@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -7,97 +7,116 @@
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-PF2TSPV6');</script>
-
+    <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lojas e Serviços – Guia Rancho Queimado</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
+    <script>
+        window.FontAwesomeConfig = { autoReplaceSvg: 'nest' };
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <style>
         ::-webkit-scrollbar { display: none; }
         * { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .carousel { scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
+        .carousel::-webkit-scrollbar { display: none; }
+        @media (max-width: 768px) {
+            #packages-section .w-80,
+            #featured-tickets .w-80 {
+                scroll-snap-align: center;
+            }
+        }
+
+        @media (min-width: 769px) {
+            #packages-section > div,
+            #featured-tickets > div {
+                justify-content: center;
+                margin: 0 auto;
+                max-width: 1280px;
+            }
+        }
     </style>
 </head>
-
 <body class="bg-gray-50">
-
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PF2TSPV6"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
-<!-- ========================= HEADER ========================= -->
 <header id="header" class="fixed top-0 w-full bg-white/95 backdrop-blur-md shadow-sm z-50 py-2">
     <div class="px-4 py-2 flex items-center justify-between">
 
         <!-- Logo -->
+
         <a href="../index.html" class="flex items-center space-x-2 group">
             <img src="../assets/images/guia-rancho-queimado-logo-sem-fundo.png"
-                 class="h-12 sm:h-14 w-auto transition-transform group-hover:scale-105" alt="Logo Guia RQ">
-            <span class="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition">
-                Guia RQ
-            </span>
+                 alt="Logo Guia RQ"
+                 class="h-12 sm:h-14 w-auto transition-transform group-hover:scale-105">
+            <span class="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+    Guia RQ
+  </span>
         </a>
 
-        <!-- Navegação Desktop -->
-        <nav class="hidden md:flex space-x-10 text-sm font-medium text-gray-700">
-            <a href="../index.html" class="hover:text-blue-600">Início</a>
-            <a href="gastronomia.html" class="hover:text-blue-600">Gastronomia</a>
-            <a href="hospedagens.html" class="hover:text-blue-600">Hospedagens</a>
-            <a href="lojas-e-servicos.html" class="hover:text-blue-600 text-blue-600 font-semibold">Lojas e Serviços</a>
-            <a href="pontos-turisticos.html" class="hover:text-blue-600">Pontos Turísticos</a>
-            <a href="sobre.html" class="hover:text-blue-600">Sobre</a>
+        <!-- Navegação Desktop (ESCONDIDA no mobile) -->
+        <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-700">
+            <nav class="hidden md:flex space-x-10">
+                <a href="../index.html" class="text-gray-700 hover:text-blue-600">Início</a>
+                <a href="gastronomia.html" class="text-gray-700 hover:text-blue-600">Gastronomia</a>
+                <a href="hospedagens.html" class="text-gray-700 hover:text-blue-600">Hospedagens</a>
+                <a href="lojas-e-servicos.html" class="text-gray-700 hover:text-blue-600">Lojas e Serviços</a>
+                <a href="pontos-turisticos.html" class="text-gray-700 hover:text-blue-600">Pontos Turísticos</a>
+                <a href="sobre.html" class="text-gray-700 hover:text-blue-600">Sobre</a>
+            </nav>
         </nav>
 
-        <!-- Direita -->
+        <!-- Lado direito -->
         <div class="flex items-center space-x-5">
 
             <!-- Usuário -->
-            <div class="relative" id="user-menu-container">
-                <button id="user-icon" class="text-gray-600 hover:text-gray-900 text-2xl">
+            <div class="relative flex items-center justify-center" id="user-menu-container">
+                <button id="user-icon" class="text-gray-600 hover:text-gray-900 text-2xl focus:outline-none">
                     <i class="fa-solid fa-user"></i>
                 </button>
                 <div id="user-dropdown"
-                     class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 w-56
-                     bg-white border border-gray-200 rounded-xl shadow-xl"></div>
+                     class="hidden absolute top-[calc(100%+12px)] left-1/2 -translate-x-1/2 transform
+                    w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50">
+                    <!-- JS injeta aqui -->
+                </div>
             </div>
 
             <!-- Carrinho -->
-            <a href="carrinho.html" class="relative text-gray-600 hover:text-blue-600">
+            <a href="carrinho.html" class="relative text-gray-600 hover:text-blue-600 transition-colors">
                 <i class="fa-solid fa-shopping-cart text-lg"></i>
                 <span id="cart-count"
-                      class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center"></span>
+                      class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-semibold w-5 h-5 rounded-full flex items-center justify-center shadow"></span>
             </a>
 
-            <!-- Menu Mobile -->
-            <button id="menu-btn" class="md:hidden text-gray-700 text-2xl">
+            <!-- Botão Hambúrguer (SÓ no mobile) -->
+            <button id="menu-btn" class="md:hidden text-gray-700 text-2xl focus:outline-none">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
     </div>
 
-    <!-- Menu Mobile -->
+    <!-- Menu Mobile (toggle) -->
     <div id="mobile-menu" class="hidden md:hidden flex flex-col bg-white border-t border-gray-100">
-        <a href="../index.html" class="px-4 py-3 hover:bg-gray-50 border-b">Início</a>
-        <a href="gastronomia.html" class="px-4 py-3 hover:bg-gray-50 border-b">Gastronomia</a>
-        <a href="hospedagens.html" class="px-4 py-3 hover:bg-gray-50 border-b">Hospedagens</a>
-        <a href="lojas-e-servicos.html" class="px-4 py-3 hover:bg-gray-50 border-b font-semibold text-blue-600">Lojas e Serviços</a>
-        <a href="pontos-turisticos.html" class="px-4 py-3 hover:bg-gray-50 border-b">Pontos Turísticos</a>
-        <a href="sobre.html" class="px-4 py-3 hover:bg-gray-50">Sobre</a>
+        <a href="../index.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 border-b">Início</a>
+        <a href="gastronomia.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 border-b">Gastronomia</a>
+        <a href="hospedagens.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 border-b">Hospedagens</a>
+        <a href="lojas-e-servicos.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 border-b">Lojas e Serviços</a>
+        <a href="pontos-turisticos.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50 border-b">Pontos Turísticos</a>
+        <a href="sobre.html" class="px-4 py-3 text-gray-700 hover:bg-gray-50">Sobre</a>
     </div>
-</header>
 
-<script>
-    document.getElementById("menu-btn").addEventListener("click", () => {
-        document.getElementById("mobile-menu").classList.toggle("hidden");
-    });
-</script>
+</header>
 
 <!-- ========================= HERO ========================= -->
 <section class="relative h-[400px] md:h-[500px] mt-20">
-    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/321537718b-77ca2595b1cfe594124c.png"
+    <img src="../assets/images/entrada.jpeg"
          class="w-full h-full object-cover">
 
     <!-- Gradiente reforçado para leitura -->
@@ -106,7 +125,7 @@
     <!-- Conteúdo -->
     <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
 
-        <h1 class="text-white text-4xl md:text-5xl font-bold tracking-tight drop-shadow-[0_3px_10px_rgba(0,0,0,0.45)]">
+        <h1 class="text-[#FFCE45] text-4xl md:text-5xl font-bold drop-shadow-[0_3px_10px_rgba(0,0,0,0.45)]">
             Lojas e Serviços
         </h1>
 
@@ -126,7 +145,7 @@
         <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
                 <img class="w-full h-full object-cover"
-                     src="https://storage.googleapis.com/uxpilot-auth.appspot.com/acd617cbad-3fef230a6796204916a9.png">
+                     src="../assets/images/rjoffroadjpg.jpg">
             </div>
 
             <div class="p-6">
@@ -146,7 +165,7 @@
         <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
                 <img class="w-full h-full object-cover"
-                     src="https://storage.googleapis.com/uxpilot-auth.appspot.com/e5ce92373c-f67d52a9a0ca747b385c.png">
+                     src="../assets/images/images2/img_115.png">
             </div>
 
             <div class="p-6">
@@ -166,7 +185,7 @@
         <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
                 <img class="w-full h-full object-cover"
-                     src="https://storage.googleapis.com/uxpilot-auth.appspot.com/030bfeea63-cd016c2a24c8b79a80af.png">
+                     src="../assets/images/images2/img_100.png">
             </div>
 
             <div class="p-6">
@@ -186,7 +205,7 @@
         <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
                 <img class="w-full h-full object-cover"
-                     src="https://storage.googleapis.com/uxpilot-auth.appspot.com/9d308b7581-a75dc25e23d626fa146a.png">
+                     src="../assets/images/images2/img_96.png">
             </div>
 
             <div class="p-6">
@@ -206,7 +225,7 @@
         <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
                 <img class="w-full h-full object-cover"
-                     src="https://storage.googleapis.com/uxpilot-auth.appspot.com/14c52c85c0-6d6ebcd9b5a30cbf5f16.png">
+                     src="../assets/images/images2/img_116.png">
             </div>
 
             <div class="p-6">
@@ -226,7 +245,7 @@
         <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
                 <img class="w-full h-full object-cover"
-                     src="https://storage.googleapis.com/uxpilot-auth.appspot.com/6043b1eef7-5a81f47d132fad72544a.png">
+                     src="../assets/images/images2/img_83.png">
             </div>
 
             <div class="p-6">
@@ -246,7 +265,7 @@
         <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
                 <img class="w-full h-full object-cover"
-                     src="https://storage.googleapis.com/uxpilot-auth.appspot.com/6cefb7a4d9-8d77ef42a0d00ef8055e.png">
+                     src="../assets/images/images2/img_105.png">
             </div>
 
             <div class="p-6">
@@ -266,7 +285,7 @@
         <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
                 <img class="w-full h-full object-cover"
-                     src="https://storage.googleapis.com/uxpilot-auth.appspot.com/f93970ed7c-8c9d226e2dc7af5dcddd.png">
+                     src="../assets/images/images2/img_118.png">
             </div>
 
             <div class="p-6">
@@ -286,7 +305,7 @@
         <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
                 <img class="w-full h-full object-cover"
-                     src="https://storage.googleapis.com/uxpilot-auth.appspot.com/dab40bd38e-62c744f812ab79eb0e0f.png">
+                     src="../assets/images/images2/img_95.png">
             </div>
 
             <div class="p-6">
@@ -306,7 +325,7 @@
         <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
                 <img class="w-full h-full object-cover"
-                     src="https://storage.googleapis.com/uxpilot-auth.appspot.com/ef9d973e35-28bb1d806737f92c389e.png">
+                     src=../assets/images/images2/img_104.png>
             </div>
 
             <div class="p-6">
@@ -326,7 +345,7 @@
         <article class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
             <div class="h-56 overflow-hidden">
                 <img class="w-full h-full object-cover"
-                     src="https://storage.googleapis.com/uxpilot-auth.appspot.com/970380fd26-18f66dd3b2a275689c40.png">
+                     src="../assets/images/images2/img_117.png">
             </div>
 
             <div class="p-6">
@@ -345,45 +364,136 @@
     </div>
 </main>
 
-<!-- ========================= FOOTER ========================= -->
-<footer class="bg-gray-900 text-white py-12 px-4">
-    <div class="text-center mb-8">
-        <h3 class="text-2xl font-bold">Guia RQ</h3>
-        <p class="text-gray-400">Seu guia oficial de Rancho Queimado</p>
-    </div>
+<<!-- ========================= FOOTER ========================= -->
 
-    <div class="grid grid-cols-2 gap-8 max-w-3xl mx-auto text-sm">
-        <div>
-            <h4 class="font-semibold mb-3">Links úteis</h4>
-            <ul class="space-y-2 text-gray-300">
-                <li>Contato</li>
-                <li>Termos</li>
-                <li>Privacidade</li>
-            </ul>
+
+    <footer id="footer" class="bg-gray-800 text-white py-12 px-4">
+
+        <!-- Título e descrição -->
+        <div class="space-y-8 text-center">
+            <h3 class="text-2xl font-bold mb-4">Guia RQ</h3>
+            <p class="text-gray-300 mb-4">Sua porta de entrada para Rancho Queimado</p>
         </div>
 
-        <div>
-            <h4 class="font-semibold mb-3">Redes Sociais</h4>
-            <a href="https://www.instagram.com/guiaranchoqueimado/"
-               class="text-gray-300 text-2xl hover:text-blue-400">
-                <i class="fa-brands fa-instagram"></i>
-            </a>
+        <!-- Grid -->
+        <div class="grid grid-cols-2 gap-8 text-sm mt-10">
+
+            <!-- Coluna 1 -->
+            <div>
+                <h4 class="font-semibold mb-3">Links Úteis</h4>
+                <ul class="space-y-2 text-gray-300">
+                    <li><a href="sobre.html" class="hover:text-white transition-colors">Sobre</a></li>
+                    <li><a href="termosdeuso.html" class="hover:text-white transition-colors">Termos de Uso</a></li>
+                    <li><a href="politica.html" class="hover:text-white transition-colors">Política de Privacidade</a></li>
+                </ul>
+            </div>
+
+            <!-- Coluna 2 -->
+            <div>
+                <h4 class="font-semibold mb-3">Suporte</h4>
+                <p class="text-gray-300 mb-2">gropoguiarq@gmail.com</p>
+                <div class="flex space-x-4 mt-4">
+                    <a
+                            href="https://www.instagram.com/guiaranchoqueimado/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-gray-400 hover:text-blue-400 cursor-pointer text-2xl"
+                    >
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div> <!-- Fim do grid -->
+
+        <!-- Rodapé inferior -->
+        <div class="text-center text-sm text-gray-400 border-t border-gray-700 pt-6 mt-10">
+            © 2024 Guia RQ. Todos os direitos reservados.
         </div>
-    </div>
 
-    <p class="text-center text-xs text-gray-500 mt-8">© 2024 Guia RQ</p>
-</footer>
+    </footer>
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const cartCountEl = document.getElementById("cart-count");
-        const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-        if (carrinho.length > 0) {
-            cartCountEl.textContent = carrinho.length;
-            cartCountEl.classList.remove("hidden");
+
+    <script>
+        window.addEventListener('load', function() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            menuToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // === Dropdown do usuário ===
+            let userLoggedIn = false;
+            const userIcon = document.getElementById('user-icon');
+            const dropdown = document.getElementById('user-dropdown');
+
+            function renderMenu() {
+                dropdown.innerHTML = userLoggedIn
+                    ? `
+        <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minha conta</a>
+        <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minhas compras</a>
+        <hr class="my-1">
+        <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
+      `
+                    : `
+        <a href="login.html" class="block px-10 py-5 hover:bg-gray-100 text-gray-700">Entrar ou Cadastrar-se</a>
+      `;
+            }
+
+            if (userIcon) {
+                userIcon.addEventListener('click', () => {
+                    dropdown.classList.toggle('hidden');
+                    renderMenu();
+                });
+            }
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#user-menu-container')) dropdown.classList.add('hidden');
+                if (e.target.id === 'logout-btn') {
+                    userLoggedIn = false;
+                    dropdown.classList.add('hidden');
+                    alert('Você saiu da conta.');
+                }
+            });
+
+            // === Menu Mobile ===
+            const menuBtn = document.getElementById("menu-btn");
+            const mobileMenu = document.getElementById("mobile-menu");
+            let menuOpen = false;
+
+            if (menuBtn) {
+                menuBtn.addEventListener("click", () => {
+                    menuOpen = !menuOpen;
+                    mobileMenu.classList.toggle("hidden");
+                    menuBtn.innerHTML = menuOpen
+                        ? '<i class="fa-solid fa-xmark"></i>'
+                        : '<i class="fa-solid fa-bars"></i>';
+                });
+            }
+        });
+    </script>
+    <script>
+        function updateCartCount() {
+            const cartCount = document.getElementById('cart-count');
+            const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+
+            if (carrinho.length > 0) {
+                const totalQtd = carrinho.reduce((acc, i) => acc + i.qtd, 0);
+                cartCount.textContent = totalQtd;
+                cartCount.classList.remove('hidden');
+            } else {
+                cartCount.classList.add('hidden');
+            }
         }
-    });
-</script>
+
+        updateCartCount();
+    </script>
+
 
 </body>
 </html>
