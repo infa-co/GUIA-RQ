@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TicketService {
@@ -19,6 +20,23 @@ public class TicketService {
     @Autowired
     private QrCodeService qrCodeService;
 
+    // ============================
+    // SALVAR
+    // ============================
+    public Ticket salvar(Ticket ticket) {
+        return ticketRepository.save(ticket);
+    }
+
+    // ============================
+    // LISTAR
+    // ============================
+    public List<Ticket> listarTodos() {
+        return ticketRepository.findAll();
+    }
+
+    // ============================
+    // PROCESSAR COMPRA (ENVIAR QR POR EMAIL)
+    // ============================
     public void processarCompra(
             Long ticketId,
             String email,
@@ -28,13 +46,10 @@ public class TicketService {
             String nomeTicket
     ) {
         try {
-            // 🔵 1. Conteúdo que vira o QR Code
             String conteudo = "https://guiaranchoqueimado.com.br/ticket/" + ticketId;
 
-            // 🔵 2. Gera o QR Code
             byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
 
-            // 🔵 3. Envia por e-mail com todos os dados disponíveis
             emailService.sendTicketEmail(
                     email,
                     nomeCliente,
@@ -44,19 +59,35 @@ public class TicketService {
                     qrBytes
             );
 
-            System.out.println("✔ COMPRA PROCESSADA COM SUCESSO");
+            System.out.println("✔ COMPRA PROCESSADA");
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("❌ ERRO AO PROCESSAR COMPRA: " + e.getMessage());
+            System.out.println("❌ ERRO AO PROCESSAR COMPRA");
         }
     }
 
-    public void salvar(Ticket t) {
-        ticketRepository.save(t);
+    // ============================
+    // VERIFICAR TICKET
+    // ============================
+    public Ticket verificar(UUID idPublico) {
+        return ticketRepository.findByIdPublico(idPublico)
+                .orElseThrow(() -> new RuntimeException("Ticket não encontrado"));
     }
 
-    public List<Ticket> listarTodos() {
-        return ticketRepository.findAll();
+    // ============================
+    // CONFIRMAR TICKET (VALIDAÇÃO)
+    // ============================
+    public Ticket confirmar(UUID idPublico) {
+        Ticket t = verificar(idPublico);
+
+        if (t.isUsado()) {
+            throw new RuntimeException("Ticket já utilizado!");
+        }
+
+        t.setUsado(true);
+        t.setUsadoEm(java.time.LocalDateTime.now());
+
+        return ticketRepository.save(t);
     }
 }

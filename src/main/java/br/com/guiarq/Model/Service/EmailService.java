@@ -1,5 +1,6 @@
 package br.com.guiarq.Model.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -7,6 +8,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class EmailService {
@@ -14,64 +18,32 @@ public class EmailService {
     @Value("${RESEND_API_KEY}")
     private String apiKey;
 
-    @Value("${APP_BASE_URL}")
+    @Value("${API_URL}")
     private String baseUrl;
 
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    // ----------------------------------------------------
+    // ENVIO EMAIL DE VERIFICAÇÃO
+    // ----------------------------------------------------
     public void enviarVerificacaoEmail(String emailDestino, String token) {
 
         try {
             String link = baseUrl + "/api/auth/verify?token=" + token;
 
             String html = """
-                    <table width='100%%' cellspacing='0' cellpadding='0' style='background-color:#f5f5f5; padding:40px 0; font-family:Arial, Helvetica, sans-serif;'>
-                        <tr>
-                            <td align='center'>
-                                <table width='480' cellspacing='0' cellpadding='0'
-                                       style='background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.08);'>
-
-                                    <tr>
-                                        <td style='background-color:#0d47a1; padding:24px; text-align:center;'>
-                                            <img src='https://guiaranchoqueimado.com.br/assets/images/guia-rancho-queimado-logo-sem-fundo.png'
-                                                 alt='Logo' width='140' style='display:block; margin:auto;'>
-                                            <h2 style='color:#ffffff; margin-top:16px; margin-bottom:0; font-size:22px;'>Confirme seu e-mail</h2>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td style='padding:28px; color:#333; font-size:15px;'>
-                                            <p>Obrigado por criar sua conta no <strong>Guia Rancho Queimado</strong>.</p>
-                                            <p>Clique no botão abaixo para ativar seu e-mail:</p>
-
-                                            <p style='text-align:center; margin:32px 0;'>
-                                                <a href='%s' style='background-color:#0d47a1; color:white; padding:14px 28px; border-radius:6px; text-decoration:none; font-size:16px;'>
-                                                    Confirmar e-mail
-                                                </a>
-                                            </p>
-
-                                            <p style='font-size:13px; color:#777;'>Se não foi você quem criou a conta, ignore este e-mail.</p>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td style='background-color:#fafafa; text-align:center; padding:18px; font-size:12px; color:#999;'>
-                                            © 2025 Guia Rancho Queimado. Todos os direitos reservados.
-                                        </td>
-                                    </tr>
-
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+                    <h2>Confirme seu e-mail</h2>
+                    <p>Clique no botão abaixo para ativar sua conta:</p>
+                    <a href='%s'>Confirmar e-mail</a>
                     """.formatted(link);
 
-            String json = """
-                    {
-                      "from": "no-reply@guiaranchoqueimado.com.br",
-                      "to": ["%s"],
-                      "subject": "Confirme seu e-mail",
-                      "html": "%s"
-                    }
-                    """.formatted(emailDestino, html.replace("\"", "\\\""));
+            Map<String, Object> body = new HashMap<>();
+            body.put("from", "Guia Rancho Queimado <no-reply@guiaranchoqueimado.com.br>");
+            body.put("to", new String[]{emailDestino});
+            body.put("subject", "Confirme seu e-mail");
+            body.put("html", html);
+
+            String json = mapper.writeValueAsString(body);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://api.resend.com/emails"))
@@ -87,6 +59,9 @@ public class EmailService {
         }
     }
 
+    // ----------------------------------------------------
+    // ENVIO EMAIL DO TICKET + QR CODE
+    // ----------------------------------------------------
     public void sendTicketEmail(
             String emailDestino,
             String nomeCliente,
@@ -95,68 +70,31 @@ public class EmailService {
             String nomeTicket,
             byte[] qrBytes
     ) {
+
         try {
-            String base64Qr = java.util.Base64.getEncoder().encodeToString(qrBytes);
+            String base64Qr = Base64.getEncoder().encodeToString(qrBytes);
 
             String html = """
-                    <table width='100%%' cellspacing='0' cellpadding='0' style='background-color:#f5f5f5; padding:40px 0; font-family:Arial, Helvetica, sans-serif;'>
-                        <tr>
-                            <td align='center'>
-                                <table width='480' cellspacing='0' cellpadding='0'
-                                       style='background-color:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.08);'>
-
-                                    <tr>
-                                        <td style='background-color:#0d47a1; padding:24px; text-align:center;'>
-                                            <img src='https://guiaranchoqueimado.com.br/assets/images/guia-rancho-queimado-logo-sem-fundo.png'
-                                                 alt='Logo' width='140' style='display:block; margin:auto;'>
-                                            <h2 style='color:#ffffff; margin-top:16px; margin-bottom:0; font-size:22px;'>Seu Ticket Está Pronto 🎟️</h2>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td style='padding:28px; color:#333; font-size:15px;'>
-
-                                            <p>Olá <strong>%s</strong>,</p>
-                                            <p>Aqui estão os detalhes da sua compra:</p>
-
-                                            <ul>
-                                                <li><strong>Ticket:</strong> %s</li>
-                                                <li><strong>Telefone:</strong> %s</li>
-                                                <li><strong>CPF:</strong> %s</li>
-                                            </ul>
-
-                                            <p style='margin-top:20px;'>Seu QR Code está anexado a este e-mail.</p>
-
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td style='background-color:#fafafa; text-align:center; padding:18px; font-size:12px; color:#999;'>
-                                            © 2025 Guia Rancho Queimado. Todos os direitos reservados.
-                                        </td>
-                                    </tr>
-
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+                    <h2>Seu Ticket Está Pronto 🎟️</h2>
+                    <p>Olá <strong>%s</strong>,</p>
+                    <p>Seu ticket: <strong>%s</strong></p>
+                    <p>Telefone: %s</p>
+                    <p>CPF: %s</p>
+                    <p>Seu QR Code está anexado a este e-mail.</p>
                     """.formatted(nomeCliente, nomeTicket, telefone, cpf);
 
-            String json = """
-                    {
-                      "from": "no-reply@guiaranchoqueimado.com.br",
-                      "to": ["%s"],
-                      "subject": "Seu Ticket – Guia Rancho Queimado",
-                      "html": "%s",
-                      "attachments": [
-                        {
-                          "filename": "ticket-qrcode.png",
-                          "content": "%s"
-                        }
-                      ]
-                    }
-                    """
-                    .formatted(emailDestino, html.replace("\"", "\\\""), base64Qr);
+            Map<String, Object> attachment = new HashMap<>();
+            attachment.put("filename", "ticket-qrcode.png");
+            attachment.put("content", base64Qr);
+
+            Map<String, Object> body = new HashMap<>();
+            body.put("from", "Guia Rancho Queimado <no-reply@guiaranchoqueimado.com.br>");
+            body.put("to", new String[]{emailDestino});
+            body.put("subject", "Seu Ticket – Guia Rancho Queimado");
+            body.put("html", html);
+            body.put("attachments", new Object[]{attachment});
+
+            String json = mapper.writeValueAsString(body);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://api.resend.com/emails"))
@@ -171,4 +109,50 @@ public class EmailService {
             throw new RuntimeException("Erro ao enviar ticket: " + e.getMessage());
         }
     }
+
+    // ----------------------------------------------------
+    // TESTE DIRETO VIA RENDER
+    // ----------------------------------------------------
+    public void testEmail() {
+        sendTicketEmail(
+                "tkmarlon594@gmail.com",
+                "Teste Nome",
+                "48999999999",
+                "000.000.000-00",
+                "Ticket de Teste",
+                "TESTE QR".getBytes()
+        );
+    }
+    public void enviarEmailTeste(String emailDestino) {
+        try {
+
+            String html = """
+            <p>Seu sistema está funcionando! 🎉</p>
+            <p>Este é um e-mail de TESTE enviado via Resend.</p>
+            <p>Se você recebeu isso, o envio está totalmente OK.</p>
+            """;
+
+            String json = """
+            {
+              "from": "Guia Rancho Queimado <no-reply@guiaranchoqueimado.com.br>",
+              "to": ["%s"],
+              "subject": "E-mail de Teste – Guia Rancho Queimado",
+              "html": "%s"
+            }
+            """.formatted(emailDestino, html.replace("\"", "\\\""));
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://api.resend.com/emails"))
+                    .header("Authorization", "Bearer " + apiKey)
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+
+            HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao enviar email de teste: " + e.getMessage());
+        }
+    }
+
 }

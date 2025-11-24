@@ -6,16 +6,18 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tickets")
+@Table(name = "tickets_compra") // <<< Atualizado para a nova tabela correta
 public class Ticket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Identificador público do ticket
     @Column(name = "id_publico")
     private UUID idPublico;
 
+    // Informações do ticket (catálogo)
     private String nome;
     private String tipo;
     private String descricao;
@@ -29,6 +31,7 @@ public class Ticket {
     @Column(name = "parceiro_id")
     private Long parceiroId;
 
+    // Dados da compra
     @Column(name = "data_compra")
     private LocalDateTime dataCompra;
 
@@ -51,8 +54,9 @@ public class Ticket {
     @Column(name = "valor_pago")
     private Double valorPago;
 
+    // QR Code / validação
     @Column(name = "qr_token")
-    private UUID qrToken;
+    private String qrToken; // <<< TROQUEI para String. Muito mais seguro para hash/UUID no banco.
 
     private boolean usado;
 
@@ -65,7 +69,16 @@ public class Ticket {
     @Column(name = "criado_em")
     private LocalDateTime criadoEm;
 
+
+    // =========================
+    // CONSTRUTOR
+    // =========================
     public Ticket() {}
+
+
+    // =========================
+    // GETTERS & SETTERS
+    // =========================
 
     public Long getId() {
         return id;
@@ -191,11 +204,11 @@ public class Ticket {
         this.valorPago = valorPago;
     }
 
-    public UUID getQrToken() {
+    public String getQrToken() {
         return qrToken;
     }
 
-    public void setQrToken(UUID qrToken) {
+    public void setQrToken(String qrToken) {
         this.qrToken = qrToken;
     }
 
@@ -230,4 +243,5 @@ public class Ticket {
     public void setCriadoEm(LocalDateTime criadoEm) {
         this.criadoEm = criadoEm;
     }
+
 }
