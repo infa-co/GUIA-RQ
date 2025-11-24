@@ -5,8 +5,11 @@ public class CheckoutRequest {
     private Double amount;
     private String description;
     private Long ticketId;
-    private String email;
+
     private String nome;
+    private String email;
+    private String telefone;
+    private String cpf;
 
     public CheckoutRequest() {}
 
@@ -34,6 +37,14 @@ public class CheckoutRequest {
         this.ticketId = ticketId;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -42,11 +53,19 @@ public class CheckoutRequest {
         this.email = email;
     }
 
-    public String getNome() {
-        return nome;
+    public String getTelefone() {
+        return telefone;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 }

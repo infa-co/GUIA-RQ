@@ -75,6 +75,8 @@ public class StripeWebhookController {
             Long ticketId = Long.parseLong(metadata.get("ticketId"));
             String email = metadata.get("email");
             String nome = metadata.get("nome");
+            String telefone = metadata.get("telefone");
+            String cpf = metadata.get("cpf");
 
             Ticket base = ticketRepository.findById(ticketId).orElse(null);
 
@@ -94,6 +96,8 @@ public class StripeWebhookController {
 
             novo.setEmailCliente(email);
             novo.setNomeCliente(nome);
+            novo.setTelefoneCliente(telefone); // NOVO
+            novo.setCpfCliente(cpf); // NOVO
             novo.setDataCompra(LocalDateTime.now());
 
             novo.setIdPublico(UUID.randomUUID());
@@ -108,12 +112,16 @@ public class StripeWebhookController {
 
             logger.info("🎫 Ticket gerado: {}", novo.getIdPublico());
 
+            // Agora enviamos todos os dados
             ticketService.processarCompra(
                     novo.getId(),
                     email,
                     nome,
+                    telefone,
+                    cpf,
                     novo.getNome()
             );
         });
     }
+
 }

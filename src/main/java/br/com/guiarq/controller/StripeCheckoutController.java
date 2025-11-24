@@ -27,12 +27,21 @@ public class StripeCheckoutController {
             throw new IllegalArgumentException("Valor inválido.");
         }
 
-        Long amountInCents = Math.round(req.getAmount());
+        Long amountInCents = Math.round(req.getAmount() * 100);
+
+        // 🔥 METADATA COM DADOS DO USUÁRIO
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("nome", req.getNome());
+        metadata.put("email", req.getEmail());
+        metadata.put("telefone", req.getTelefone());
+        metadata.put("cpf", req.getCpf());
+        metadata.put("ticketId", String.valueOf(req.getTicketId()));
 
         SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
                 .setSuccessUrl("https://guiaranchoqueimado.com.br/pages/sucesso.html")
                 .setCancelUrl("https://guiaranchoqueimado.com.br/pages/cancelado.html")
+                .putAllMetadata(metadata) // <-- AQUI
                 .addLineItem(
                         SessionCreateParams.LineItem.builder()
                                 .setQuantity(1L)
@@ -53,9 +62,7 @@ public class StripeCheckoutController {
 
         Session session = Session.create(params);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("url", session.getUrl());
-
-        return response;
+        return Map.of("url", session.getUrl());
     }
 }
+

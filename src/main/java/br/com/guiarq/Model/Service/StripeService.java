@@ -64,24 +64,4 @@ public class StripeService {
 
         return Session.create(params);
     }
-    public void processarCompra(String email, String codigoValidacao) {
-        try {
-            // gerar QR
-            byte[] qrBytes = qrCodeService.generateQrCodeBytes(codigoValidacao, 300, 300);
-
-            // enviar email
-            emailService.sendTicketEmail(
-                    email,
-                    codigoValidacao,
-                    qrBytes
-            );
-
-            System.out.println("Email de ticket enviado com sucesso para " + email);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Erro ao processar compra e enviar ticket", e);
-        }
-    }
-
 }
