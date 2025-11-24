@@ -213,63 +213,85 @@
 
 <!-- Missão, Visão e Valores -->
 <section id="missao-visao-valores" class="px-6 py-12 bg-gray-50">
-  <div class="max-w-5xl mx-auto">
-    <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
-      Missão, Visão e Valores
-    </h2>
+    <div class="max-w-6xl mx-auto">
+        <h2 class="text-3xl font-bold text-gray-900 mb-10 text-center">
+            Missão, Visão e Valores
+        </h2>
 
-    <!-- Container do carrossel -->
-    <div class="relative">
-      <!-- Área rolável -->
-      <div class="carousel flex space-x-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4">
-        <!-- Card 1 -->
-        <div
-          class="min-w-[280px] bg-white p-6 rounded-2xl shadow-md snap-center flex-shrink-0"
-        >
-          <div
-            class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4"
-          >
-            <i class="fa-solid fa-bullseye text-primary text-xl"></i>
-          </div>
-          <h3 class="font-semibold text-gray-900 mb-2">Missão</h3>
-          <p class="text-gray-600 text-sm leading-relaxed">
-            Facilitar a descoberta e o acesso às melhores experiências de Rancho Queimado.
-          </p>
-        </div>
+        <!-- Wrapper -->
+        <div class="relative">
 
-        <!-- Card 2 -->
-        <div
-          class="min-w-[280px] bg-white p-6 rounded-2xl shadow-md snap-center flex-shrink-0"
-        >
-          <div
-            class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mb-4"
-          >
-            <i class="fa-solid fa-eye text-secondary text-xl"></i>
-          </div>
-          <h3 class="font-semibold text-gray-900 mb-2">Visão</h3>
-          <p class="text-gray-600 text-sm leading-relaxed">
-            Ser o principal canal de turismo e lifestyle da serra catarinense.
-          </p>
-        </div>
+            <!-- CARROSSEL MOBILE / GRID DESKTOP -->
+            <div
+                    class="
+                flex md:grid
+                md:grid-cols-3
+                gap-6
+                overflow-x-auto md:overflow-visible
+                carousel scroll-smooth pb-4
+                "
+            >
 
-        <!-- Card 3 -->
-        <div
-          class="min-w-[280px] bg-white p-6 rounded-2xl shadow-md snap-center flex-shrink-0"
-        >
-          <div
-            class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4"
-          >
-            <i class="fa-solid fa-heart text-accent text-xl"></i>
-          </div>
-          <h3 class="font-semibold text-gray-900 mb-2">Valores</h3>
-          <p class="text-gray-600 text-sm leading-relaxed">
-            Transparência, colaboração, valorização local e sustentabilidade.
-          </p>
+                <!-- Card 1 -->
+                <div
+                        class="
+                    bg-white p-6 rounded-2xl shadow-md
+                    min-w-[260px] md:min-w-0
+                    snap-center
+                    "
+                >
+                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-4 bg-gray-100">
+                        <i class="fa-solid fa-bullseye text-gray-800 text-xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Missão</h3>
+                    <p class="text-gray-600 leading-relaxed text-sm">
+                        Facilitar a descoberta e o acesso às melhores experiências de Rancho Queimado.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div
+                        class="
+                    bg-white p-6 rounded-2xl shadow-md
+                    min-w-[260px] md:min-w-0
+                    snap-center
+                    "
+                >
+                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-4 bg-gray-100">
+                        <i class="fa-solid fa-eye text-gray-800 text-xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Visão</h3>
+                    <p class="text-gray-600 leading-relaxed text-sm">
+                        Ser o principal canal de turismo e lifestyle da serra catarinense.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div
+                        class="
+                    bg-white p-6 rounded-2xl shadow-md
+                    min-w-[260px] md:min-w-0
+                    snap-center
+                    "
+                >
+                    <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-4 bg-gray-100">
+                        <i class="fa-solid fa-heart text-gray-800 text-xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Valores</h3>
+                    <p class="text-gray-600 leading-relaxed text-sm">
+                        Transparência, colaboração, valorização local e sustentabilidade.
+                    </p>
+                </div>
+
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </section>
+
+<style>
+    .carousel::-webkit-scrollbar { display: none; }
+    .carousel { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
 
 
 <!-- Nossos Números -->
@@ -297,7 +319,7 @@
 
         <!-- Card 3 -->
         <div class="min-w-[240px] bg-white p-6 rounded-xl shadow-md text-center snap-center flex-shrink-0">
-          <div class="text-3xl font-bold text-accent mb-1">+10k</div>
+          <div class="text-3xl font-bold text-accent mb-1">+100 mil</div>
           <p class="text-gray-600 text-sm">visitantes por mês</p>
         </div>
 
@@ -315,116 +337,190 @@
 <!-- Equipe & Contato -->
 <section id="equipe-contato" class="px-6 py-12 bg-white">
     <div class="max-w-lg mx-auto">
-        <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Quem faz o Guia RQ acontecer</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">
+            Quem faz o Guia RQ acontecer
+        </h2>
+
+        <!-- LISTA DE PESSOAS -->
         <div class="space-y-6">
-            <div class="bg-gray-50 p-6 rounded-xl">
-                <div class="flex items-center space-x-4 mb-4">
-                    <img src="../assets/images/leo2.jpg" class="w-16 h-16 rounded-full object-cover">
-                    <div>
-                        <h3 class="font-semibold text-gray-900">Fundador do Guia</h3>
-                        <p class="text-gray-600 text-sm">Fundador & Relações Locais</p>
-                    </div>
+
+            <!-- CARD 1 -->
+            <div class="bg-gray-50 p-6 rounded-xl flex items-center space-x-4">
+                <img src="../assets/images/leo2.jpg"
+                     class="w-16 h-16 rounded-full object-cover">
+
+                <div>
+                    <h3 class="font-semibold text-gray-900">Leonardo Schütz</h3>
+                    <p class="text-gray-600 text-sm"></p>
                 </div>
             </div>
-            
-            
-        <div class="mt-8 text-center">
-            <p class="text-gray-600 mb-4">Quer fazer parte do Guia?</p>
-            <button class="bg-secondary text-white px-6 py-3 rounded-lg font-medium text-sm">
-                <i class="fa-brands fa-whatsapp mr-2"></i>
+
+            <!-- CARD 2 -->
+            <div class="bg-gray-50 p-6 rounded-xl flex items-center space-x-4">
+                <img src="../assets/images/gustavo.jpg"
+                     class="w-16 h-16 rounded-full object-cover">
+
+                <div>
+                    <h3 class="font-semibold text-gray-900">Gustavo Paz</h3>
+                    <p class="text-gray-600 text-sm"></p>
+                </div>
+            </div>
+
+            <!-- CARD 3 -->
+            <div class="bg-gray-50 p-6 rounded-xl flex items-center space-x-4">
+                <img src="../assets/images/"
+                     class="w-16 h-16 rounded-full object-cover">
+
+                <div>
+                    <h3 class="font-semibold text-gray-900">Wanda Lechner</h3>
+                    <p class="text-gray-600 text-sm"></p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CTA -->
+        <div class="text-center mt-10">
+            <p class="text-gray-700 text-lg mb-2">Quer fazer parte do Guia?</p>
+            <a href="https://wa.me/5548991107533"
+               target="_blank"
+               class="inline-flex items-center text-blue-600 font-medium hover:underline">
                 Entre em contato
-            </button>
+            </a>
         </div>
+
     </div>
 </section>
 
-<!-- CTA Final -->
-<section id="cta-final" class="px-6 py-12 bg-primary text-white">
-    <div class="max-w-lg mx-auto text-center">
-        <h2 class="text-2xl font-bold mb-4">Planeje sua próxima viagem com o Guia RQ</h2>
-        <p class="mb-8 text-blue-100 leading-relaxed">Descubra lugares incríveis, economize com nossos tickets e viva o melhor de Rancho Queimado com quem entende da cidade.</p>
-        <button class="bg-white text-primary px-8 py-3 rounded-lg font-semibold">
-            Ver tickets disponíveis
-        </button>
-    </div>
 </section>
 
-<!-- Footer -->
 <footer id="footer" class="bg-gray-800 text-white py-12 px-4">
-    <div class="space-y-8">
-        <div class="text-center">
-            <h3 class="text-2xl font-bold mb-4">Guia RQ</h3>
-            <p class="text-gray-300 mb-4">Sua porta de entrada para Rancho Queimado</p>
-            </div>
-        </div>
-        
-        <div class="grid grid-cols-2 gap-8 text-sm">
-            <div>
-                <h4 class="font-semibold mb-3">Links Úteis</h4>
-                <ul class="space-y-2 text-gray-300">
-                    <li><span class="hover:text-white cursor-pointer">Contato</span></li>
-                    <li><span class="hover:text-white cursor-pointer">Termos de Uso</span></li>
-                    <li><span class="hover:text-white cursor-pointer">Política de Privacidade</span></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="font-semibold mb-3">Suporte</h4>
-                <p class="text-gray-300 mb-2">suporte@guiarq.com.br</p>
-                <div class="flex space-x-4 mt-4">
-  <!-- Link do Instagram -->
-  <a 
-    href="https://www.instagram.com/guiaranchoqueimado/" 
-    target="_blank" 
-    rel="noopener noreferrer" 
-    class="text-gray-400 hover:text-blue-400 cursor-pointer text-2xl"
-  >
-    <i class="fa-brands fa-instagram"></i>
-  </a>
-</div>
-        
-        <div class="text-center text-sm text-gray-400 border-t border-gray-700 pt-6">
-            © 2024 Guia RQ. Todos os direitos reservados.
-        </div>
+
+    <!-- Título e descrição -->
+    <div class="space-y-8 text-center">
+        <h3 class="text-2xl font-bold mb-4">Guia RQ</h3>
+        <p class="text-gray-300 mb-4">Sua porta de entrada para Rancho Queimado</p>
     </div>
+
+    <!-- Grid -->
+    <div class="grid grid-cols-2 gap-8 text-sm mt-10">
+
+        <!-- Coluna 1 -->
+        <div>
+            <h4 class="font-semibold mb-3">Links Úteis</h4>
+            <ul class="space-y-2 text-gray-300">
+                <li><a href="sobre.html" class="hover:text-white transition-colors">Sobre</a></li>
+                <li><a href="termosdeuso.html" class="hover:text-white transition-colors">Termos de Uso</a></li>
+                <li><a href="politica.html" class="hover:text-white transition-colors">Política de Privacidade</a></li>
+            </ul>
+        </div>
+
+        <!-- Coluna 2 -->
+        <div>
+            <h4 class="font-semibold mb-3">Suporte</h4>
+            <p class="text-gray-300 mb-2">gropoguiarq@gmail.com</p>
+            <div class="flex space-x-4 mt-4">
+                <a
+                        href="https://www.instagram.com/guiaranchoqueimado/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-gray-400 hover:text-blue-400 cursor-pointer text-2xl"
+                >
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+            </div>
+        </div>
+
+    </div> <!-- Fim do grid -->
+
+    <!-- Rodapé inferior -->
+    <div class="text-center text-sm text-gray-400 border-t border-gray-700 pt-6 mt-10">
+        © 2024 Guia RQ. Todos os direitos reservados.
+    </div>
+
 </footer>
 
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const cartCountEl = document.getElementById("cart-count");
-  if (!cartCountEl) return;
+    window.addEventListener('load', function() {
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
 
-  // Recupera o carrinho do localStorage
-  const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-
-  // Atualiza o contador
-  if (carrinho.length > 0) {
-    cartCountEl.textContent = carrinho.length;
-    cartCountEl.classList.remove("hidden");
-  } else {
-    cartCountEl.classList.add("hidden");
-  }
-});
-</script>
-<script>
-    // === Menu Mobile ===
-    document.addEventListener("DOMContentLoaded", () => {
-        const menuBtn = document.getElementById("menu-btn");
-        const mobileMenu = document.getElementById("mobile-menu");
-
-        if (!menuBtn || !mobileMenu) return;
-
-        let menuOpen = false;
-
-        menuBtn.addEventListener("click", () => {
-            menuOpen = !menuOpen;
-            mobileMenu.classList.toggle("hidden");
-
-            menuBtn.innerHTML = menuOpen
-                ? '<i class="fa-solid fa-xmark"></i>'
-                : '<i class="fa-solid fa-bars"></i>';
+        menuToggle.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
         });
     });
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // === Dropdown do usuário ===
+        let userLoggedIn = false;
+        const userIcon = document.getElementById('user-icon');
+        const dropdown = document.getElementById('user-dropdown');
+
+        function renderMenu() {
+            dropdown.innerHTML = userLoggedIn
+                ? `
+        <a href="conta.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minha conta</a>
+        <a href="compras.html" class="block px-4 py-2 hover:bg-gray-100 text-gray-700">Minhas compras</a>
+        <hr class="my-1">
+        <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
+      `
+                : `
+        <a href="login.html" class="block px-10 py-5 hover:bg-gray-100 text-gray-700">Entrar ou Cadastrar-se</a>
+      `;
+        }
+
+        if (userIcon) {
+            userIcon.addEventListener('click', () => {
+                dropdown.classList.toggle('hidden');
+                renderMenu();
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#user-menu-container')) dropdown.classList.add('hidden');
+            if (e.target.id === 'logout-btn') {
+                userLoggedIn = false;
+                dropdown.classList.add('hidden');
+                alert('Você saiu da conta.');
+            }
+        });
+
+        // === Menu Mobile ===
+        const menuBtn = document.getElementById("menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+        let menuOpen = false;
+
+        if (menuBtn) {
+            menuBtn.addEventListener("click", () => {
+                menuOpen = !menuOpen;
+                mobileMenu.classList.toggle("hidden");
+                menuBtn.innerHTML = menuOpen
+                    ? '<i class="fa-solid fa-xmark"></i>'
+                    : '<i class="fa-solid fa-bars"></i>';
+            });
+        }
+    });
+</script>
+<script>
+    function updateCartCount() {
+        const cartCount = document.getElementById('cart-count');
+        const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+
+        if (carrinho.length > 0) {
+            const totalQtd = carrinho.reduce((acc, i) => acc + i.qtd, 0);
+            cartCount.textContent = totalQtd;
+            cartCount.classList.remove('hidden');
+        } else {
+            cartCount.classList.add('hidden');
+        }
+    }
+
+    updateCartCount();
+</script>
+
 
 </body>
 </html>

@@ -107,6 +107,87 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </div>
     </section>
 
+      <section class="space-y-6">
+
+          <!-- TÍTULO -->
+          <h3 class="text-xl font-bold text-gray-900"></h3>
+          <p class="text-gray-700 text-sm"></p>
+
+          <!-- CARD 1 – VANTAGEM -->
+          <div class="bg-green-50 border border-green-200 p-5 rounded-2xl shadow-sm">
+              <h4 class="text-green-800 font-semibold flex items-center gap-2 mb-2">
+                  💡 Por que esse pacote é tão vantajoso?
+              </h4>
+
+              <p class="text-green-700 text-sm leading-relaxed">
+                  Os estabelecimentos parceiros oferecem descontos exclusivos para incentivar mais pessoas a conhecerem a cidade — o Guia RQ reúne tudo em um só lugar para você economizar.
+              </p>
+          </div>
+
+          <!-- CARD 2 – LISTA + CARD DE USO (ESCONDIDO NO MOBILE) -->
+          <div class="bg-white border border-gray-200 p-5 rounded-2xl shadow-sm">
+
+              <h4 class="text-gray-900 font-semibold mb-3">O que você vai ter acesso:</h4>
+
+              <div id="expansible"
+                   class="max-h-0 overflow-hidden transition-all duration-500 md:max-h-none md:overflow-visible">
+
+                  <!-- LISTA DE TICKETS -->
+                  <ul id="ticket-list" class="ml-3 text-gray-700 text-sm space-y-1 mt-1">
+                      <li>🍕 Ticket Pizzaria Forno e Serra • Desconto de R$16</li>
+                      <li>🏍️ Ticket RJ Off-Road • Desconto de R$25</li>
+                      <li>🏡 Ticket Chalé Encantado • Desconto de R$50</li>
+                      <li>☕ Ticket Bergkafee Café Colonial • Desconto de R$15</li>
+                      <li>🥗 Ticket Da Roça • R$10 off a cada R$50 gasto</li>
+                      <li>🌿 Ticket Espaço Floresta • Desconto de R$50</li>
+                      <li>🍺 Ticket Bierhaus • 10% extra na compra</li>
+                      <li>🌄 Ticket Mirante Boa Vista • Desconto de R$30</li>
+                      <li>🍷 Ticket Goyah Vinhos • Desconto de R$14</li>
+                      <li>🪵 Ticket Atafona (finais de semana) • Desconto de R$10</li>
+                  </ul>
+
+                  <!-- CARD DE USO (AGORA DENTRO DO EXPANSÍVEL) -->
+                  <div class="mt-4 bg-green-50 border border-blue-200 p-5 rounded-2xl shadow-sm">
+                      <p class="text-green-800 font-semibold text-sm leading-relaxed">
+                          Use quando quiser durante 6 meses. Você não perde nada — só economiza.
+                      </p>
+                  </div>
+
+              </div>
+
+              <!-- BOTÃO MOBILE -->
+              <button id="toggle-btn"
+                      class="mt-3 md:hidden text-blue-600 font-semibold text-sm">
+                  Mostrar mais ▼
+              </button>
+
+          </div>
+
+      </section>
+
+      <script>
+          const btn = document.getElementById("toggle-btn");
+          const expandable = document.getElementById("expansible");
+
+          btn?.addEventListener("click", () => {
+              const isClosed = expandable.classList.contains("max-h-0");
+
+              if (isClosed) {
+                  expandable.classList.remove("max-h-0");
+                  expandable.classList.add("max-h-[900px]");
+                  btn.textContent = "Mostrar menos ▲";
+              } else {
+                  expandable.classList.add("max-h-0");
+                  expandable.classList.remove("max-h-[900px]");
+                  btn.textContent = "Mostrar mais ▼";
+              }
+          });
+      </script>
+
+
+
+
+
 
 
     <!-- Itens adicionados -->
