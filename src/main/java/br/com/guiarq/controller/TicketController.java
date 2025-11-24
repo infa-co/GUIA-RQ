@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -66,24 +65,5 @@ public class TicketController {
         } catch (Exception e) {
             return ResponseEntity.status(404).body("Ticket inválido ou já usado");
         }
-    }
-    public Ticket salvar(Ticket ticket) {
-
-        // Gerar ID público se não existir
-        if (ticket.getIdPublico() == null) {
-            ticket.setIdPublico(UUID.randomUUID());
-        }
-
-        // Gerar QR token se não existir
-        if (ticket.getQrToken() == null) {
-            ticket.setQrToken(UUID.randomUUID().toString());
-        }
-
-        // Criar timestamp se não existir
-        if (ticket.getCriadoEm() == null) {
-            ticket.setCriadoEm(java.time.LocalDateTime.now());
-        }
-
-        return ticketRepository.save(ticket);
     }
 }
