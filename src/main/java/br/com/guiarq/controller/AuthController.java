@@ -5,6 +5,7 @@ import br.com.guiarq.Model.Repository.UsuarioRepository;
 import br.com.guiarq.Model.Service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -21,6 +22,9 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping("/login")
     public Map<String, Object> login(@RequestBody Map<String, String> body) {
 
@@ -29,9 +33,9 @@ public class AuthController {
 
         Usuario usuario = usuarioRepository.findByEmail(email);
 
-        return Map.of(
-                "success", usuario != null && usuario.getSenha().equals(senha)
-        );
+        boolean success = usuario != null && passwordEncoder.matches(senha, usuario.getSenha());
+
+        return Map.of("success", success);
     }
 
     @PostMapping("/enviar-verificacao")

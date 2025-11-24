@@ -27,6 +27,11 @@
     <p>Este ticket não existe ou já foi utilizado.</p>
 </div>
 
+<div id="usado" class="bg-yellow-100 text-yellow-900 p-6 rounded-xl shadow w-full max-w-md text-center hidden">
+    <h2 class="text-xl font-bold mb-2">Ticket Já Utilizado ⚠️</h2>
+    <p>Este ticket já foi validado anteriormente.</p>
+</div>
+
 <script>
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
@@ -36,25 +41,47 @@
     } else {
         fetch(`https://guia-rq-backend.onrender.com/api/tickets/ver/${id}`)
             .then(res => {
+                if (res.status === 409) {
+                    document.getElementById("usado").classList.remove("hidden");
+                    throw new Error();
+                }
                 if (!res.ok) throw new Error();
                 return res.json();
             })
             .then(ticket => {
+                if (ticket.usado === true) {
+                    document.getElementById("usado").classList.remove("hidden");
+                    return;
+                }
+
                 document.getElementById("nomeCliente").innerText = ticket.nomeCliente;
                 document.getElementById("nomeTicket").innerText = ticket.nome;
                 document.getElementById("card").classList.remove("hidden");
             })
-            .catch(() => document.getElementById("erro").classList.remove("hidden"));
+            .catch(() => {
+                // erro genérico
+            });
     }
 
     function confirmarTicket() {
         fetch(`https://guia-rq-backend.onrender.com/api/tickets/confirmar/${id}`, {
             method: "POST"
         })
-        .then(res => res.text())
-        .then(msg => {
-            alert("Ticket confirmado com sucesso!");
-            location.reload();
+        .then(async res => {
+            const msg = await res.text();
+
+            if (res.status === 200) {
+                alert("✔ Ticket confirmado com sucesso!");
+                location.reload();
+            }
+
+            if (res.status === 409) {
+                document.getElementById("usado").classList.remove("hidden");
+            }
+
+            if (res.status === 404) {
+                document.getElementById("erro").classList.remove("hidden");
+            }
         });
     }
 </script>

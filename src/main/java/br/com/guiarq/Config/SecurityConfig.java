@@ -14,16 +14,32 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+
+                        // ROTAS QUE NÃO PRECISAM DE LOGIN
                         .requestMatchers(
                                 "/actuator/**",
                                 "/api/auth/**",
-                                "/api/stripe/**"
+                                "/api/stripe/**",
+                                "/api/email/**",
+                                "/api/public/**"
                         ).permitAll()
+
+                        // ROTAS PROTEGIDAS: COMERCIANTE PRECISA ESTAR AUTENTICADO
+                        .requestMatchers(
+                                "/api/tickets/**"
+                        ).authenticated()
+
+                        // QUALQUER OUTRA ROTA: LIBERADO
                         .anyRequest().permitAll()
-                );
+                )
+
+                // SEM SESSÃO STATELESS POR ENQUANTO (PODEMOS ADICIONAR JWT DEPOIS)
+                .httpBasic(basic -> {})
+                .formLogin(login -> login.disable());
 
         return http.build();
     }
