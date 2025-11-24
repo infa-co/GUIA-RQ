@@ -17,9 +17,6 @@ public class EmailService {
     @Value("${APP_BASE_URL}")
     private String baseUrl;
 
-    // -----------------------------
-    // ENVIO DE EMAIL DE VERIFICAÇÃO
-    // -----------------------------
     public void enviarVerificacaoEmail(String emailDestino, String token) {
 
         try {
@@ -90,11 +87,14 @@ public class EmailService {
         }
     }
 
-
-    // -----------------------------
-    // ENVIO DO TICKET COM QR CODE
-    // -----------------------------
-    public void sendTicketEmail(String emailDestino, String codigo, byte[] qrBytes) {
+    public void sendTicketEmail(
+            String emailDestino,
+            String nomeCliente,
+            String telefone,
+            String cpf,
+            String nomeTicket,
+            byte[] qrBytes
+    ) {
         try {
             String base64Qr = java.util.Base64.getEncoder().encodeToString(qrBytes);
 
@@ -116,13 +116,16 @@ public class EmailService {
                                     <tr>
                                         <td style='padding:28px; color:#333; font-size:15px;'>
 
-                                            <p>Aqui está seu código de validação:</p>
+                                            <p>Olá <strong>%s</strong>,</p>
+                                            <p>Aqui estão os detalhes da sua compra:</p>
 
-                                            <p style='font-size:20px; font-weight:bold; color:#0d47a1; text-align:center; margin:20px 0;'>
-                                                %s
-                                            </p>
+                                            <ul>
+                                                <li><strong>Ticket:</strong> %s</li>
+                                                <li><strong>Telefone:</strong> %s</li>
+                                                <li><strong>CPF:</strong> %s</li>
+                                            </ul>
 
-                                            <p>Seu QR Code está anexado a este e-mail.</p>
+                                            <p style='margin-top:20px;'>Seu QR Code está anexado a este e-mail.</p>
 
                                         </td>
                                     </tr>
@@ -137,7 +140,7 @@ public class EmailService {
                             </td>
                         </tr>
                     </table>
-                    """.formatted(codigo);
+                    """.formatted(nomeCliente, nomeTicket, telefone, cpf);
 
             String json = """
                     {

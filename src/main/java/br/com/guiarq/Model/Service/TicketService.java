@@ -19,22 +19,28 @@ public class TicketService {
     @Autowired
     private QrCodeService qrCodeService;
 
-    // ==========================================
-    // 🔵 MÉTODO USADO PELO WEBHOOK (COMPRA)
-    // ==========================================
-    public void processarCompra(Long ticketId, String email, String nomeCliente, String nomeTicket) {
+    public void processarCompra(
+            Long ticketId,
+            String email,
+            String nomeCliente,
+            String telefone,
+            String cpf,
+            String nomeTicket
+    ) {
         try {
-
-            // Conteúdo que vira o QR Code
+            // 🔵 1. Conteúdo que vira o QR Code
             String conteudo = "https://guiaranchoqueimado.com.br/ticket/" + ticketId;
 
-            // Gera o QR
+            // 🔵 2. Gera o QR Code
             byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
 
-            // Envia o ticket por e-mail
+            // 🔵 3. Envia por e-mail com todos os dados disponíveis
             emailService.sendTicketEmail(
                     email,
-                    nomeTicket,   // pode alterar para outro campo se quiser
+                    nomeCliente,
+                    telefone,
+                    cpf,
+                    nomeTicket,
                     qrBytes
             );
 
@@ -45,10 +51,6 @@ public class TicketService {
             System.out.println("❌ ERRO AO PROCESSAR COMPRA: " + e.getMessage());
         }
     }
-
-    // ==========================================
-    // 🔵 RESTORE — MÉTODOS QUE O CONTROLLER USA
-    // ==========================================
 
     public void salvar(Ticket t) {
         ticketRepository.save(t);

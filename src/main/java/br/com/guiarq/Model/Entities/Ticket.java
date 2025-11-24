@@ -40,6 +40,12 @@ public class Ticket {
     @Column(name = "nome_cliente")
     private String nomeCliente;
 
+    @Column(name = "telefone_cliente")
+    private String telefoneCliente;
+
+    @Column(name = "cpf_cliente")
+    private String cpfCliente;
+
     private String status;
 
     @Column(name = "valor_pago")
@@ -61,59 +67,167 @@ public class Ticket {
 
     public Ticket() {}
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public UUID getIdPublico() { return idPublico; }
-    public void setIdPublico(UUID idPublico) { this.idPublico = idPublico; }
+    public UUID getIdPublico() {
+        return idPublico;
+    }
 
-    public String getNome() { return nome; }
-    public void setNome(String nome) { this.nome = nome; }
+    public void setIdPublico(UUID idPublico) {
+        this.idPublico = idPublico;
+    }
 
-    public String getTipo() { return tipo; }
-    public void setTipo(String tipo) { this.tipo = tipo; }
+    public String getNome() {
+        return nome;
+    }
 
-    public String getDescricao() { return descricao; }
-    public void setDescricao(String descricao) { this.descricao = descricao; }
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
-    public BigDecimal getPrecoOriginal() { return precoOriginal; }
-    public void setPrecoOriginal(BigDecimal precoOriginal) { this.precoOriginal = precoOriginal; }
+    public String getTipo() {
+        return tipo;
+    }
 
-    public BigDecimal getPrecoPromocional() { return precoPromocional; }
-    public void setPrecoPromocional(BigDecimal precoPromocional) { this.precoPromocional = precoPromocional; }
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
 
-    public Long getParceiroId() { return parceiroId; }
-    public void setParceiroId(Long parceiroId) { this.parceiroId = parceiroId; }
+    public String getDescricao() {
+        return descricao;
+    }
 
-    public LocalDateTime getDataCompra() { return dataCompra; }
-    public void setDataCompra(LocalDateTime dataCompra) { this.dataCompra = dataCompra; }
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-    public String getEmailCliente() { return emailCliente; }
-    public void setEmailCliente(String emailCliente) { this.emailCliente = emailCliente; }
+    public BigDecimal getPrecoOriginal() {
+        return precoOriginal;
+    }
 
-    public String getExperiencia() { return experiencia; }
-    public void setExperiencia(String experiencia) { this.experiencia = experiencia; }
+    public void setPrecoOriginal(BigDecimal precoOriginal) {
+        this.precoOriginal = precoOriginal;
+    }
 
-    public String getNomeCliente() { return nomeCliente; }
-    public void setNomeCliente(String nomeCliente) { this.nomeCliente = nomeCliente; }
+    public BigDecimal getPrecoPromocional() {
+        return precoPromocional;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setPrecoPromocional(BigDecimal precoPromocional) {
+        this.precoPromocional = precoPromocional;
+    }
 
-    public Double getValorPago() { return valorPago; }
-    public void setValorPago(Double valorPago) { this.valorPago = valorPago; }
+    public Long getParceiroId() {
+        return parceiroId;
+    }
 
-    public UUID getQrToken() { return qrToken; }
-    public void setQrToken(UUID qrToken) { this.qrToken = qrToken; }
+    public void setParceiroId(Long parceiroId) {
+        this.parceiroId = parceiroId;
+    }
 
-    public boolean isUsado() { return usado; }
-    public void setUsado(boolean usado) { this.usado = usado; }
+    public LocalDateTime getDataCompra() {
+        return dataCompra;
+    }
 
-    public LocalDateTime getUsadoEm() { return usadoEm; }
-    public void setUsadoEm(LocalDateTime usadoEm) { this.usadoEm = usadoEm; }
+    public void setDataCompra(LocalDateTime dataCompra) {
+        this.dataCompra = dataCompra;
+    }
 
-    public UUID getCompraId() { return compraId; }
-    public void setCompraId(UUID compraId) { this.compraId = compraId; }
+    public String getEmailCliente() {
+        return emailCliente;
+    }
 
-    public LocalDateTime getCriadoEm() { return criadoEm; }
-    public void setCriadoEm(LocalDateTime criadoEm) { this.criadoEm = criadoEm; }
+    public void setEmailCliente(String emailCliente) {
+        this.emailCliente = emailCliente;
+    }
+
+    public String getExperiencia() {
+        return experiencia;
+    }
+
+    public void setExperiencia(String experiencia) {
+        this.experiencia = experiencia;
+    }
+
+    public String getNomeCliente() {
+        return nomeCliente;
+    }
+
+    public void setNomeCliente(String nomeCliente) {
+        this.nomeCliente = nomeCliente;
+    }
+
+    public String getTelefoneCliente() {
+        return telefoneCliente;
+    }
+
+    public void setTelefoneCliente(String telefoneCliente) {
+        this.telefoneCliente = telefoneCliente;
+    }
+
+    public String getCpfCliente() {
+        return cpfCliente;
+    }
+
+    public void setCpfCliente(String cpfCliente) {
+        this.cpfCliente = cpfCliente;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Double getValorPago() {
+        return valorPago;
+    }
+
+    public void setValorPago(Double valorPago) {
+        this.valorPago = valorPago;
+    }
+
+    public UUID getQrToken() {
+        return qrToken;
+    }
+
+    public void setQrToken(UUID qrToken) {
+        this.qrToken = qrToken;
+    }
+
+    public boolean isUsado() {
+        return usado;
+    }
+
+    public void setUsado(boolean usado) {
+        this.usado = usado;
+    }
+
+    public LocalDateTime getUsadoEm() {
+        return usadoEm;
+    }
+
+    public void setUsadoEm(LocalDateTime usadoEm) {
+        this.usadoEm = usadoEm;
+    }
+
+    public UUID getCompraId() {
+        return compraId;
+    }
+
+    public void setCompraId(UUID compraId) {
+        this.compraId = compraId;
+    }
+
+    public LocalDateTime getCriadoEm() {
+        return criadoEm;
+    }
+
+    public void setCriadoEm(LocalDateTime criadoEm) {
+        this.criadoEm = criadoEm;
+    }
 }
