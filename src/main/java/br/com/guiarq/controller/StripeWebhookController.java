@@ -72,12 +72,17 @@ public class StripeWebhookController {
             PaymentIntent pi = (PaymentIntent) obj;
             Map<String, String> metadata = pi.getMetadata();
 
-            logger.info("🔎 Metadata recebido no webhook: {}", metadata);
             Long ticketId = Long.parseLong(metadata.get("ticketId"));
             String email = metadata.get("email");
             String nome = metadata.get("nome");
             String telefone = metadata.get("telefone");
-            String cpf = metadata.get("cpf");
+
+            logger.info("🔎 Metadata recebido no webhook: {}", metadata);
+            logger.info("🔎 METADATA RECEBIDO: {}", metadata);
+            logger.info("🔎 EMAIL: {}", email);
+            logger.info("🔎 NOME: {}", nome);
+            logger.info("🔎 TELEFONE: {}", telefone);
+            logger.info("🔎 CPF: {}", cpf);String cpf = metadata.get("cpf");
 
             Ticket base = ticketRepository.findById(ticketId).orElse(null);
 
