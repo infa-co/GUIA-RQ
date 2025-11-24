@@ -83,7 +83,7 @@ public class StripeWebhookController {
         ticket.setCriadoEm(LocalDateTime.now());
         ticket.setIdPublico(UUID.randomUUID());
         ticket.setCompraId(UUID.randomUUID());
-        ticket.setQrToken(UUID.randomUUID());
+        ticket.setQrToken(UUID.randomUUID().toString());
         ticket.setValorPago(data.optDouble("amount_total") / 100.0);
 
         ticketRepository.save(ticket);
