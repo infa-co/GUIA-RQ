@@ -19,6 +19,23 @@ public class TicketService {
     @Autowired
     private QrCodeService qrCodeService;
 
+    // ============================
+    // SALVAR TICKET
+    // ============================
+    public Ticket salvar(Ticket ticket) {
+        return ticketRepository.save(ticket);
+    }
+
+    // ============================
+    // LISTAR TICKETS
+    // ============================
+    public List<Ticket> listarTodos() {
+        return ticketRepository.findAll();
+    }
+
+    // ============================
+    // PROCESSAR COMPRA + ENVIAR EMAIL
+    // ============================
     public void processarCompra(
             Long ticketId,
             String email,
@@ -47,9 +64,5 @@ public class TicketService {
             e.printStackTrace();
             System.out.println("❌ ERRO AO PROCESSAR COMPRA: " + e.getMessage());
         }
-    }
-
-    public List<Ticket> listarTodos() {
-        return ticketRepository.findAll();
     }
 }

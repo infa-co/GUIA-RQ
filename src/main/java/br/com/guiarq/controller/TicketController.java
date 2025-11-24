@@ -28,27 +28,17 @@ public class TicketController {
 
     @GetMapping("/listar")
     public ResponseEntity<?> listar() {
-        return ResponseEntity.ok(ticketService.listarTodos());
-    }
-
-    @GetMapping("/por-email")
-    public ResponseEntity<?> listarPorEmail(@RequestParam String email) {
-        List<Ticket> tickets = ticketRepository.findByEmailCliente(email);
+        List<Ticket> tickets = ticketService.listarTodos();
         return ResponseEntity.ok(tickets);
     }
 
     @GetMapping("/ver/{idPublico}")
     public ResponseEntity<?> verTicket(@PathVariable String idPublico) {
 
-        try {
-            UUID uuid = UUID.fromString(idPublico);
+        UUID uuid = UUID.fromString(idPublico);
 
-            return ticketRepository.findByIdPublico(uuid)
-                    .map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.notFound().build());
-
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("ID inválido");
-        }
+        return ticketRepository.findByIdPublico(uuid)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
