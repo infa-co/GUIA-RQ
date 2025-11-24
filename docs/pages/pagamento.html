@@ -163,15 +163,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
                 alert("Erro ao calcular o valor da compra. Tente novamente.");
                 return;
             }
-
             console.log("Iniciando checkout Stripe...");
 
-            // ====== NOVO BODY ENVIANDO DADOS PESSOAIS ======
             const response = await fetch(`${window.API_URL}/api/stripe/create-checkout`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    amount: total * 100,
+                    amount: total,
                     description: "Compra de ingresso(s) – Guia Rancho Queimado",
                     nome: nome,
                     email: email,
