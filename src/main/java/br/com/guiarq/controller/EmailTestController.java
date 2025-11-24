@@ -1,4 +1,4 @@
-package br.com.guiarq.controller;
+/**package br.com.guiarq.controller;
 
 import br.com.guiarq.Model.Service.EmailService;
 import br.com.guiarq.Model.Service.QrCodeService;
@@ -39,3 +39,4 @@ public class EmailTestController {
         }
     }
 }
+**/
