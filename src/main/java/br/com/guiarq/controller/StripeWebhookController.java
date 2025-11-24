@@ -3,6 +3,7 @@ package br.com.guiarq.controller;
 import br.com.guiarq.Model.Entities.Ticket;
 import br.com.guiarq.Model.Repository.TicketRepository;
 import br.com.guiarq.Model.Service.TicketService;
+import com.stripe.Stripe;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
@@ -34,6 +35,9 @@ public class StripeWebhookController {
     @Value("${STRIPE_WEBHOOK_SECRET}")
     private String endpointSecret;
 
+    @Value("${stripe.secret.key}")
+    private String stripeKey;
+
     @PostMapping("/webhook")
     public ResponseEntity<String> handleWebhook(
             @RequestBody String payload,
@@ -43,13 +47,9 @@ public class StripeWebhookController {
 
         try {
             event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
-
         } catch (SignatureVerificationException e) {
-            logger.error("❌ Assinatura inválida no webhook");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid signature");
-
         } catch (Exception e) {
-            logger.error("❌ Erro ao processar webhook", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Webhook error");
         }
 
@@ -59,84 +59,67 @@ public class StripeWebhookController {
             processarCheckout(event);
         }
 
-        return ResponseEntity.ok("Webhook OK");
+        return ResponseEntity.ok("OK");
     }
 
     private void processarCheckout(Event event) {
 
-        Session session = (Session) event.getDataObjectDeserializer()
-                .getObject()
-                .orElse(null);
+        EventDataObjectDeserializer deserializer = event.getDataObjectDeserializer();
 
-        if (session == null) {
-            logger.error("❌ Não foi possível desserializar Session");
+        if (!deserializer.getObject().isPresent()) {
+            logger.error("❌ Falha ao desserializar checkout.session");
             return;
         }
 
-        logger.info("🟦 Sessão desserializada com sucesso: {}", session.getId());
+        Session session = (Session) deserializer.getObject().get();
 
-        String paymentIntentId = session.getPaymentIntent();
+        logger.info("🔎 Session ID: {}", session.getId());
+        logger.info("🔎 Metadata: {}", session.getMetadata());
 
-        if (paymentIntentId == null) {
-            logger.error("❌ session.getPaymentIntent() veio nulo!");
-            return;
-        }
+        Map<String, String> metadata = session.getMetadata();
 
-        logger.info("🟨 PaymentIntent ID recebido: {}", paymentIntentId);
-
-        PaymentIntent pi;
-
-        try {
-            pi = PaymentIntent.retrieve(paymentIntentId);
-
-        } catch (Exception e) {
-            logger.error("❌ Erro ao consultar PaymentIntent no Stripe", e);
-            return;
-        }
-
-        Map<String, String> metadata = pi.getMetadata();
-
-        logger.info("🔎 METADATA RECEBIDO DO PAYMENT INTENT: {}", metadata);
-
-        Long ticketId = Long.parseLong(metadata.get("ticketId"));
         String email = metadata.get("email");
         String nome = metadata.get("nome");
         String telefone = metadata.get("telefone");
         String cpf = metadata.get("cpf");
 
-        Ticket base = ticketRepository.findById(ticketId).orElse(null);
-
-        if (base == null) {
-            logger.error("❌ Ticket base não encontrado no banco");
+        if (email == null || nome == null) {
+            logger.error("❌ Metadata incompleto. Encerrando.");
             return;
         }
 
-        Ticket novo = new Ticket();
-        novo.setNome(base.getNome());
-        novo.setDescricao(base.getDescricao());
-        novo.setPrecoOriginal(base.getPrecoOriginal());
-        novo.setPrecoPromocional(base.getPrecoPromocional());
-        novo.setExperiencia(base.getExperiencia());
-        novo.setTipo(base.getTipo());
-        novo.setParceiroId(base.getParceiroId());
+        // Recupera o PaymentIntent
+        Stripe.apiKey = stripeKey;
 
+        PaymentIntent pi;
+        try {
+            pi = PaymentIntent.retrieve(session.getPaymentIntent());
+        } catch (Exception e) {
+            logger.error("❌ Erro ao recuperar PaymentIntent: {}", e.getMessage());
+            return;
+        }
+
+        double valorPago = pi.getAmountReceived() / 100.0;
+
+        // Criar ticket novo
+        Ticket novo = new Ticket();
+        novo.setNome("Compra via Guia RQ");
         novo.setEmailCliente(email);
         novo.setNomeCliente(nome);
         novo.setTelefoneCliente(telefone);
         novo.setCpfCliente(cpf);
+        novo.setValorPago(valorPago);
+        novo.setStatus("PAGO");
+        novo.setCriadoEm(LocalDateTime.now());
         novo.setDataCompra(LocalDateTime.now());
-
+        novo.setUsado(false);
         novo.setIdPublico(UUID.randomUUID());
         novo.setQrToken(UUID.randomUUID());
         novo.setCompraId(UUID.randomUUID());
-        novo.setStatus("PAGO");
-        novo.setUsado(false);
-        novo.setCriadoEm(LocalDateTime.now());
-        novo.setValorPago(pi.getAmountReceived() / 100.0);
 
         ticketRepository.save(novo);
 
-        logger.info("🎫 Ticket GERADO: {}", novo.getIdPublico());
+        logger.info("🎫 Ticket gerado: {}", novo.getIdPublico());
 
         ticketService.processarCompra(
                 novo.getId(),
