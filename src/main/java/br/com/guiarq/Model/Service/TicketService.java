@@ -28,13 +28,10 @@ public class TicketService {
             String nomeTicket
     ) {
         try {
-            // 🔵 1. Conteúdo que vira o QR Code
             String conteudo = "https://guiaranchoqueimado.com.br/ticket/" + ticketId;
 
-            // 🔵 2. Gera o QR Code
             byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
 
-            // 🔵 3. Envia por e-mail com todos os dados disponíveis
             emailService.sendTicketEmail(
                     email,
                     nomeCliente,
@@ -50,10 +47,6 @@ public class TicketService {
             e.printStackTrace();
             System.out.println("❌ ERRO AO PROCESSAR COMPRA: " + e.getMessage());
         }
-    }
-
-    public void salvar(Ticket t) {
-        ticketRepository.save(t);
     }
 
     public List<Ticket> listarTodos() {

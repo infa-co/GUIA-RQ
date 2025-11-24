@@ -4,10 +4,9 @@ import br.com.guiarq.Model.Entities.Ticket;
 import br.com.guiarq.Model.Repository.TicketRepository;
 import br.com.guiarq.Model.Service.TicketService;
 import com.stripe.Stripe;
-import com.stripe.exception.SignatureVerificationException;
-import com.stripe.model.*;
-import com.stripe.model.checkout.Session;
+import com.stripe.model.PaymentIntent;
 import com.stripe.net.Webhook;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -35,99 +33,102 @@ public class StripeWebhookController {
     @Value("${STRIPE_WEBHOOK_SECRET}")
     private String endpointSecret;
 
-    @Value("${stripe.secret.key}")
-    private String stripeKey;
+    @Value("${STRIPE_SECRET_KEY}")
+    private String stripeSecretKey;
 
     @PostMapping("/webhook")
     public ResponseEntity<String> handleWebhook(
             @RequestBody String payload,
             @RequestHeader("Stripe-Signature") String sigHeader) {
 
-        Event event;
+        logger.info("📩 Webhook recebido");
 
         try {
-            event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
-        } catch (SignatureVerificationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid signature");
+            Webhook.constructEvent(payload, sigHeader, endpointSecret);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Webhook error");
+            logger.error("❌ ERRO DE ASSINATURA: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid signature");
         }
 
-        logger.info("📩 Evento Stripe recebido: {}", event.getType());
+        JSONObject json = new JSONObject(payload);
+        String eventType = json.getString("type");
 
-        if ("checkout.session.completed".equals(event.getType())) {
-            processarCheckout(event);
+        logger.info("📌 Evento recebido: {}", eventType);
+
+        if ("checkout.session.completed".equals(eventType)) {
+            processCheckout(json);
         }
 
         return ResponseEntity.ok("OK");
     }
 
-    private void processarCheckout(Event event) {
+    private void processCheckout(JSONObject json) {
 
-        EventDataObjectDeserializer deserializer = event.getDataObjectDeserializer();
+        JSONObject data = json.getJSONObject("data").getJSONObject("object");
 
-        if (!deserializer.getObject().isPresent()) {
-            logger.error("❌ Falha ao desserializar checkout.session");
+        // ⁃ Metadados
+        JSONObject metadata = data.optJSONObject("metadata");
+
+        if (metadata == null) {
+            logger.error("❌ Metadata vazio");
             return;
         }
 
-        Session session = (Session) deserializer.getObject().get();
+        String email = metadata.optString("email", null);
+        String nome = metadata.optString("nome", null);
+        String telefone = metadata.optString("telefone", null);
+        String cpf = metadata.optString("cpf", null);
 
-        logger.info("🔎 Session ID: {}", session.getId());
-        logger.info("🔎 Metadata: {}", session.getMetadata());
+        logger.info("📬 Email: {}", email);
+        logger.info("👤 Nome: {}", nome);
+        logger.info("📱 Telefone: {}", telefone);
+        logger.info("🧾 CPF: {}", cpf);
 
-        Map<String, String> metadata = session.getMetadata();
+        // ⁃ PaymentIntent
+        String paymentIntentId = data.getString("payment_intent");
 
-        String email = metadata.get("email");
-        String nome = metadata.get("nome");
-        String telefone = metadata.get("telefone");
-        String cpf = metadata.get("cpf");
+        Stripe.apiKey = stripeSecretKey;
 
-        if (email == null || nome == null) {
-            logger.error("❌ Metadata incompleto. Encerrando.");
-            return;
-        }
-
-        // Recupera o PaymentIntent
-        Stripe.apiKey = stripeKey;
-
-        PaymentIntent pi;
+        double valorPago;
         try {
-            pi = PaymentIntent.retrieve(session.getPaymentIntent());
+            PaymentIntent pi = PaymentIntent.retrieve(paymentIntentId);
+            valorPago = pi.getAmountReceived() / 100.0;
         } catch (Exception e) {
-            logger.error("❌ Erro ao recuperar PaymentIntent: {}", e.getMessage());
+            logger.error("❌ Falha ao recuperar PaymentIntent: {}", e.getMessage());
             return;
         }
 
-        double valorPago = pi.getAmountReceived() / 100.0;
+        // ⁃ Criar ticket
+        Ticket ticket = new Ticket();
+        ticket.setNome("Ticket Guia Rancho Queimado");
+        ticket.setEmailCliente(email);
+        ticket.setNomeCliente(nome);
+        ticket.setTelefoneCliente(telefone);
+        ticket.setCpfCliente(cpf);
+        ticket.setValorPago(valorPago);
+        ticket.setStatus("PAGO");
+        ticket.setCriadoEm(LocalDateTime.now());
+        ticket.setDataCompra(LocalDateTime.now());
+        ticket.setUsado(false);
 
-        // Criar ticket novo
-        Ticket novo = new Ticket();
-        novo.setNome("Compra via Guia RQ");
-        novo.setEmailCliente(email);
-        novo.setNomeCliente(nome);
-        novo.setTelefoneCliente(telefone);
-        novo.setCpfCliente(cpf);
-        novo.setValorPago(valorPago);
-        novo.setStatus("PAGO");
-        novo.setCriadoEm(LocalDateTime.now());
-        novo.setDataCompra(LocalDateTime.now());
-        novo.setUsado(false);
-        novo.setIdPublico(UUID.randomUUID());
-        novo.setQrToken(UUID.randomUUID());
-        novo.setCompraId(UUID.randomUUID());
+        ticket.setIdPublico(UUID.randomUUID());
+        ticket.setQrToken(UUID.randomUUID());
+        ticket.setCompraId(UUID.randomUUID());
 
-        ticketRepository.save(novo);
+        ticketRepository.save(ticket);
 
-        logger.info("🎫 Ticket gerado: {}", novo.getIdPublico());
+        logger.info("🎫 Ticket criado: {}", ticket.getIdPublico());
 
+        // ⁃ Enviar email com QR Code
         ticketService.processarCompra(
-                novo.getId(),
+                ticket.getId(),
                 email,
                 nome,
                 telefone,
                 cpf,
-                novo.getNome()
+                ticket.getNome()
         );
+
+        logger.info("📧 Email enviado com sucesso!");
     }
 }
