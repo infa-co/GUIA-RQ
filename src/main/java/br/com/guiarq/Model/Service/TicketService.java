@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TicketService {
@@ -20,21 +21,21 @@ public class TicketService {
     private QrCodeService qrCodeService;
 
     // ============================
-    // SALVAR TICKET
+    // SALVAR
     // ============================
     public Ticket salvar(Ticket ticket) {
         return ticketRepository.save(ticket);
     }
 
     // ============================
-    // LISTAR TICKETS
+    // LISTAR
     // ============================
     public List<Ticket> listarTodos() {
         return ticketRepository.findAll();
     }
 
     // ============================
-    // PROCESSAR COMPRA + ENVIAR EMAIL
+    // PROCESSAR COMPRA (ENVIAR QR POR EMAIL)
     // ============================
     public void processarCompra(
             Long ticketId,
@@ -58,11 +59,35 @@ public class TicketService {
                     qrBytes
             );
 
-            System.out.println("✔ COMPRA PROCESSADA COM SUCESSO");
+            System.out.println("✔ COMPRA PROCESSADA");
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("❌ ERRO AO PROCESSAR COMPRA: " + e.getMessage());
+            System.out.println("❌ ERRO AO PROCESSAR COMPRA");
         }
+    }
+
+    // ============================
+    // VERIFICAR TICKET
+    // ============================
+    public Ticket verificar(UUID idPublico) {
+        return ticketRepository.findByIdPublico(idPublico)
+                .orElseThrow(() -> new RuntimeException("Ticket não encontrado"));
+    }
+
+    // ============================
+    // CONFIRMAR TICKET (VALIDAÇÃO)
+    // ============================
+    public Ticket confirmar(UUID idPublico) {
+        Ticket t = verificar(idPublico);
+
+        if (t.isUsado()) {
+            throw new RuntimeException("Ticket já utilizado!");
+        }
+
+        t.setUsado(true);
+        t.setUsadoEm(java.time.LocalDateTime.now());
+
+        return ticketRepository.save(t);
     }
 }
