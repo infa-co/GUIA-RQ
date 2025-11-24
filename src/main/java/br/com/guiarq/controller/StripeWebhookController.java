@@ -32,7 +32,7 @@ public class StripeWebhookController {
     @Autowired
     private TicketService ticketService;
 
-    @Value("${stripe.webhook.secret}")
+    @Value("${STRIPE_SECRET_WEBHOOK}")
     private String endpointSecret;
 
     @PostMapping("/webhook")

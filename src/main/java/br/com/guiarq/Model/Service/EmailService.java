@@ -14,7 +14,7 @@ public class EmailService {
     @Value("${RESEND_API_KEY}")
     private String apiKey;
 
-    @Value("${APP_BASE_URL}")
+    @Value("${API_URL}")
     private String baseUrl;
 
     public void enviarVerificacaoEmail(String emailDestino, String token) {

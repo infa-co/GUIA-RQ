@@ -20,7 +20,7 @@ public class StripeService {
     private QrCodeService qrCodeService;
 
 
-    @Value("${stripe.secret-key}")
+    @Value("${STRIPE_SECRET_KEY}")
     private String secretKey;
 
     public Session createCheckoutSession(
