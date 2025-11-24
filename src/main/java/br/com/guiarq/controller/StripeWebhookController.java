@@ -4,8 +4,7 @@ import br.com.guiarq.Model.Entities.Ticket;
 import br.com.guiarq.Model.Repository.TicketRepository;
 import br.com.guiarq.Model.Service.TicketService;
 import com.stripe.exception.SignatureVerificationException;
-import com.stripe.model.Event;
-import com.stripe.model.EventDataObjectDeserializer;
+import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import org.slf4j.Logger;
@@ -32,7 +31,6 @@ public class StripeWebhookController {
     @Autowired
     private TicketService ticketService;
 
-    // Render: STRIPE_WEBHOOK_SECRET=whsec_xxx
     @Value("${STRIPE_WEBHOOK_SECRET}")
     private String endpointSecret;
 
@@ -47,124 +45,106 @@ public class StripeWebhookController {
             event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
 
         } catch (SignatureVerificationException e) {
-            logger.error("❌ Assinatura Stripe inválida", e);
+            logger.error("❌ Assinatura inválida no webhook");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid signature");
 
         } catch (Exception e) {
-            logger.error("❌ Erro genérico no webhook", e);
+            logger.error("❌ Erro ao processar webhook", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Webhook error");
         }
 
         logger.info("📩 Evento Stripe recebido: {}", event.getType());
 
-        switch (event.getType()) {
-
-            case "checkout.session.completed":
-                processarCheckoutSession(event);
-                break;
-
-            case "payment_intent.succeeded":
-                // Apenas log – não usamos esse evento para criar ticket
-                logger.info("ℹ️ payment_intent.succeeded recebido (apenas log, lógica está em checkout.session.completed)");
-                break;
-
-            default:
-                logger.info("ℹ️ Evento ignorado: {}", event.getType());
+        if ("checkout.session.completed".equals(event.getType())) {
+            processarCheckout(event);
         }
 
         return ResponseEntity.ok("Webhook OK");
     }
 
-    private void processarCheckoutSession(Event event) {
+    private void processarCheckout(Event event) {
 
-        EventDataObjectDeserializer deserializer = event.getDataObjectDeserializer();
+        Session session = (Session) event.getDataObjectDeserializer()
+                .getObject()
+                .orElse(null);
 
-        deserializer.getObject().ifPresentOrElse(obj -> {
+        if (session == null) {
+            logger.error("❌ Não foi possível desserializar Session");
+            return;
+        }
 
-            if (!(obj instanceof Session)) {
-                logger.error("❌ Objeto do evento não é uma Session. Tipo real: {}", obj.getClass().getName());
-                return;
-            }
+        logger.info("🟦 Sessão desserializada com sucesso: {}", session.getId());
 
-            Session session = (Session) obj;
+        String paymentIntentId = session.getPaymentIntent();
 
-            Map<String, String> metadata = session.getMetadata();
-            logger.info("🔎 METADATA RECEBIDO (SESSION): {}", metadata);
+        if (paymentIntentId == null) {
+            logger.error("❌ session.getPaymentIntent() veio nulo!");
+            return;
+        }
 
-            try {
-                String ticketIdStr = metadata.get("ticketId");
-                String email = metadata.get("email");
-                String nome = metadata.get("nome");
-                String telefone = metadata.get("telefone");
-                String cpf = metadata.get("cpf");
+        logger.info("🟨 PaymentIntent ID recebido: {}", paymentIntentId);
 
-                logger.info("🔎 EMAIL: {}", email);
-                logger.info("🔎 NOME: {}", nome);
-                logger.info("🔎 TELEFONE: {}", telefone);
-                logger.info("🔎 CPF: {}", cpf);
+        PaymentIntent pi;
 
-                if (ticketIdStr == null) {
-                    logger.error("❌ ticketId ausente no metadata");
-                    return;
-                }
+        try {
+            pi = PaymentIntent.retrieve(paymentIntentId);
 
-                Long ticketId = Long.parseLong(ticketIdStr);
+        } catch (Exception e) {
+            logger.error("❌ Erro ao consultar PaymentIntent no Stripe", e);
+            return;
+        }
 
-                Ticket base = ticketRepository.findById(ticketId).orElse(null);
+        Map<String, String> metadata = pi.getMetadata();
 
-                if (base == null) {
-                    logger.error("❌ Ticket base não encontrado para ID {}", ticketId);
-                    return;
-                }
+        logger.info("🔎 METADATA RECEBIDO DO PAYMENT INTENT: {}", metadata);
 
-                Ticket novo = new Ticket();
-                novo.setNome(base.getNome());
-                novo.setDescricao(base.getDescricao());
-                novo.setPrecoOriginal(base.getPrecoOriginal());
-                novo.setPrecoPromocional(base.getPrecoPromocional());
-                novo.setExperiencia(base.getExperiencia());
-                novo.setTipo(base.getTipo());
-                novo.setParceiroId(base.getParceiroId());
+        Long ticketId = Long.parseLong(metadata.get("ticketId"));
+        String email = metadata.get("email");
+        String nome = metadata.get("nome");
+        String telefone = metadata.get("telefone");
+        String cpf = metadata.get("cpf");
 
-                novo.setEmailCliente(email);
-                novo.setNomeCliente(nome);
-                novo.setTelefoneCliente(telefone);
-                novo.setCpfCliente(cpf);
-                novo.setDataCompra(LocalDateTime.now());
+        Ticket base = ticketRepository.findById(ticketId).orElse(null);
 
-                novo.setIdPublico(UUID.randomUUID());
-                novo.setQrToken(UUID.randomUUID());
-                novo.setCompraId(UUID.randomUUID());
-                novo.setStatus("PAGO");
-                novo.setUsado(false);
-                novo.setCriadoEm(LocalDateTime.now());
+        if (base == null) {
+            logger.error("❌ Ticket base não encontrado no banco");
+            return;
+        }
 
-                Long amountTotal = session.getAmountTotal(); // em centavos
-                if (amountTotal != null) {
-                    novo.setValorPago(amountTotal / 100.0);
-                }
+        Ticket novo = new Ticket();
+        novo.setNome(base.getNome());
+        novo.setDescricao(base.getDescricao());
+        novo.setPrecoOriginal(base.getPrecoOriginal());
+        novo.setPrecoPromocional(base.getPrecoPromocional());
+        novo.setExperiencia(base.getExperiencia());
+        novo.setTipo(base.getTipo());
+        novo.setParceiroId(base.getParceiroId());
 
-                ticketRepository.save(novo);
-                logger.info("🎫 Ticket gerado e salvo. ID público: {}", novo.getIdPublico());
+        novo.setEmailCliente(email);
+        novo.setNomeCliente(nome);
+        novo.setTelefoneCliente(telefone);
+        novo.setCpfCliente(cpf);
+        novo.setDataCompra(LocalDateTime.now());
 
-                // Envia o e-mail com QR code
-                ticketService.processarCompra(
-                        novo.getId(),
-                        email,
-                        nome,
-                        telefone,
-                        cpf,
-                        novo.getNome()
-                );
+        novo.setIdPublico(UUID.randomUUID());
+        novo.setQrToken(UUID.randomUUID());
+        novo.setCompraId(UUID.randomUUID());
+        novo.setStatus("PAGO");
+        novo.setUsado(false);
+        novo.setCriadoEm(LocalDateTime.now());
+        novo.setValorPago(pi.getAmountReceived() / 100.0);
 
-                logger.info("📧 processarCompra chamado com sucesso para {}", email);
+        ticketRepository.save(novo);
 
-            } catch (Exception e) {
-                logger.error("❌ Erro ao processar checkout.session.completed", e);
-            }
+        logger.info("🎫 Ticket GERADO: {}", novo.getIdPublico());
 
-        }, () -> {
-            logger.error("❌ Não foi possível desserializar o objeto do evento Stripe");
-        });
+        ticketService.processarCompra(
+                novo.getId(),
+                email,
+                nome,
+                telefone,
+                cpf,
+                novo.getNome()
+        );
     }
 }
