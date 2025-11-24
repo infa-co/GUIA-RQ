@@ -66,7 +66,7 @@ public class EmailService {
 
             String json = """
                     {
-                      "from": "gropoguiarq@gmail.com",
+                      "from": "Guia Rancho Queimado <no-reply@guiaranchoqueimado.com.br>",
                       "to": ["%s"],
                       "subject": "Confirme seu e-mail",
                       "html": "%s"
@@ -144,7 +144,7 @@ public class EmailService {
 
             String json = """
                     {
-                      "from": "gropoguiarq@gmail.com",
+                      "from": "Guia Rancho Queimado <no-reply@guiaranchoqueimado.com.br>",
                       "to": ["%s"],
                       "subject": "Seu Ticket – Guia Rancho Queimado",
                       "html": "%s",
