@@ -24,7 +24,7 @@
 
 <div id="erro" class="bg-red-100 text-red-800 p-6 rounded-xl shadow w-full max-w-md text-center hidden">
     <h2 class="text-xl font-bold mb-2">Ticket Inválido ❌</h2>
-    <p>Este ticket não existe ou já foi utilizado.</p>
+    <p>Este ticket não existe.</p>
 </div>
 
 <div id="usado" class="bg-yellow-100 text-yellow-900 p-6 rounded-xl shadow w-full max-w-md text-center hidden">
@@ -34,42 +34,38 @@
 
 <script>
     const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
+    const qr = params.get("qr");
 
-    if (!id) {
+    if (!qr) {
         document.getElementById("erro").classList.remove("hidden");
     } else {
-        fetch(`https://guia-rq-backend.onrender.com/api/tickets/ver/${id}`)
-            .then(res => {
-                if (res.status === 409) {
-                    document.getElementById("usado").classList.remove("hidden");
-                    throw new Error();
-                }
-                if (!res.ok) throw new Error();
-                return res.json();
-            })
+
+        // ROTA CERTA
+        fetch(`https://guia-rq-backend.onrender.com/api/tickets/validar/${qr}`)
+            .then(res => res.json())
             .then(ticket => {
+
+                if (ticket.status === "INVALIDO") {
+                    document.getElementById("erro").classList.remove("hidden");
+                    return;
+                }
+
                 if (ticket.usado === true) {
                     document.getElementById("usado").classList.remove("hidden");
                     return;
                 }
 
-                document.getElementById("nomeCliente").innerText = ticket.nomeCliente;
-                document.getElementById("nomeTicket").innerText = ticket.nome;
+                document.getElementById("nomeCliente").innerText = ticket.cliente;
+                document.getElementById("nomeTicket").innerText = ticket.ticket;
                 document.getElementById("card").classList.remove("hidden");
             })
-            .catch(() => {
-                // erro genérico
-            });
     }
 
     function confirmarTicket() {
-        fetch(`https://guia-rq-backend.onrender.com/api/tickets/confirmar/${id}`, {
+        fetch(`https://guia-rq-backend.onrender.com/api/tickets/confirmar/${qr}`, {
             method: "POST"
         })
         .then(async res => {
-            const msg = await res.text();
-
             if (res.status === 200) {
                 alert("✔ Ticket confirmado com sucesso!");
                 location.reload();

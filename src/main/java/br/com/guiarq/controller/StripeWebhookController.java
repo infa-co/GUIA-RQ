@@ -12,12 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
-
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -54,6 +51,18 @@ public class StripeWebhookController {
 
         JSONObject data = json.getJSONObject("data").getJSONObject("object");
 
+        String sessionId = data.optString("id");
+
+        if (sessionId == null || sessionId.isBlank()) {
+            logger.error("❌ sessionId inválido no webhook.");
+            return;
+        }
+
+        if (ticketRepository.existsByStripeSessionId(sessionId)) {
+            logger.warn("⚠️ Webhook duplicado ignorado para sessionId: {}", sessionId);
+            return;
+        }
+
         JSONObject metadata = data.optJSONObject("metadata");
 
         if (metadata == null) {
@@ -85,6 +94,8 @@ public class StripeWebhookController {
         ticket.setCompraId(UUID.randomUUID());
         ticket.setQrToken(UUID.randomUUID().toString());
         ticket.setValorPago(data.optDouble("amount_total") / 100.0);
+
+        ticket.setStripeSessionId(sessionId);
 
         ticketRepository.save(ticket);
 

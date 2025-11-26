@@ -56,7 +56,7 @@ public class Ticket {
 
     // QR Code / validação
     @Column(name = "qr_token")
-    private String qrToken; // <<< TROQUEI para String. Muito mais seguro para hash/UUID no banco.
+    private String qrToken;
 
     private boolean usado;
 
@@ -69,16 +69,10 @@ public class Ticket {
     @Column(name = "criado_em")
     private LocalDateTime criadoEm;
 
+    @Column(name = "stripe_session_id", unique = true)
+    private String stripeSessionId;
 
-    // =========================
-    // CONSTRUTOR
-    // =========================
     public Ticket() {}
-
-
-    // =========================
-    // GETTERS & SETTERS
-    // =========================
 
     public Long getId() {
         return id;
@@ -242,6 +236,13 @@ public class Ticket {
 
     public void setCriadoEm(LocalDateTime criadoEm) {
         this.criadoEm = criadoEm;
+    }
+    public String getStripeSessionId() {
+        return stripeSessionId;
+    }
+
+    public void setStripeSessionId(String stripeSessionId) {
+        this.stripeSessionId = stripeSessionId;
     }
 
 }

@@ -16,4 +16,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     Optional<Ticket> findByIdPublico(UUID idPublico);
 
     Optional<Ticket> findByQrToken(String qrToken);
+
+    boolean existsByStripeSessionId(String stripeSessionId);
+
 }

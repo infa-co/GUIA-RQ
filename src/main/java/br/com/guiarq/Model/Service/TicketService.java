@@ -23,17 +23,10 @@ public class TicketService {
     public Ticket salvar(Ticket ticket) {
         return ticketRepository.save(ticket);
     }
-
-    // ============================
-    // LISTAR
-    // ============================
     public List<Ticket> listarTodos() {
         return ticketRepository.findAll();
     }
 
-    // ============================
-    // PROCESSAR COMPRA (ENVIAR QR POR EMAIL)
-    // ============================
     public void processarCompra(Ticket ticket) {
         try {
             // Gera o link que aparecerá ao escanear o QR Code
@@ -59,17 +52,10 @@ public class TicketService {
             System.out.println("❌ ERRO AO PROCESSAR COMPRA");
         }
     }
-    // ============================
-    // VERIFICAR TICKET
-    // ============================
     public Ticket verificar(UUID idPublico) {
         return ticketRepository.findByIdPublico(idPublico)
                 .orElseThrow(() -> new RuntimeException("Ticket não encontrado"));
     }
-
-    // ============================
-    // CONFIRMAR TICKET (VALIDAÇÃO)
-    // ============================
     public Ticket confirmar(UUID idPublico) {
         Ticket t = verificar(idPublico);
 
