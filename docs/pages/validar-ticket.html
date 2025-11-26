@@ -45,7 +45,7 @@
     } else {
 
         // ROTA CORRETA
-        fetch(`https://guia-rq-backend.onrender.com/api/tickets/validar/${qr}`)
+        fetch(`https://guia-rq-backend.onrender.com/api/validar-ticket.html${qr}`)
             .then(res => res.json())
             .then(ticket => {
 
