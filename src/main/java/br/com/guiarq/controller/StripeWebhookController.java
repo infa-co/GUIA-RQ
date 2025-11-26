@@ -98,9 +98,6 @@ public class StripeWebhookController {
         }
     }
 
-    // ======================
-    // TICKET AVULSO
-    // ======================
     private void processarTicketAvulso(String sessionId,
                                        JSONObject data,
                                        String email,
@@ -110,14 +107,14 @@ public class StripeWebhookController {
                                        String ticketIdStr) {
 
         Long ticketCatalogoId = null;
-        String nomeTicket = "Ingresso - Guia RQ";
+        String nomeTicket = "Guia RQ";
 
         try {
             ticketCatalogoId = Long.parseLong(ticketIdStr);
             Optional<TicketCatalogo> cat = ticketCatalogoRepository.findById(ticketCatalogoId);
 
             if (cat.isPresent()) {
-                nomeTicket = cat.get().getNome();
+                nomeTicket = cat.get().getNome() + " - Guia RQ";
             }
 
         } catch (Exception e) {
