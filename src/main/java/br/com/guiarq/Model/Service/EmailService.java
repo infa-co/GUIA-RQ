@@ -22,6 +22,9 @@ public class EmailService {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
+    // ==========================================
+    // PACOTE – ENVIO DE 10 QR CODES
+    // ==========================================
     public void sendPacoteTicketsEmail(
             String emailDestino,
             String nomeCliente,
@@ -32,44 +35,50 @@ public class EmailService {
     ) {
 
         try {
-            StringBuilder html = new StringBuilder();
 
+            // HTML DO EMAIL
+            StringBuilder html = new StringBuilder();
             html.append("<h2>Seu Pacote Guia RQ está pronto 🎒</h2>");
-            html.append("<p>Olá <strong>")
-                    .append(nomeCliente)
-                    .append("</strong>,</p>");
+            html.append("<p>Olá <strong>").append(nomeCliente).append("</strong>,</p>");
             html.append("<p>Você recebeu <strong>")
                     .append(tickets.size())
-                    .append(" tickets individuais</strong>. Cada um pode ser utilizado separadamente nos estabelecimentos abaixo:</p>");
+                    .append(" tickets</strong>. Cada um pode ser utilizado separadamente:</p>");
             html.append("<ul>");
-            for (Ticket t : tickets) {
-                html.append("<li>")
-                        .append(t.getNome())
-                        .append("</li>");
-            }
-            html.append("</ul>");
-            html.append("<p>Os QR Codes de cada ticket estão anexados a este e-mail.</p>");
 
+            for (Ticket t : tickets) {
+                html.append("<li><strong>").append(t.getNome()).append("</strong></li>");
+            }
+
+            html.append("</ul>");
+            html.append("<p>Os QR Codes estão anexados a este e-mail.</p>");
+
+            // LISTA DE ANEXOS COM MIME TYPE
             List<Map<String, Object>> attachments = new ArrayList<>();
 
             for (int i = 0; i < tickets.size(); i++) {
-                Ticket t = tickets.get(i);
-                byte[] qrBytes = qrBytesList.get(i);
+
+                Ticket t        = tickets.get(i);
+                byte[] qrBytes  = qrBytesList.get(i);
+
                 String base64Qr = Base64.getEncoder().encodeToString(qrBytes);
 
                 Map<String, Object> attachment = new HashMap<>();
                 attachment.put("filename", "Ticket - " + t.getNome() + ".png");
                 attachment.put("content", base64Qr);
+                attachment.put("type", "image/png");
+
                 attachments.add(attachment);
             }
 
+            // BODY FINAL
             Map<String, Object> body = new HashMap<>();
             body.put("from", "Guia Rancho Queimado <no-reply@guiaranchoqueimado.com.br>");
             body.put("to", new String[]{emailDestino});
             body.put("subject", "Seu Pacote Guia RQ – " + tickets.size() + " tickets");
             body.put("html", html.toString());
-            body.put("attachments", attachments.toArray());
+            body.put("attachments", attachments); // <<<<< CORRETO!
 
+            // ENVIO
             String json = mapper.writeValueAsString(body);
 
             HttpRequest request = HttpRequest.newBuilder()
@@ -81,10 +90,17 @@ public class EmailService {
 
             HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
+            System.out.println("📨 Pacote enviado com sucesso!");
+
         } catch (Exception e) {
             throw new RuntimeException("Erro ao enviar email de pacote: " + e.getMessage());
         }
     }
+
+
+    // ==========================================
+    // TICKET ÚNICO
+    // ==========================================
     public void sendTicketEmail(
             String emailDestino,
             String nomeCliente,
@@ -99,9 +115,9 @@ public class EmailService {
             String html = """
                 <h2>Seu Ticket Está Pronto 🎟️</h2>
                 <p>Olá <strong>%s</strong>,</p>
-                <p>Seu ticket: <strong>%s</strong></p>
+                <p>Ticket: <strong>%s</strong></p>
                 <p>Telefone: %s<br>CPF: %s</p>
-                <p>Seu QR Code está anexado a este e-mail.</p>
+                <p>Seu QR Code está anexado.</p>
                 """.formatted(nomeCliente, nomeTicket, telefone, cpf);
 
             String qrBase64 = Base64.getEncoder().encodeToString(qrBytes);
@@ -109,13 +125,14 @@ public class EmailService {
             Map<String, Object> attachment = new HashMap<>();
             attachment.put("filename", "ticket.png");
             attachment.put("content", qrBase64);
+            attachment.put("type", "image/png");
 
             Map<String, Object> body = new HashMap<>();
             body.put("from", "Guia Rancho Queimado <no-reply@guiaranchoqueimado.com.br>");
             body.put("to", new String[]{emailDestino});
             body.put("subject", "Seu Ticket – " + nomeTicket);
             body.put("html", html);
-            body.put("attachments", new Object[]{attachment});
+            body.put("attachments", List.of(attachment));
 
             String json = mapper.writeValueAsString(body);
 
@@ -135,6 +152,11 @@ public class EmailService {
             throw new RuntimeException("Erro ao enviar email: " + e.getMessage());
         }
     }
+
+
+    // ==========================================
+    // EMAIL DE VERIFICAÇÃO
+    // ==========================================
     public void enviarVerificacaoEmail(String emailDestino, String token) {
 
         try {
@@ -142,7 +164,7 @@ public class EmailService {
 
             String html = """
                 <h2>Confirme seu e-mail</h2>
-                <p>Clique abaixo para ativar sua conta:</p>
+                <p>Clique no link abaixo:</p>
                 <a href='%s'>Confirmar e-mail</a>
                 """.formatted(link);
 
@@ -163,11 +185,8 @@ public class EmailService {
 
             HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("📨 E-mail de verificação enviado!");
-
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao enviar email de verificação: " + e.getMessage());
+            throw new RuntimeException("Erro ao enviar e-mail de verificação: " + e.getMessage());
         }
     }
-
 }

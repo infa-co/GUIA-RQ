@@ -245,7 +245,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <p class="text-lg mb-6 text-gray-100">Aproveite e conheça a região pagando menos</p>
 
         <button
-                onclick="window.location.href=''ab"
+                onclick="window.location.href=''"
                 class="bg-white text-blue-600 font-semibold py-4 px-6 rounded-lg hover:bg-gray-100 transition-colors">
             Quer receber as melhores ofertas e passeios da Serra Catarinense? Cadastre-se.
         </button>
@@ -473,20 +473,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <p class="text-sm text-green-600 font-medium mb-1">
               Pague R$5 Ganhe R$10 a cada R$50 em compras
                 <p class="text-sm text-gray-600 mb-3">Uso único / válido por 12 meses</p>
-                <button 
-                id="bonus-btn"
-                class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                    Cadastre-se e GANHE
+                <button
+                        class="add-to-cart w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                        data-id="10"
+                        data-nome="Ticket Da Roça"
+                        data-local="Ticket Da Roça"
+                        data-preco="5.00"
+                        data-img="assets/images/daroca.jpg">
+                    Adicionar ao Carrinho
                 </button>
-                <script>
-  // Quando clicar em "Cadastre-se e Ganhe"
-  document.getElementById('bonus-btn').addEventListener('click', () => {
-    // Marca no localStorage que o usuário ganhou o bônus
-    localStorage.setItem('bonusTicket', 'true');
 
-    // Redireciona para a página de login/cadastro
-    window.location.href = '../pages/login.html';
-  });
+                <script>
+
+
 </script>
             </div>
         </div>
@@ -801,7 +800,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <button id="logout-btn" class="w-full text-left px-4 py-2 hover:bg-red-50 text-red-600">Sair</button>
       `
       : `
-        <a href="pages/login.html" class="block px-10 py-5 hover:bg-gray-100 text-gray-700">Entrar ou Cadastrar-se</a>
+        <a href="" class="block px-10 py-5 hover:bg-gray-100 text-gray-700">Entrar ou Cadastrar-se</a>
       `;
   }
 
