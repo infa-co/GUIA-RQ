@@ -40,7 +40,7 @@
         document.getElementById("erro").classList.remove("hidden");
     } else {
 
-        fetch(`https://guia-rq-backend.onrender.com/api/tickets/ver/${qr}`)
+        fetch(`https://guia-rq-backend.onrender.com/api/tickets/validar-ticket/${qr}`)
             .then(res => {
                 if (res.status === 409) {
                     document.getElementById("usado").classList.remove("hidden");
