@@ -6,39 +6,30 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tickets_compra") // <<< Atualizado para a nova tabela correta
+@Table(name = "tickets_compra")
 public class Ticket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Identificador público do ticket
     @Column(name = "id_publico")
     private UUID idPublico;
 
-    // Informações do ticket (catálogo)
-    private String nome;
-    private String tipo;
+    // Referência ao ticket original do catálogo
+    @Column(name = "ticket_catalogo_id")
+    private Long ticketCatalogoId;
+
+    // Dados do ticket comprado
+    private String nome;          // nome do ticket (ex: “Mirante Boa Vista”)
     private String descricao;
+    private String tipo;
 
-    @Column(name = "preco_original")
-    private BigDecimal precoOriginal;
-
-    @Column(name = "preco_promocional")
-    private BigDecimal precoPromocional;
-
-    @Column(name = "parceiro_id")
-    private Long parceiroId;
-
-    // Dados da compra
     @Column(name = "data_compra")
     private LocalDateTime dataCompra;
 
     @Column(name = "email_cliente")
     private String emailCliente;
-
-    private String experiencia;
 
     @Column(name = "nome_cliente")
     private String nomeCliente;
@@ -54,9 +45,8 @@ public class Ticket {
     @Column(name = "valor_pago")
     private Double valorPago;
 
-    // QR Code / validação
     @Column(name = "qr_token")
-    private String qrToken; // <<< TROQUEI para String. Muito mais seguro para hash/UUID no banco.
+    private String qrToken;
 
     private boolean usado;
 
@@ -69,16 +59,10 @@ public class Ticket {
     @Column(name = "criado_em")
     private LocalDateTime criadoEm;
 
+    @Column(name = "stripe_session_id", unique = true)
+    private String stripeSessionId;
 
-    // =========================
-    // CONSTRUTOR
-    // =========================
     public Ticket() {}
-
-
-    // =========================
-    // GETTERS & SETTERS
-    // =========================
 
     public Long getId() {
         return id;
@@ -92,52 +76,28 @@ public class Ticket {
         this.idPublico = idPublico;
     }
 
+    public Long getTicketCatalogoId() {
+        return ticketCatalogoId;
+    }
+
+    public void setTicketCatalogoId(Long ticketCatalogoId) {
+        this.ticketCatalogoId = ticketCatalogoId;
+    }
+
+    public String getStripeSessionId() {
+        return stripeSessionId;
+    }
+
+    public void setStripeSessionId(String stripeSessionId) {
+        this.stripeSessionId = stripeSessionId;
+    }
+
     public String getNome() {
         return nome;
     }
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public BigDecimal getPrecoOriginal() {
-        return precoOriginal;
-    }
-
-    public void setPrecoOriginal(BigDecimal precoOriginal) {
-        this.precoOriginal = precoOriginal;
-    }
-
-    public BigDecimal getPrecoPromocional() {
-        return precoPromocional;
-    }
-
-    public void setPrecoPromocional(BigDecimal precoPromocional) {
-        this.precoPromocional = precoPromocional;
-    }
-
-    public Long getParceiroId() {
-        return parceiroId;
-    }
-
-    public void setParceiroId(Long parceiroId) {
-        this.parceiroId = parceiroId;
     }
 
     public LocalDateTime getDataCompra() {
@@ -154,14 +114,6 @@ public class Ticket {
 
     public void setEmailCliente(String emailCliente) {
         this.emailCliente = emailCliente;
-    }
-
-    public String getExperiencia() {
-        return experiencia;
-    }
-
-    public void setExperiencia(String experiencia) {
-        this.experiencia = experiencia;
     }
 
     public String getNomeCliente() {
@@ -243,5 +195,4 @@ public class Ticket {
     public void setCriadoEm(LocalDateTime criadoEm) {
         this.criadoEm = criadoEm;
     }
-
 }

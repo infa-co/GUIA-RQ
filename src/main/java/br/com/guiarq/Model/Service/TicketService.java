@@ -5,6 +5,7 @@ import br.com.guiarq.Model.Repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,25 +25,16 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 
-    // ============================
-    // LISTAR
-    // ============================
     public List<Ticket> listarTodos() {
         return ticketRepository.findAll();
     }
 
-    // ============================
-    // PROCESSAR COMPRA (ENVIAR QR POR EMAIL)
-    // ============================
+    // TICKET AVULSO (já existia)
     public void processarCompra(Ticket ticket) {
         try {
-            // Gera o link que aparecerá ao escanear o QR Code
-            String conteudo = "https://guiaranchoqueimado.com.br/pages/validar/?qr=" + ticket.getQrToken();
-
-            // Gera o QR Code em imagem
+            String conteudo = "https://guiaranchoqueimado.com.br/validar-ticket.html?qr=" + ticket.getQrToken();
             byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
 
-            // Envia o email com o QR Code
             emailService.sendTicketEmail(
                     ticket.getEmailCliente(),
                     ticket.getNomeCliente(),
@@ -52,24 +44,51 @@ public class TicketService {
                     qrBytes
             );
 
-            System.out.println("✔ COMPRA PROCESSADA");
+            System.out.println("✔ COMPRA PROCESSADA (TICKET ÚNICO)");
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("❌ ERRO AO PROCESSAR COMPRA");
+            System.out.println("❌ ERRO AO PROCESSAR COMPRA (TICKET ÚNICO)");
         }
     }
-    // ============================
-    // VERIFICAR TICKET
-    // ============================
+
+    // ✅ NOVO: PROCESSAR PACOTE
+    public void processarPacote(String emailDestino,
+                                String nomeCliente,
+                                String telefone,
+                                String cpf,
+                                List<Ticket> tickets) {
+        try {
+            List<byte[]> qrBytesList = new ArrayList<>();
+
+            for (Ticket ticket : tickets) {
+                String conteudo = "https://guiaranchoqueimado.com.br/validar-ticket.html?qr=" + ticket.getQrToken();
+                byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
+                qrBytesList.add(qrBytes);
+            }
+
+            emailService.sendPacoteTicketsEmail(
+                    emailDestino,
+                    nomeCliente,
+                    telefone,
+                    cpf,
+                    tickets,
+                    qrBytesList
+            );
+
+            System.out.println("✔ PACOTE PROCESSADO");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("❌ ERRO AO PROCESSAR PACOTE");
+        }
+    }
+
     public Ticket verificar(UUID idPublico) {
         return ticketRepository.findByIdPublico(idPublico)
                 .orElseThrow(() -> new RuntimeException("Ticket não encontrado"));
     }
 
-    // ============================
-    // CONFIRMAR TICKET (VALIDAÇÃO)
-    // ============================
     public Ticket confirmar(UUID idPublico) {
         Ticket t = verificar(idPublico);
 
