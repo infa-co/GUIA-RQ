@@ -2,7 +2,7 @@ const API_URL = "https://guia-rq-backend.onrender.com";
 
 async function carregarTicketIndividual() {
     const params = new URLSearchParams(window.location.search);
-    const idPublico = params.get("id");
+    const idPublico = params.get("qr");
 
     const erroEl = document.getElementById("erro");
     const loadingEl = document.getElementById("loading");
