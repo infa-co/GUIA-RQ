@@ -30,7 +30,7 @@ public class TicketService {
     public void processarCompra(Ticket ticket) {
         try {
             // Gera o link que aparecerá ao escanear o QR Code
-            String conteudo = "https://guiaranchoqueimado.com.br/validar/?qr=" + ticket.getQrToken();
+            String conteudo = "https://guiaranchoqueimado.com.br/pages/validar/?qr=" + ticket.getQrToken();
 
             // Gera o QR Code em imagem
             byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
