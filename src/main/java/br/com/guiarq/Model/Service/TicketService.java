@@ -32,7 +32,7 @@ public class TicketService {
     // TICKET AVULSO (já existia)
     public void processarCompra(Ticket ticket) {
         try {
-            String conteudo = "https://guiaranchoqueimado.com.br/validar/?qr=" + ticket.getQrToken();
+            String conteudo = "https://guiaranchoqueimado.com.br/validar-ticket.html/?qr=" + ticket.getQrToken();
             byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
 
             emailService.sendTicketEmail(
