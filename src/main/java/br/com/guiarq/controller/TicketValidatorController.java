@@ -15,7 +15,7 @@ public class TicketValidatorController {
     @Autowired
     private TicketRepository ticketRepository;
 
-    @GetMapping("/validar/{qr}")
+    @GetMapping("/validar-ticket/{qr}")
     public ResponseEntity<?> validar(@PathVariable String qr) {
 
         return ticketRepository.findByQrToken(qr)

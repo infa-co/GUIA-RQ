@@ -32,7 +32,7 @@ public class TicketService {
     // TICKET AVULSO (já existia)
     public void processarCompra(Ticket ticket) {
         try {
-            String conteudo = "https://guiaranchoqueimado.com.br/validar.html?qr=" + ticket.getQrToken();
+            String conteudo = "https://guiaranchoqueimado.com.br/pages/validar-ticket.html?qr=" + ticket.getQrToken();
             byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
 
             emailService.sendTicketEmail(
@@ -62,7 +62,7 @@ public class TicketService {
             List<byte[]> qrBytesList = new ArrayList<>();
 
             for (Ticket ticket : tickets) {
-                String conteudo = "https://guiaranchoqueimado.com.br/validar.html?qr=" + ticket.getQrToken();
+                String conteudo = "https://guiaranchoqueimado.com.br/pages/validar-ticket.html?qr=" + ticket.getQrToken();
                 byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
                 qrBytesList.add(qrBytes);
             }
