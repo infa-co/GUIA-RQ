@@ -35,50 +35,45 @@ public class EmailService {
     ) {
 
         try {
-
-            // HTML DO EMAIL
             StringBuilder html = new StringBuilder();
+
             html.append("<h2>Seu Pacote Guia RQ está pronto 🎒</h2>");
-            html.append("<p>Olá <strong>").append(nomeCliente).append("</strong>,</p>");
+            html.append("<p>Olá <strong>")
+                    .append(nomeCliente)
+                    .append("</strong>,</p>");
             html.append("<p>Você recebeu <strong>")
                     .append(tickets.size())
-                    .append(" tickets</strong>. Cada um pode ser utilizado separadamente:</p>");
+                    .append(" tickets individuais</strong>. Cada um pode ser utilizado separadamente:</p>");
             html.append("<ul>");
-
             for (Ticket t : tickets) {
-                html.append("<li><strong>").append(t.getNome()).append("</strong></li>");
+                html.append("<li>")
+                        .append(t.getNome())
+                        .append("</li>");
             }
-
             html.append("</ul>");
-            html.append("<p>Os QR Codes estão anexados a este e-mail.</p>");
+            html.append("<p>Os QR Codes de cada ticket estão anexados a este e-mail.</p>");
 
-            // LISTA DE ANEXOS COM MIME TYPE
             List<Map<String, Object>> attachments = new ArrayList<>();
 
             for (int i = 0; i < tickets.size(); i++) {
-
-                Ticket t        = tickets.get(i);
-                byte[] qrBytes  = qrBytesList.get(i);
-
+                Ticket t = tickets.get(i);
+                byte[] qrBytes = qrBytesList.get(i);
                 String base64Qr = Base64.getEncoder().encodeToString(qrBytes);
 
                 Map<String, Object> attachment = new HashMap<>();
                 attachment.put("filename", "Ticket - " + t.getNome() + ".png");
                 attachment.put("content", base64Qr);
-                attachment.put("type", "image/png");
 
                 attachments.add(attachment);
             }
 
-            // BODY FINAL
             Map<String, Object> body = new HashMap<>();
             body.put("from", "Guia Rancho Queimado <no-reply@guiaranchoqueimado.com.br>");
             body.put("to", new String[]{emailDestino});
             body.put("subject", "Seu Pacote Guia RQ – " + tickets.size() + " tickets");
             body.put("html", html.toString());
-            body.put("attachments", attachments); // <<<<< CORRETO!
+            body.put("attachments", attachments); // ← AQUI A CORREÇÃO
 
-            // ENVIO
             String json = mapper.writeValueAsString(body);
 
             HttpRequest request = HttpRequest.newBuilder()
@@ -90,13 +85,10 @@ public class EmailService {
 
             HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("📨 Pacote enviado com sucesso!");
-
         } catch (Exception e) {
             throw new RuntimeException("Erro ao enviar email de pacote: " + e.getMessage());
         }
     }
-
 
     // ==========================================
     // TICKET ÚNICO

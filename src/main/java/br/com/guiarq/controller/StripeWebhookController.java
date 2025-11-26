@@ -184,7 +184,7 @@ public class StripeWebhookController {
             }
 
             t.setTicketCatalogoId(cat.getId());
-            t.setNome(cat.getNome()); // ✔ agora nome certo
+            t.setNome(cat.getNome() + " - Guia RQ");
             t.setEmailCliente(email);
             t.setNomeCliente(nome);
             t.setTelefoneCliente(telefone);
@@ -205,7 +205,13 @@ public class StripeWebhookController {
         }
 
         // 🚀 Envia os 10 tickets no e-mail final
-        ticketService.processarPacote(email, nome, telefone, cpf, ticketsGerados);
+        ticketService.processarPacote(
+                email,
+                nome,
+                telefone,
+                cpf,
+                ticketsGerados);
+
 
         logger.info("📨 Pacote enviado com sucesso!");
     }
