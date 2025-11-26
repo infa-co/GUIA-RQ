@@ -37,7 +37,7 @@ public class QrCodeController {
         if (ticket == null)
             return ResponseEntity.notFound().build();
 
-        String conteudo = "https://guiaranchoqueimado.com.br/validar-ticket.html?id=" + ticket.getIdPublico();
+        String conteudo = "https://guiaranchoqueimado.com.br/docs/pages/validar-ticket.html?id=" + ticket.getIdPublico(); + ticket.getIdPublico();
 
         byte[] qr = qrCodeService.generateQrCodeBytes(conteudo, 400, 400);
 
