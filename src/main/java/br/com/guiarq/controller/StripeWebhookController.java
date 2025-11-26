@@ -90,14 +90,7 @@ public class StripeWebhookController {
 
         logger.info("🎫 Ticket criado ID público: {}", ticket.getIdPublico());
 
-        ticketService.processarCompra(
-                ticket.getId(),
-                email,
-                nome,
-                telefone,
-                cpf,
-                ticket.getNome()
-        );
+        ticketService.processarCompra(ticket);
 
         logger.info("📨 Email enviado com sucesso!");
     }

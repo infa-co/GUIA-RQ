@@ -20,9 +20,6 @@ public class TicketService {
     @Autowired
     private QrCodeService qrCodeService;
 
-    // ============================
-    // SALVAR
-    // ============================
     public Ticket salvar(Ticket ticket) {
         return ticketRepository.save(ticket);
     }
@@ -37,25 +34,21 @@ public class TicketService {
     // ============================
     // PROCESSAR COMPRA (ENVIAR QR POR EMAIL)
     // ============================
-    public void processarCompra(
-            Long ticketId,
-            String email,
-            String nomeCliente,
-            String telefone,
-            String cpf,
-            String nomeTicket
-    ) {
+    public void processarCompra(Ticket ticket) {
         try {
-            String conteudo = "https://guiaranchoqueimado.com.br/ticket/" + ticketId;
+            // Gera o link que aparecerá ao escanear o QR Code
+            String conteudo = "https://guiaranchoqueimado.com.br/validar/?qr=" + ticket.getQrToken();
 
+            // Gera o QR Code em imagem
             byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
 
+            // Envia o email com o QR Code
             emailService.sendTicketEmail(
-                    email,
-                    nomeCliente,
-                    telefone,
-                    cpf,
-                    nomeTicket,
+                    ticket.getEmailCliente(),
+                    ticket.getNomeCliente(),
+                    ticket.getTelefoneCliente(),
+                    ticket.getCpfCliente(),
+                    ticket.getNome(),
                     qrBytes
             );
 
@@ -66,7 +59,6 @@ public class TicketService {
             System.out.println("❌ ERRO AO PROCESSAR COMPRA");
         }
     }
-
     // ============================
     // VERIFICAR TICKET
     // ============================
