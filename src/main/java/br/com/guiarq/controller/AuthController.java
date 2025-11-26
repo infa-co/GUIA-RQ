@@ -52,6 +52,7 @@ public class AuthController {
         usuario.setTokenVerificacao(token);
         usuarioRepository.save(usuario);
 
+        // ✔ MÉTODO CORRETO
         emailService.enviarVerificacaoEmail(email, token);
 
         return ResponseEntity.ok("E-mail de verificação enviado");

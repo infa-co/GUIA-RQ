@@ -49,9 +49,17 @@ public class StripeCheckoutController {
                                 )
                                 .build()
                 );
+
+        // ticketId (para avulsos)
         if (req.getTicketId() != null) {
             builder.putMetadata("ticketId", req.getTicketId().toString());
         }
+
+        // flag de pacote
+        if (Boolean.TRUE.equals(req.getPacote())) {
+            builder.putMetadata("pacote", "true");
+        }
+
         if (req.getEmail() != null) {
             builder.putMetadata("email", req.getEmail());
         }
@@ -72,6 +80,4 @@ public class StripeCheckoutController {
         response.put("url", session.getUrl());
         return response;
     }
-
 }
-

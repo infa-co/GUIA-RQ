@@ -19,4 +19,5 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     boolean existsByStripeSessionId(String stripeSessionId);
 
+    List<Ticket> findByTicketCatalogoId(Long ticketCatalogoId);
 }

@@ -4,14 +4,14 @@ public class CheckoutRequest {
 
     private Double amount;
     private String description;
-    private Long ticketId;
-
-    private String nome;
+    private Long ticketId;      // para ticket avulso
     private String email;
+    private String nome;
     private String telefone;
     private String cpf;
 
-    public CheckoutRequest() {}
+    // NOVO: indica se é um pacote
+    private Boolean pacote;
 
     public Double getAmount() {
         return amount;
@@ -37,20 +37,20 @@ public class CheckoutRequest {
         this.ticketId = ticketId;
     }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getTelefone() {
@@ -67,5 +67,13 @@ public class CheckoutRequest {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public Boolean getPacote() {
+        return pacote;
+    }
+
+    public void setPacote(Boolean pacote) {
+        this.pacote = pacote;
     }
 }
