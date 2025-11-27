@@ -159,60 +159,47 @@ public class StripeWebhookController {
         LocalDateTime agora = LocalDateTime.now();
         Double valorTotal = data.optDouble("amount_total") / 100.0;
 
-        int qtd = IDS_TICKETS_PACOTE.size();
-        Double valorPorTicket = valorTotal / qtd;
+        // Criamos APENAS 1 ticket
+        Ticket pacote = new Ticket();
 
-        UUID compraIdPacote = UUID.randomUUID();
+        pacote.setStripeSessionId(sessionId);
+        pacote.setTicketCatalogoId(null); // opcional
+        pacote.setNome("Pacote Guia RQ – 10 Usos");
+        pacote.setDescricao("Pacote com 10 validações individuais");
+        pacote.setTipo("PACOTE");
 
-        List<Ticket> ticketsGerados = new ArrayList<>();
-        boolean primeiro = true;
+        pacote.setEmailCliente(email);
+        pacote.setNomeCliente(nome);
+        pacote.setTelefoneCliente(telefone);
+        pacote.setCpfCliente(cpf);
 
-        for (Long idCat : IDS_TICKETS_PACOTE) {
+        pacote.setStatus("PAGO");
+        pacote.setUsado(false);
 
-            TicketCatalogo cat = ticketCatalogoRepository.findById(idCat).orElse(null);
+        pacote.setDataCompra(agora);
+        pacote.setCriadoEm(agora);
 
-            if (cat == null) {
-                logger.error("❌ Ticket catálogo ID {} não encontrado", idCat);
-                continue;
-            }
+        pacote.setIdPublico(UUID.randomUUID());
+        pacote.setCompraId(UUID.randomUUID());
+        pacote.setQrToken(UUID.randomUUID().toString());
 
-            Ticket t = new Ticket();
+        pacote.setValorPago(valorTotal);
 
-            if (primeiro) {
-                t.setStripeSessionId(sessionId);
-                primeiro = false;
-            }
+        // CAMPOS DE PACOTE 🔥
+        pacote.setTipoPacote(true);
+        pacote.setUsosTotais(10);
+        pacote.setUsosRestantes(10);
 
-            t.setTicketCatalogoId(cat.getId());
-            t.setNome(cat.getNome() + " - Guia RQ");
-            t.setEmailCliente(email);
-            t.setNomeCliente(nome);
-            t.setTelefoneCliente(telefone);
-            t.setCpfCliente(cpf);
-            t.setStatus("PAGO");
-            t.setUsado(false);
-            t.setDataCompra(agora);
-            t.setCriadoEm(agora);
-            t.setIdPublico(UUID.randomUUID());
-            t.setCompraId(compraIdPacote);
-            t.setQrToken(UUID.randomUUID().toString());
-            t.setValorPago(valorPorTicket);
+        ticketRepository.save(pacote);
 
-            ticketRepository.save(t);
-            ticketsGerados.add(t);
+        logger.info("🎒 Pacote criado com 10 usos. QR único: {}", pacote.getQrToken());
 
-            logger.info("🎟 Ticket pacote criado: {}", t.getNome());
-        }
-
-        // 🚀 Envia os 10 tickets no e-mail final
+        // Enviar e-mail com 1 QR + texto explicativo
         ticketService.processarPacote(
                 email,
                 nome,
                 telefone,
                 cpf,
-                ticketsGerados);
-
-
-        logger.info("📨 Pacote enviado com sucesso!");
+                List.of(pacote) // ← apenas 1 ticket
+        );
     }
-}

@@ -1,7 +1,6 @@
 package br.com.guiarq.Model.Entities;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -16,12 +15,10 @@ public class Ticket {
     @Column(name = "id_publico")
     private UUID idPublico;
 
-    // Referência ao ticket original do catálogo
     @Column(name = "ticket_catalogo_id")
     private Long ticketCatalogoId;
 
-    // Dados do ticket comprado
-    private String nome;          // nome do ticket (ex: “Mirante Boa Vista”)
+    private String nome;
     private String descricao;
     private String tipo;
 
@@ -58,6 +55,24 @@ public class Ticket {
 
     @Column(name = "criado_em")
     private LocalDateTime criadoEm;
+
+    @Column(name = "cliente_uso")
+    private String clienteUso;
+
+    @Column(name = "estabelecimento_validacao")
+    private String estabelecimentoValidacao;
+
+    @Column(name = "validado_por")
+    private String validadoPor;
+
+    @Column(name = "usos_totais")
+    private Integer usosTotais;
+
+    @Column(name = "usos_restantes")
+    private Integer usosRestantes;
+
+    @Column(name = "tipo_pacote")
+    private Boolean tipoPacote;
 
     @Column(name = "stripe_session_id", unique = true)
     private String stripeSessionId;
@@ -194,5 +209,53 @@ public class Ticket {
 
     public void setCriadoEm(LocalDateTime criadoEm) {
         this.criadoEm = criadoEm;
+    }
+
+    public String getClienteUso() {
+        return clienteUso;
+    }
+
+    public void setClienteUso(String clienteUso) {
+        this.clienteUso = clienteUso;
+    }
+
+    public String getEstabelecimentoValidacao() {
+        return estabelecimentoValidacao;
+    }
+
+    public void setEstabelecimentoValidacao(String estabelecimentoValidacao) {
+        this.estabelecimentoValidacao = estabelecimentoValidacao;
+    }
+
+    public String getValidadoPor() {
+        return validadoPor;
+    }
+
+    public void setValidadoPor(String validadoPor) {
+        this.validadoPor = validadoPor;
+    }
+
+    public Integer getUsosTotais() {
+        return usosTotais;
+    }
+
+    public void setUsosTotais(Integer usosTotais) {
+        this.usosTotais = usosTotais;
+    }
+
+    public Integer getUsosRestantes() {
+        return usosRestantes;
+    }
+
+    public void setUsosRestantes(Integer usosRestantes) {
+        this.usosRestantes = usosRestantes;
+    }
+
+    public Boolean getTipoPacote() {
+        return tipoPacote;
+    }
+
+    public void setTipoPacote(Boolean tipoPacote) {
+        this.tipoPacote = tipoPacote;
     }
 }

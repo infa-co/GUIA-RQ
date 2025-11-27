@@ -1,4 +1,4 @@
-package br.com.guiarq.controller;
+packapackage br.com.guiarq.controller;
 
 import br.com.guiarq.Model.Entities.Ticket;
 import br.com.guiarq.Model.Repository.TicketRepository;
@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tickets")
@@ -15,41 +16,89 @@ public class TicketValidatorController {
     @Autowired
     private TicketRepository ticketRepository;
 
+    // ==========================================================
+    // 1) VALIDAR (carrega informações do ticket)
+    // ==========================================================
     @GetMapping("/validar-ticket/{qr}")
     public ResponseEntity<?> validar(@PathVariable String qr) {
 
         return ticketRepository.findByQrToken(qr)
                 .map(ticket -> ResponseEntity.ok(
-                        java.util.Map.of(
+                        Map.of(
                                 "status", "VALIDO",
                                 "cliente", ticket.getNomeCliente(),
                                 "ticket", ticket.getNome(),
-                                "usado", ticket.isUsado()
+                                "usado", ticket.isUsado(),
+                                "usosRestantes", ticket.getUsosRestantes(),
+                                "tipoPacote", ticket.getTipoPacote()
                         )
                 ))
                 .orElse(ResponseEntity.status(404).body(
-                        java.util.Map.of(
-                                "status", "INVALIDO"
-                        )
+                        Map.of("status", "INVALIDO")
                 ));
     }
 
-    // ✅ Confirmar ticket
+    // ==========================================================
+    // 2) CONFIRMAR (grava no banco os dados do proprietário)
+    // ==========================================================
     @PostMapping("/confirmar/{qr}")
-    public ResponseEntity<?> confirmar(@PathVariable String qr) {
+    public ResponseEntity<?> confirmar(
+            @PathVariable String qr,
+            @RequestBody Map<String, String> dadosValidacao
+    ) {
 
         return ticketRepository.findByQrToken(qr)
                 .map(ticket -> {
 
-                    if (ticket.isUsado()) {
-                        return ResponseEntity.status(409).body("Ticket já utilizado");
+                    boolean ePacote = ticket.getTipoPacote() != null && ticket.getTipoPacote();
+
+                    // ================================
+                    // CASO 1 → Ticket INDIVIDUAL
+                    // ================================
+                    if (!ePacote) {
+
+                        if (ticket.isUsado()) {
+                            return ResponseEntity.status(409).body("Ticket já utilizado");
+                        }
+
+                        ticket.setUsado(true);
+                        ticket.setUsadoEm(LocalDateTime.now());
                     }
 
-                    ticket.setUsado(true);
-                    ticket.setUsadoEm(LocalDateTime.now());
+                    // ================================
+                    // CASO 2 → Ticket PACOTE (multi-uso)
+                    // ================================
+                    else {
+
+                        if (ticket.getUsosRestantes() <= 0) {
+                            return ResponseEntity.status(409).body("Todos os usos já foram consumidos");
+                        }
+
+                        // reduz 1 uso
+                        ticket.setUsosRestantes(ticket.getUsosRestantes() - 1);
+
+                        // se zerou → marcar como usado
+                        if (ticket.getUsosRestantes() == 0) {
+                            ticket.setUsado(true);
+                            ticket.setUsadoEm(LocalDateTime.now());
+                        }
+                    }
+
+                    // =======================================
+                    // Salvando os dados do comércio
+                    // =======================================
+                    ticket.setClienteUso(dadosValidacao.get("clienteUso"));
+                    ticket.setEstabelecimentoValidacao(dadosValidacao.get("estabelecimento"));
+                    ticket.setValidadoPor(dadosValidacao.get("validadoPor"));
+
                     ticketRepository.save(ticket);
 
-                    return ResponseEntity.ok("Ticket confirmado");
+                    return ResponseEntity.ok(
+                            ePacote ?
+                                    "Uso registrado! Restam: " + ticket.getUsosRestantes() :
+                                    "Ticket confirmado"
+                    );
+
                 })
                 .orElse(ResponseEntity.status(404).body("Ticket não encontrado"));
     }

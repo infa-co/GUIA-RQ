@@ -41,17 +41,35 @@ public class EmailService {
             html.append("<p>Olá <strong>")
                     .append(nomeCliente)
                     .append("</strong>,</p>");
-            html.append("<p>Você recebeu <strong>")
-                    .append(tickets.size())
-                    .append(" tickets individuais</strong>. Cada um pode ser utilizado separadamente:</p>");
-            html.append("<ul>");
-            for (Ticket t : tickets) {
-                html.append("<li>")
-                        .append(t.getNome())
-                        .append("</li>");
-            }
-            html.append("</ul>");
-            html.append("<p>Os QR Codes de cada ticket estão anexados a este e-mail.</p>");
+
+            html.append("""
+    <p>Você adquiriu o <strong>Pacote Guia RQ</strong>, que dá acesso a <strong>10 experiências em Rancho Queimado</strong>.</p>
+
+    <p style='background:#f0f7ff;padding:10px;border-left:4px solid #3b82f6;margin:15px 0;'>
+        <strong>Importante:</strong><br>
+        Este pacote utiliza <strong>APENAS 1 QR Code</strong>, válido para <strong>10 validações</strong>.<br>
+        Cada validação corresponde ao uso de um ticket em um estabelecimento diferente.
+    </p>
+
+    <p><strong>Experiências incluídas:</strong></p>
+    <ul>
+        <li>🍕 Ticket Pizzaria Forno e Serra — Desconto de R$16</li>
+        <li>🛵 Ticket RJ Off-Road — Desconto de R$25</li>
+        <li>🏡 Ticket Chalé Encantado — Desconto de R$50</li>
+        <li>🍰 Ticket Bergkaffee Café Colonial — Desconto de R$15</li>
+        <li>🍽️ Ticket Da Roça — Desconto de R$10 a cada R$50 gasto</li>
+        <li>🌿 Ticket Espaço Floresta — Desconto de R$50</li>
+        <li>🍺 Ticket Bierhaus — 10% extra na compra</li>
+        <li>📸 Ticket Mirante Boa Vista — Desconto de R$30</li>
+        <li>🍷 Ticket Goyah Vinhos — Desconto de R$14</li>
+        <li>🍖 Ticket Atafona — Desconto de R$10 (aos finais de semana)</li>
+    </ul>
+
+    <p style="margin-top:15px;">
+        📎 O QR Code do pacote está anexado a este e-mail.<br>
+        Você poderá utilizá-lo <strong>10 vezes</strong>, uma para cada experiência.
+    </p>
+""");
 
             List<Map<String, Object>> attachments = new ArrayList<>();
 
