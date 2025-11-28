@@ -15,5 +15,5 @@ COPY --from=build /app/target/*.jar app.jar
 EXPOSE 10000
 
 # Rodar usando a porta dinâmica do Render
-ENV PORT=10000
+ENV PORT=8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
