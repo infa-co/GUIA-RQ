@@ -159,47 +159,42 @@ public class StripeWebhookController {
         LocalDateTime agora = LocalDateTime.now();
         Double valorTotal = data.optDouble("amount_total") / 100.0;
 
-        // Criamos APENAS 1 ticket
+        // Criar 1 pacote
         Ticket pacote = new Ticket();
 
         pacote.setStripeSessionId(sessionId);
-        pacote.setTicketCatalogoId(null); // opcional
-        pacote.setNome("Pacote Guia RQ – 10 Usos");
-        pacote.setDescricao("Pacote com 10 validações individuais");
-        pacote.setTipo("PACOTE");
-
+        pacote.setTicketCatalogoId(999L); // PODE DEFINIR O ID EM SUA TABELA DE CATÁLOGO
+        pacote.setNome("Pacote Guia RQ - 10 usos");
         pacote.setEmailCliente(email);
         pacote.setNomeCliente(nome);
         pacote.setTelefoneCliente(telefone);
         pacote.setCpfCliente(cpf);
-
         pacote.setStatus("PAGO");
         pacote.setUsado(false);
-
         pacote.setDataCompra(agora);
         pacote.setCriadoEm(agora);
-
         pacote.setIdPublico(UUID.randomUUID());
         pacote.setCompraId(UUID.randomUUID());
         pacote.setQrToken(UUID.randomUUID().toString());
-
         pacote.setValorPago(valorTotal);
 
-        // CAMPOS DE PACOTE 🔥
+        // NOVOS CAMPOS DO PACOTE
         pacote.setTipoPacote(true);
         pacote.setUsosTotais(10);
         pacote.setUsosRestantes(10);
 
         ticketRepository.save(pacote);
 
-        logger.info("🎒 Pacote criado com 10 usos. QR único: {}", pacote.getQrToken());
-
-        // Enviar e-mail com 1 QR + texto explicativo
+        // ENVIAR O PACOTE POR EMAIL (apenas 1 ticket)
         ticketService.processarPacote(
                 email,
                 nome,
                 telefone,
                 cpf,
-                List.of(pacote) // ← apenas 1 ticket
+                List.of(pacote)
         );
+
+        System.out.println("📦 Pacote criado e enviado!");
     }
+
+}

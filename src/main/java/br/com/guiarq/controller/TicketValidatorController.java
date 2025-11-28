@@ -1,4 +1,4 @@
-packapackage br.com.guiarq.controller;
+package br.com.guiarq.controller;
 
 import br.com.guiarq.Model.Entities.Ticket;
 import br.com.guiarq.Model.Repository.TicketRepository;
@@ -51,6 +51,7 @@ public class TicketValidatorController {
                 .map(ticket -> {
 
                     boolean ePacote = ticket.getTipoPacote() != null && ticket.getTipoPacote();
+                    Integer usosRestantes = ticket.getUsosRestantes() == null ? 0 : ticket.getUsosRestantes();
 
                     // ================================
                     // CASO 1 → Ticket INDIVIDUAL
@@ -70,15 +71,16 @@ public class TicketValidatorController {
                     // ================================
                     else {
 
-                        if (ticket.getUsosRestantes() <= 0) {
+                        if (usosRestantes <= 0) {
                             return ResponseEntity.status(409).body("Todos os usos já foram consumidos");
                         }
 
                         // reduz 1 uso
-                        ticket.setUsosRestantes(ticket.getUsosRestantes() - 1);
+                        usosRestantes = usosRestantes - 1;
+                        ticket.setUsosRestantes(usosRestantes);
 
                         // se zerou → marcar como usado
-                        if (ticket.getUsosRestantes() == 0) {
+                        if (usosRestantes == 0) {
                             ticket.setUsado(true);
                             ticket.setUsadoEm(LocalDateTime.now());
                         }
@@ -94,9 +96,9 @@ public class TicketValidatorController {
                     ticketRepository.save(ticket);
 
                     return ResponseEntity.ok(
-                            ePacote ?
-                                    "Uso registrado! Restam: " + ticket.getUsosRestantes() :
-                                    "Ticket confirmado"
+                            ePacote
+                                    ? "Uso registrado! Restam: " + ticket.getUsosRestantes()
+                                    : "Ticket confirmado"
                     );
 
                 })
