@@ -28,6 +28,8 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 
+
+
     public List<Ticket> listarTodos() {
         return ticketRepository.findAll();
     }
