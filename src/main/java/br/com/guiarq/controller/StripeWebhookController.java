@@ -196,5 +196,4 @@ public class StripeWebhookController {
 
         System.out.println("📦 Pacote criado e enviado!");
     }
-
 }
