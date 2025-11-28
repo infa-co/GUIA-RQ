@@ -7,6 +7,13 @@ RUN mvn clean package -DskipTests
 # Etapa 2: rodar o JAR
 FROM eclipse-temurin:17-jdk
 WORKDIR /app
+
+# Copia o JAR gerado
 COPY --from=build /app/target/*.jar app.jar
-EXPOSE 8080
+
+# Expor a porta fornecida pelo Render
+EXPOSE 10000
+
+# Rodar usando a porta dinâmica do Render
+ENV PORT=10000
 ENTRYPOINT ["java", "-jar", "app.jar"]
