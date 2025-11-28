@@ -1,4 +1,4 @@
-# Etapa 1: construir o JAR
+# Etapa 1: construi o JAR
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
