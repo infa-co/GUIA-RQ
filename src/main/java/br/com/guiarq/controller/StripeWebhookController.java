@@ -107,14 +107,14 @@ public class StripeWebhookController {
                                        String ticketIdStr) {
 
         Long ticketCatalogoId = null;
-        String nomeTicket = "Guia RQ";
+        String nomeTicket = "Guia RQ aaaaaa";
 
         try {
             ticketCatalogoId = Long.parseLong(ticketIdStr);
             Optional<TicketCatalogo> cat = ticketCatalogoRepository.findById(ticketCatalogoId);
 
             if (cat.isPresent()) {
-                nomeTicket = cat.get().getNome() + " - Guia RQ";
+                nomeTicket = cat.get().getNome() + " - Guia RQ aaaaa";
             }
 
         } catch (Exception e) {
