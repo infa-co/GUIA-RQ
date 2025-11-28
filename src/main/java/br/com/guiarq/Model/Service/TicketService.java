@@ -21,6 +21,9 @@ public class TicketService {
     @Autowired
     private QrCodeService qrCodeService;
 
+    private static final String URL_VALIDACAO =
+            "https://guiaranchoqueimado.com.br/pages/validar-ticket.html?qr=";
+
     public Ticket salvar(Ticket ticket) {
         return ticketRepository.save(ticket);
     }
@@ -28,11 +31,9 @@ public class TicketService {
     public List<Ticket> listarTodos() {
         return ticketRepository.findAll();
     }
-
-    // TICKET AVULSO (já existia)
     public void processarCompra(Ticket ticket) {
         try {
-            String conteudo = "https://guiaranchoqueimado.com.br/validar-ticket.html?qr=" + ticket.getQrToken();
+            String conteudo = URL_VALIDACAO + ticket.getQrToken();
             byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
 
             emailService.sendTicketEmail(
@@ -40,7 +41,7 @@ public class TicketService {
                     ticket.getNomeCliente(),
                     ticket.getTelefoneCliente(),
                     ticket.getCpfCliente(),
-                    ticket.getNome(),
+                    ticket.getNome(),   // Nome do ticket agora vem correto
                     qrBytes
             );
 
@@ -51,8 +52,6 @@ public class TicketService {
             System.out.println("❌ ERRO AO PROCESSAR COMPRA (TICKET ÚNICO)");
         }
     }
-
-    // ✅ NOVO: PROCESSAR PACOTE
     public void processarPacote(String emailDestino,
                                 String nomeCliente,
                                 String telefone,
@@ -62,7 +61,7 @@ public class TicketService {
             List<byte[]> qrBytesList = new ArrayList<>();
 
             for (Ticket ticket : tickets) {
-                String conteudo = "https://guiaranchoqueimado.com.br/validar-ticket.html?qr=" + ticket.getQrToken();
+                String conteudo = URL_VALIDACAO + ticket.getQrToken();
                 byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
                 qrBytesList.add(qrBytes);
             }
@@ -83,7 +82,6 @@ public class TicketService {
             System.out.println("❌ ERRO AO PROCESSAR PACOTE");
         }
     }
-
     public Ticket verificar(UUID idPublico) {
         return ticketRepository.findByIdPublico(idPublico)
                 .orElseThrow(() -> new RuntimeException("Ticket não encontrado"));

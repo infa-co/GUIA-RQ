@@ -107,14 +107,15 @@ public class StripeWebhookController {
                                        String ticketIdStr) {
 
         Long ticketCatalogoId = null;
+        TicketCatalogo catalogo = null;
         String nomeTicket = "Guia RQ";
 
         try {
             ticketCatalogoId = Long.parseLong(ticketIdStr);
-            Optional<TicketCatalogo> cat = ticketCatalogoRepository.findById(ticketCatalogoId);
+            catalogo = ticketCatalogoRepository.findById(ticketCatalogoId).orElse(null);
 
-            if (cat.isPresent()) {
-                nomeTicket = cat.get().getNome() + " - Guia RQ";
+            if (catalogo != null) {
+                nomeTicket = catalogo.getNome() + " - Guia RQ";
             }
 
         } catch (Exception e) {
@@ -124,7 +125,13 @@ public class StripeWebhookController {
         Ticket ticket = new Ticket();
         ticket.setStripeSessionId(sessionId);
         ticket.setTicketCatalogoId(ticketCatalogoId);
-        ticket.setNome(nomeTicket);
+
+        if (catalogo != null) {
+            ticket.setNome(catalogo.getNome());
+        } else {
+            ticket.setNome("Ticket - Guia RQ");
+        }
+
         ticket.setEmailCliente(email);
         ticket.setNomeCliente(nome);
         ticket.setTelefoneCliente(telefone);
@@ -141,14 +148,11 @@ public class StripeWebhookController {
         ticketRepository.save(ticket);
 
         logger.info("🎫 Ticket criado: {}", ticket.getNome());
-        ticketService.processarCompra(ticket);
 
+        ticketService.processarCompra(ticket);
         logger.info("📨 Ticket avulso enviado!");
     }
 
-    // ======================
-    // PACOTE COMPLETO (10 tickets)
-    // ======================
     private void processarPacote(String sessionId,
                                  JSONObject data,
                                  String email,
@@ -184,7 +188,7 @@ public class StripeWebhookController {
             }
 
             t.setTicketCatalogoId(cat.getId());
-            t.setNome(cat.getNome()); // ✔ agora nome certo
+            t.setNome(cat.getNome());
             t.setEmailCliente(email);
             t.setNomeCliente(nome);
             t.setTelefoneCliente(telefone);
@@ -203,8 +207,6 @@ public class StripeWebhookController {
 
             logger.info("🎟 Ticket pacote criado: {}", t.getNome());
         }
-
-        // 🚀 Envia os 10 tickets no e-mail final
         ticketService.processarPacote(email, nome, telefone, cpf, ticketsGerados);
 
         logger.info("📨 Pacote enviado com sucesso!");
