@@ -22,7 +22,6 @@ public class StripeWebhookController {
 
     private static final Logger logger = LoggerFactory.getLogger(StripeWebhookController.class);
 
-    // IDs reais do catálogo
     private static final List<Long> IDS_TICKETS_PACOTE = Arrays.asList(
             1L, 2L, 3L, 4L, 5L,
             6L, 7L, 8L, 9L, 10L
@@ -65,16 +64,14 @@ public class StripeWebhookController {
             return;
         }
 
-        // Idempotência
         if (ticketRepository.existsByStripeSessionId(sessionId)) {
-            logger.warn("⚠️ Webhook duplicado ignorado para sessionId: {}", sessionId);
+            logger.warn("⚠️ Webhook duplicado ignorado para sessionId {}", sessionId);
             return;
         }
 
         JSONObject metadata = data.optJSONObject("metadata");
-
         if (metadata == null) {
-            logger.error("❌ Metadata vazio no checkout.session");
+            logger.error("❌ Metadata vazio no checkout");
             return;
         }
 
@@ -108,15 +105,10 @@ public class StripeWebhookController {
 
         Long ticketCatalogoId = null;
         TicketCatalogo catalogo = null;
-        String nomeTicket = "Guia RQ";
 
         try {
             ticketCatalogoId = Long.parseLong(ticketIdStr);
             catalogo = ticketCatalogoRepository.findById(ticketCatalogoId).orElse(null);
-
-            if (catalogo != null) {
-                nomeTicket = catalogo.getNome() + " - Guia RQ";
-            }
 
         } catch (Exception e) {
             logger.error("Erro ao buscar ticket catálogo: {}", e.getMessage());
@@ -207,7 +199,8 @@ public class StripeWebhookController {
 
             logger.info("🎟 Ticket pacote criado: {}", t.getNome());
         }
-        ticketService.processarPacote(email, nome, telefone, cpf, ticketsGerados);
+
+        ticketService.processarPacote(ticketsGerados);
 
         logger.info("📨 Pacote enviado com sucesso!");
     }

@@ -10,12 +10,12 @@ public class TicketCatalogo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;            // ex: Mirante Boa Vista
-    private String descricao;       // texto explicativo
-    private String tipo;            // ex: passeio, mirante, atividade
-    private Double preco;           // preço base
-    private Long parceiroId;        // qual estabelecimento é o responsável
-    private String imagem;          // opcional, URL da foto
+    private String nome;
+    private String descricao;
+    private String tipo;
+    private Double preco;
+    private Long parceiroId;
+    private String imagem;
 
     public TicketCatalogo() {}
 
