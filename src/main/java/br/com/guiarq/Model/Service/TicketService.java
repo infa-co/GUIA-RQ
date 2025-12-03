@@ -27,9 +27,6 @@ public class TicketService {
     public Ticket salvar(Ticket ticket) {
         return ticketRepository.save(ticket);
     }
-
-
-
     public List<Ticket> listarTodos() {
         return ticketRepository.findAll();
     }
