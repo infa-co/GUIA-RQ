@@ -258,4 +258,7 @@ public class Ticket {
     public void setTipoPacote(Boolean tipoPacote) {
         this.tipoPacote = tipoPacote;
     }
+    public boolean getUsado(){
+        return usado;
+    }
 }

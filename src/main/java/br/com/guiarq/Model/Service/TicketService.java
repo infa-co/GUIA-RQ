@@ -5,6 +5,7 @@ import br.com.guiarq.Model.Repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -86,16 +87,18 @@ public class TicketService {
                 .orElseThrow(() -> new RuntimeException("Ticket não encontrado"));
     }
 
-    public Ticket confirmar(UUID idPublico) {
-        Ticket t = verificar(idPublico);
+    public Ticket confirmarUso(String qrToken) {
 
-        if (t.isUsado()) {
-            throw new RuntimeException("Ticket já utilizado!");
+        Ticket ticket = ticketRepository.findByQrToken(qrToken)
+                .orElseThrow(() -> new RuntimeException("TICKET_NAO_ENCONTRADO"));
+
+        if (ticket.isUsado()) {
+            throw new IllegalStateException("TICKET_JA_USADO");
         }
 
-        t.setUsado(true);
-        t.setUsadoEm(java.time.LocalDateTime.now());
+        ticket.setUsado(true);
+        ticket.setUsadoEm(LocalDateTime.now());
 
-        return ticketRepository.save(t);
+        return ticketRepository.save(ticket);
     }
 }

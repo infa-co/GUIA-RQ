@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -43,13 +45,21 @@ public class TicketController {
     }
 
     @PostMapping("/confirmar/{idPublico}")
-    public ResponseEntity<?> confirmar(@PathVariable String idPublico) {
+    public ResponseEntity<?> confirmarUso(@PathVariable String idPublico) {
         try {
+            Ticket ticket = ticketService.confirmarUso(idPublico);
             UUID id = UUID.fromString(idPublico);
-            ticketService.confirmar(id);
-            return ResponseEntity.ok("Ticket validado com sucesso");
-        } catch (Exception e) {
-            return ResponseEntity.status(404).body("Ticket inválido ou já usado");
+            ticketService.confirmarUso(idPublico);
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("nomeCliente", ticket.getNomeCliente());
+            resp.put("nomeTicket", ticket.getNome());
+            resp.put("usado", ticket.getUsado());
+
+            return ResponseEntity.ok(resp);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(409).body("Ticket já utilizado");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body("Ticket inválido");
         }
     }
 }
