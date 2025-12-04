@@ -48,7 +48,11 @@ public class StripeWebhookController {
         String eventType = json.optString("type");
 
         if ("checkout.session.completed".equals(eventType)) {
-            processCheckout(json);
+            try {
+                processCheckout(json);
+            } catch (Exception e) {
+                logger.error("❌ Erro ao processar checkout: {}", e.getMessage());
+            }
         }
 
         return ResponseEntity.ok("OK");
@@ -58,76 +62,82 @@ public class StripeWebhookController {
 
         JSONObject data = json.getJSONObject("data").getJSONObject("object");
 
-        String sessionId = data.optString("id");
+        // ID da sessão
+        String sessionId = data.optString("id", null);
         if (sessionId == null || sessionId.isBlank()) {
-            logger.error("❌ sessionId inválido");
+            logger.error("❌ sessionId inválido no webhook.");
             return;
         }
 
+        // Evitar tickets duplicados em caso de reenvio do webhook
         if (ticketRepository.existsByStripeSessionId(sessionId)) {
             logger.warn("⚠️ Webhook duplicado ignorado para sessionId {}", sessionId);
             return;
         }
 
+        // Metadata
         JSONObject metadata = data.optJSONObject("metadata");
         if (metadata == null) {
-            logger.error("❌ Metadata vazio no checkout");
+            logger.error("❌ Metadata ausente no checkout.");
             return;
         }
 
-        String email = metadata.optString("email");
-        String nome = metadata.optString("nome");
-        String telefone = metadata.optString("telefone");
-        String cpf = metadata.optString("cpf");
-        String ticketIdStr = metadata.optString("ticketId", null);
-
         boolean isPacote = "true".equalsIgnoreCase(metadata.optString("pacote", "false"));
 
-        if (email == null || nome == null) {
-            logger.error("❌ Metadata insuficiente.");
+        String email = metadata.optString("email", "");
+        String nome = metadata.optString("nome", "");
+        String telefone = metadata.optString("telefone", "");
+        String cpf = metadata.optString("cpf", "");
+
+        if (email.isBlank() || nome.isBlank()) {
+            logger.error("❌ Metadata incompleto: nome/email faltando.");
             return;
         }
 
         if (isPacote) {
             processarPacote(sessionId, data, email, nome, telefone, cpf);
         } else {
+            String ticketIdStr = metadata.optString("ticketId", null);
+
+            if (ticketIdStr == null || ticketIdStr.isBlank()) {
+                logger.error("❌ ticketId ausente no metadata para ticket avulso.");
+                return;
+            }
+
             processarTicketAvulso(sessionId, data, email, nome, telefone, cpf, ticketIdStr);
         }
     }
 
-    private void processarTicketAvulso(String sessionId,
-                                       JSONObject data,
-                                       String email,
-                                       String nome,
-                                       String telefone,
-                                       String cpf,
-                                       String ticketIdStr) {
+    private void processarTicketAvulso(
+            String sessionId,
+            JSONObject data,
+            String email,
+            String nome,
+            String telefone,
+            String cpf,
+            String ticketIdStr
+    ) {
 
-        Long ticketCatalogoId = null;
         TicketCatalogo catalogo = null;
 
         try {
-            ticketCatalogoId = Long.parseLong(ticketIdStr);
+            Long ticketCatalogoId = Long.parseLong(ticketIdStr);
             catalogo = ticketCatalogoRepository.findById(ticketCatalogoId).orElse(null);
-
         } catch (Exception e) {
-            logger.error("Erro ao buscar ticket catálogo: {}", e.getMessage());
+            logger.error("❌ ticketId inválido: {}", ticketIdStr);
+            return;
         }
 
         Ticket ticket = new Ticket();
         ticket.setStripeSessionId(sessionId);
-        ticket.setTicketCatalogoId(ticketCatalogoId);
-
-        if (catalogo != null) {
-            ticket.setNome(catalogo.getNome());
-        } else {
-            ticket.setNome("Ticket - Guia RQ");
-        }
+        ticket.setTicketCatalogoId(catalogo != null ? catalogo.getId() : null);
+        ticket.setNome(catalogo != null ? catalogo.getNome() : "Ticket Guia RQ");
 
         ticket.setEmailCliente(email);
         ticket.setNomeCliente(nome);
         ticket.setTelefoneCliente(telefone);
         ticket.setCpfCliente(cpf);
+
         ticket.setStatus("PAGO");
         ticket.setUsado(false);
         ticket.setDataCompra(LocalDateTime.now());
@@ -135,26 +145,28 @@ public class StripeWebhookController {
         ticket.setIdPublico(UUID.randomUUID());
         ticket.setCompraId(UUID.randomUUID());
         ticket.setQrToken(UUID.randomUUID().toString());
+
         ticket.setValorPago(data.optDouble("amount_total") / 100.0);
 
         ticketRepository.save(ticket);
 
-        logger.info("🎫 Ticket criado: {}", ticket.getNome());
+        logger.info("🎫 Ticket avulso criado: {}", ticket.getNome());
 
         ticketService.processarCompra(ticket);
-        logger.info("📨 Ticket avulso enviado!");
+        logger.info("📨 Email enviado para ticket avulso!");
     }
 
-    private void processarPacote(String sessionId,
-                                 JSONObject data,
-                                 String email,
-                                 String nome,
-                                 String telefone,
-                                 String cpf) {
+    private void processarPacote(
+            String sessionId,
+            JSONObject data,
+            String email,
+            String nome,
+            String telefone,
+            String cpf
+    ) {
 
         LocalDateTime agora = LocalDateTime.now();
         Double valorTotal = data.optDouble("amount_total") / 100.0;
-
         int qtd = IDS_TICKETS_PACOTE.size();
         Double valorPorTicket = valorTotal / qtd;
 
@@ -192,16 +204,16 @@ public class StripeWebhookController {
             t.setIdPublico(UUID.randomUUID());
             t.setCompraId(compraIdPacote);
             t.setQrToken(UUID.randomUUID().toString());
+
             t.setValorPago(valorPorTicket);
 
             ticketRepository.save(t);
             ticketsGerados.add(t);
 
-            logger.info("🎟 Ticket pacote criado: {}", t.getNome());
+            logger.info("🎟 Ticket do pacote criado: {}", t.getNome());
         }
 
         ticketService.processarPacote(ticketsGerados);
-
-        logger.info("📨 Pacote enviado com sucesso!");
+        logger.info("📨 Email enviado com pacote de {} tickets!", ticketsGerados.size());
     }
 }

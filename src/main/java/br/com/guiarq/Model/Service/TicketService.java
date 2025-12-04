@@ -52,12 +52,20 @@ public class TicketService {
             System.out.println("❌ ERRO AO PROCESSAR COMPRA (TICKET ÚNICO)");
         }
     }
-    public void processarPacote(String emailDestino,
-                                String nomeCliente,
-                                String telefone,
-                                String cpf,
-                                List<Ticket> tickets) {
+    public void processarPacote(List<Ticket> tickets) {
         try {
+            if (tickets == null || tickets.isEmpty()) {
+                throw new IllegalArgumentException("Lista de tickets vazia");
+            }
+
+            // O PRIMEIRO ticket contém os dados do comprador
+            Ticket primeiro = tickets.get(0);
+
+            String emailDestino = primeiro.getEmailCliente();
+            String nomeCliente = primeiro.getNomeCliente();
+            String telefone = primeiro.getTelefoneCliente();
+            String cpf = primeiro.getCpfCliente();
+
             List<byte[]> qrBytesList = new ArrayList<>();
 
             for (Ticket ticket : tickets) {
@@ -79,7 +87,7 @@ public class TicketService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("❌ ERRO AO PROCESSAR PACOTE");
+            System.out.println("❌ ERRO AO PROCESSAR PACOTE: " + e.getMessage());
         }
     }
     public Ticket verificar(UUID idPublico) {

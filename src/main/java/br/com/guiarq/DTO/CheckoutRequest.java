@@ -4,14 +4,17 @@ public class CheckoutRequest {
 
     private Double amount;
     private String description;
-    private Long ticketId;      // para ticket avulso
+    private Long ticketId;
+    private Integer quantidade;
+
     private String email;
     private String nome;
     private String telefone;
     private String cpf;
 
-    // NOVO: indica se é um pacote
-    private Boolean pacote;
+    private Boolean pacote;      // indica se é compra de pacote
+
+    // GETTERS E SETTERS
 
     public Double getAmount() {
         return amount;
@@ -35,6 +38,14 @@ public class CheckoutRequest {
 
     public void setTicketId(Long ticketId) {
         this.ticketId = ticketId;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
     }
 
     public String getEmail() {

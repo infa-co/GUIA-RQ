@@ -27,7 +27,11 @@ public class StripeCheckoutController {
             throw new IllegalArgumentException("Valor inválido.");
         }
 
-        Long amountInCents = Math.round(req.getAmount() * 100); // valor em centavos
+        // valor total em centavos
+        Long amountInCents = Math.round(req.getAmount() * 100);
+
+        // quantidade de tickets avulsos
+        Long quantidade = req.getQuantidade() != null ? req.getQuantidade() : 1L;
 
         SessionCreateParams.Builder builder = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
@@ -35,7 +39,7 @@ public class StripeCheckoutController {
                 .setCancelUrl("https://guiaranchoqueimado.com.br/pages/cancelado.html")
                 .addLineItem(
                         SessionCreateParams.LineItem.builder()
-                                .setQuantity(1L)
+                                .setQuantity(quantidade)
                                 .setPriceData(
                                         SessionCreateParams.LineItem.PriceData.builder()
                                                 .setCurrency("brl")
@@ -50,32 +54,29 @@ public class StripeCheckoutController {
                                 .build()
                 );
 
-        // ticketId (para avulsos)
+        // metadata obrigatório para gerar tickets
+        builder.putMetadata("quantidade", quantidade.toString());
+
+        // ticket avulso
         if (req.getTicketId() != null) {
             builder.putMetadata("ticketId", req.getTicketId().toString());
         }
 
-        // flag de pacote
+        // indicador de pacote
         if (Boolean.TRUE.equals(req.getPacote())) {
             builder.putMetadata("pacote", "true");
         }
 
-        if (req.getEmail() != null) {
-            builder.putMetadata("email", req.getEmail());
-        }
-        if (req.getNome() != null) {
-            builder.putMetadata("nome", req.getNome());
-        }
-        if (req.getTelefone() != null) {
-            builder.putMetadata("telefone", req.getTelefone());
-        }
-        if (req.getCpf() != null) {
-            builder.putMetadata("cpf", req.getCpf());
-        }
+        // dados do comprador
+        if (req.getEmail() != null) builder.putMetadata("email", req.getEmail());
+        if (req.getNome() != null) builder.putMetadata("nome", req.getNome());
+        if (req.getTelefone() != null) builder.putMetadata("telefone", req.getTelefone());
+        if (req.getCpf() != null) builder.putMetadata("cpf", req.getCpf());
 
         SessionCreateParams params = builder.build();
         Session session = Session.create(params);
 
+        // Resposta
         Map<String, Object> response = new HashMap<>();
         response.put("url", session.getUrl());
         return response;

@@ -34,3 +34,4 @@ public class QrCodeService {
         return outputStream.toByteArray();
     }
 }
+
