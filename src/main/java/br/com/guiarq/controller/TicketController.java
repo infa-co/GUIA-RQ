@@ -5,9 +5,11 @@ import br.com.guiarq.Model.Service.TicketService;
 import br.com.guiarq.Model.Repository.TicketRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.config.RepositoryConfigurationSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -44,22 +46,32 @@ public class TicketController {
         }
     }
 
-    @PostMapping("/confirmar/{idPublico}")
-    public ResponseEntity<?> confirmarUso(@PathVariable String idPublico) {
-        try {
-            Ticket ticket = ticketService.confirmarUso(idPublico);
-            UUID id = UUID.fromString(idPublico);
-            ticketService.confirmarUso(idPublico);
-            Map<String, Object> resp = new HashMap<>();
-            resp.put("nomeCliente", ticket.getNomeCliente());
-            resp.put("nomeTicket", ticket.getNome());
-            resp.put("usado", ticket.getUsado());
+    @PostMapping("/confirmar/{qrToken}")
+    public ResponseEntity<?> confirmarUso(@PathVariable String qrToken) {
+        Ticket ticket = ticketRepository.findByQrToken(qrToken).orElse(null);
 
-            return ResponseEntity.ok(resp);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(409).body("Ticket já utilizado");
-        } catch (RuntimeException e) {
+        if(ticket == null) {
             return ResponseEntity.status(404).body("Ticket inválido");
         }
+        if(ticket.isUsado()){
+            return ResponseEntity.status(404).body("Ticket usado");
+        }
+        ticket.setUsado(true);
+        ticket.setUsadoEm(LocalDateTime.now());
+        ticketRepository.save(ticket);
+        return ResponseEntity.ok(ticket);
+    }
+
+    @GetMapping("/validar-ticket/{qrToken}")
+    public ResponseEntity<?> validarTicket(@PathVariable String qrToken) {
+        Ticket ticket = ticketRepository.findByQrToken(qrToken).orElse(null);
+
+        if(ticket == null) {
+            return ResponseEntity.status(404).body("Ticket inválido");
+        }
+        if(ticket.isUsado()){
+            return ResponseEntity.status(404).body("Ticket já utilizado");
+        }
+        return ResponseEntity.ok(ticket);
     }
 }
