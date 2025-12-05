@@ -46,3 +46,5 @@ logging:
     root: INFO
     org.springframework.web: INFO
     org.hibernate: WARN
+
+
