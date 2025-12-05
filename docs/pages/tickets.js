@@ -2,13 +2,13 @@ const API_URL = "https://guia-rq-backend.onrender.com";
 
 async function carregarTicketIndividual() {
     const params = new URLSearchParams(window.location.search);
-    const idPublico = params.get("qr");
+    const qrToken = params.get("qr"); // CORRETO
 
     const erroEl = document.getElementById("erro");
     const loadingEl = document.getElementById("loading");
     const containerEl = document.getElementById("ticketContainer");
 
-    if (!idPublico) {
+    if (!qrToken) {
         erroEl.textContent = "Ticket inválido.";
         erroEl.classList.remove("hidden");
         loadingEl.classList.add("hidden");
@@ -16,7 +16,7 @@ async function carregarTicketIndividual() {
     }
 
     try {
-        const response = await fetch(`${API_URL}/ticket/${idPublico}`);
+        const response = await fetch(`${API_URL}/api/tickets/validar-ticket/${qrToken}`); // CORRETO
 
         if (!response.ok) {
             erroEl.textContent = "Ticket não encontrado.";
@@ -27,7 +27,7 @@ async function carregarTicketIndividual() {
 
         const t = await response.json();
 
-        document.getElementById("ticketNome").textContent = t.nomeTicket || t.nome;
+        document.getElementById("ticketNome").textContent = t.nome || "-"; // CORRETO
         document.getElementById("ticketDescricao").textContent = t.descricao || "";
 
         document.getElementById("ticketData").textContent =
@@ -35,7 +35,6 @@ async function carregarTicketIndividual() {
 
         document.getElementById("ticketExperiencia").textContent = t.experiencia || "—";
 
-        // Status
         const stat = document.getElementById("ticketStatus");
         if (t.usado === true) {
             stat.textContent = "Usado";
@@ -45,7 +44,6 @@ async function carregarTicketIndividual() {
             stat.className = "inline-block px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700";
         }
 
-        // QR CODE
         const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${t.qrToken}`;
         document.getElementById("ticketQr").src = qrUrl;
 

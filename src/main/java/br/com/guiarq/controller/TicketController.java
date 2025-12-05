@@ -54,7 +54,7 @@ public class TicketController {
             return ResponseEntity.status(404).body("Ticket inválido");
         }
         if(ticket.isUsado()){
-            return ResponseEntity.status(404).body("Ticket usado");
+            return ResponseEntity.status(409).body("Ticket usado");
         }
         ticket.setUsado(true);
         ticket.setUsadoEm(LocalDateTime.now());
@@ -70,7 +70,7 @@ public class TicketController {
             return ResponseEntity.status(404).body("Ticket inválido");
         }
         if(ticket.isUsado()){
-            return ResponseEntity.status(404).body("Ticket já utilizado");
+            return ResponseEntity.status(409).body("Ticket já utilizado");
         }
         return ResponseEntity.ok(ticket);
     }
