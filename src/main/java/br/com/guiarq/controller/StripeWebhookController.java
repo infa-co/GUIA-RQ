@@ -107,14 +107,14 @@ public class StripeWebhookController {
                                        String ticketIdStr) {
 
         Long ticketCatalogoId = null;
-        String nomeTicket = "Guia RQ";
+        String nomeTicket = "Guia RQ aaaaaa";
 
         try {
             ticketCatalogoId = Long.parseLong(ticketIdStr);
             Optional<TicketCatalogo> cat = ticketCatalogoRepository.findById(ticketCatalogoId);
 
             if (cat.isPresent()) {
-                nomeTicket = cat.get().getNome() + " - Guia RQ";
+                nomeTicket = cat.get().getNome() + " - Guia RQ aaaaa";
             }
 
         } catch (Exception e) {
@@ -149,15 +149,6 @@ public class StripeWebhookController {
     // ======================
     // PACOTE COMPLETO (10 tickets)
     // ======================
-    /**
-     * Processa a compra de um pacote (ex: 10 tickets)
-     * @param sessionId ID da sessão Stripe
-     * @param data Dados do checkout
-     * @param email Email do cliente
-     * @param nome Nome do cliente
-     * @param telefone Telefone do cliente
-     * @param cpf CPF do cliente
-     */
     private void processarPacote(String sessionId,
                                  JSONObject data,
                                  String email,
@@ -165,75 +156,44 @@ public class StripeWebhookController {
                                  String telefone,
                                  String cpf) {
 
-        logger.info("📦 Iniciando processamento do pacote | sessionId={}", sessionId);
+        LocalDateTime agora = LocalDateTime.now();
+        Double valorTotal = data.optDouble("amount_total") / 100.0;
 
-        try {
+        // Criar 1 pacote
+        Ticket pacote = new Ticket();
 
-            // ============================
-            // 1. Dados básicos da compra
-            // ============================
-            LocalDateTime agora = LocalDateTime.now();
-            Double valorTotal = data.optDouble("amount_total") / 100.0;
+        pacote.setStripeSessionId(sessionId);
+        pacote.setTicketCatalogoId(999L); // PODE DEFINIR O ID EM SUA TABELA DE CATÁLOGO
+        pacote.setNome("Pacote Guia RQ - 10 usos");
+        pacote.setEmailCliente(email);
+        pacote.setNomeCliente(nome);
+        pacote.setTelefoneCliente(telefone);
+        pacote.setCpfCliente(cpf);
+        pacote.setStatus("PAGO");
+        pacote.setUsado(false);
+        pacote.setDataCompra(agora);
+        pacote.setCriadoEm(agora);
+        pacote.setIdPublico(UUID.randomUUID());
+        pacote.setCompraId(UUID.randomUUID());
+        pacote.setQrToken(UUID.randomUUID().toString());
+        pacote.setValorPago(valorTotal);
 
-            // ============================
-            // 2. Configuração do Pacote
-            // ============================
-            int quantidadeTickets = 10; // futuramente: carregar do metadata ou tabela
+        // NOVOS CAMPOS DO PACOTE
+        pacote.setTipoPacote(true);
+        pacote.setUsosTotais(10);
+        pacote.setUsosRestantes(10);
 
-            Ticket pacote = new Ticket();
-            pacote.setStripeSessionId(sessionId);
-            pacote.setTicketCatalogoId(999L); // criar um item "Pacote" no catálogo, se desejar
-            pacote.setNome("Pacote Guia RQ - " + quantidadeTickets + " usos");
+        ticketRepository.save(pacote);
 
-            // Dados do cliente
-            pacote.setEmailCliente(email);
-            pacote.setNomeCliente(nome);
-            pacote.setTelefoneCliente(telefone);
-            pacote.setCpfCliente(cpf);
+        // ENVIAR O PACOTE POR EMAIL (apenas 1 ticket)
+        ticketService.processarPacote(
+                email,
+                nome,
+                telefone,
+                cpf,
+                List.of(pacote)
+        );
 
-            // Status da compra
-            pacote.setStatus("PAGO");
-            pacote.setUsado(false);
-            pacote.setDataCompra(agora);
-            pacote.setCriadoEm(agora);
-
-            // Identificadores
-            pacote.setIdPublico(UUID.randomUUID());
-            pacote.setCompraId(UUID.randomUUID());
-            pacote.setQrToken(UUID.randomUUID().toString());
-
-            pacote.setValorPago(valorTotal);
-
-            // ============================
-            // 3. Campos exclusivos do pacote
-            // ============================
-            pacote.setTipoPacote(true);
-            pacote.setUsosTotais(quantidadeTickets);
-            pacote.setUsosRestantes(quantidadeTickets);
-
-            // ============================
-            // 4. Persistência
-            // ============================
-            pacote = ticketRepository.save(pacote);
-
-            logger.info("🎉 Pacote criado com sucesso | pacoteId={} | usos={}",
-                    pacote.getId(), quantidadeTickets);
-
-            // ============================
-            // 5. Notificação por e-mail
-            // ============================
-            ticketService.processarPacote(
-                    email,
-                    nome,
-                    telefone,
-                    cpf,
-                    List.of(pacote)
-            );
-
-            logger.info("📨 Email de pacote enviado ao cliente {}", email);
-
-        } catch (Exception e) {
-            logger.error("❌ Erro ao processar pacote | sessionId={} | erro={}",
-                    sessionId, e.getMessage(), e);
-        }
+        System.out.println("📦 Pacote criado e enviado!");
     }
+}

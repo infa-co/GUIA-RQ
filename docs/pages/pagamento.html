@@ -157,25 +157,53 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
                 return;
             }
 
+            // total final
             const total = Number(resumo.totalFinal);
-            if (!total || isNaN(total)) {
-                console.error("Resumo inválido:", resumo);
-                alert("Erro ao calcular o valor da compra. Tente novamente.");
-                return;
+
+            // determina se é pacote
+            const isPacote = carrinho.length > 1;
+
+            // determina ticket avulso
+            let ticketId = null;
+            let quantidade = 1;
+            let descricao = "Compra de ingresso(s) – Guia Rancho Queimado";
+
+            // ticket avulso → 1 item no carrinho
+            if (!isPacote) {
+                const item = carrinho[0];
+                ticketId = item?.id || null;
+                quantidade = item?.quantidade || 1;
+                descricao = item?.nome || descricao;
             }
-            console.log("Iniciando checkout Stripe...");
+
+            console.log("📦 Tipo de compra:", isPacote ? "Pacote" : "Ticket avulso");
+            console.log("➡️ Enviando para Stripe:", {
+                amount: total,
+                description: descricao,
+                nome,
+                email,
+                telefone,
+                cpf,
+                pacote: isPacote,
+                ticketId,
+                quantidade
+            });
 
             const response = await fetch(`${window.API_URL}/api/stripe/create-checkout`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     amount: total,
-                    description: "Compra de ingresso(s) – Guia Rancho Queimado",
-                    nome: nome,
-                    email: email,
-                    telefone: telefone,
-                    cpf: cpf,
-                    itens: carrinho  // opcional, mantém compatibilidade
+                    description: descricao,
+                    nome,
+                    email,
+                    telefone,
+                    cpf,
+
+                    // flags essenciais para o backend
+                    pacote: isPacote,
+                    ticketId: ticketId,
+                    quantidade: quantidade
                 })
             });
 
@@ -192,7 +220,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
                 throw new Error("URL de checkout não recebida.");
             }
 
-            // redireciona para o stripe
+            // redireciona para Stripe Checkout
             window.location.href = data.url;
 
         } catch (err) {

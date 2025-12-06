@@ -5,6 +5,7 @@ import br.com.guiarq.Model.Repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +22,13 @@ public class TicketService {
     @Autowired
     private QrCodeService qrCodeService;
 
+    private static final String URL_VALIDACAO =
+            "https://guiaranchoqueimado.com.br/pages/validar-ticket.html?qr=";
+
+    // -------------------------------
+    // SALVAR / LISTAR
+    // -------------------------------
+
     public Ticket salvar(Ticket ticket) {
         return ticketRepository.save(ticket);
     }
@@ -29,10 +37,13 @@ public class TicketService {
         return ticketRepository.findAll();
     }
 
-    // TICKET AVULSO (já existia)
+    // -------------------------------
+    // TICKET ÚNICO
+    // -------------------------------
+
     public void processarCompra(Ticket ticket) {
         try {
-            String conteudo = "https://guiaranchoqueimado.com.br/pages/validar-ticket.html?qr=" + ticket.getQrToken();
+            String conteudo = URL_VALIDACAO + ticket.getQrToken();
             byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
 
             emailService.sendTicketEmail(
@@ -52,26 +63,79 @@ public class TicketService {
         }
     }
 
-    // ✅ NOVO: PROCESSAR PACOTE
-    public void processarPacote(String emailDestino,
-                                String nomeCliente,
-                                String telefone,
-                                String cpf,
-                                List<Ticket> tickets) {
-        try {
-            List<byte[]> qrBytesList = new ArrayList<>();
+    // -------------------------------
+    // AVULSO MÚLTIPLO (MESMO TICKET)
+    // -------------------------------
 
-            for (Ticket ticket : tickets) {
-                String conteudo = "https://guiaranchoqueimado.com.br/pages/validar-ticket.html?qr=" + ticket.getQrToken();
-                byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
-                qrBytesList.add(qrBytes);
+    public void processarCompraAvulsaMultipla(List<Ticket> tickets) {
+        try {
+
+            if (tickets == null || tickets.isEmpty()) {
+                throw new IllegalArgumentException("Lista de tickets vazia");
+            }
+
+            if (tickets.size() == 1) {
+                // SE tiver só 1 ticket, manda como compra avulsa normal
+                processarCompra(tickets.get(0));
+                return;
+            }
+
+            Ticket primeiro = tickets.get(0);
+
+            List<byte[]> qrBytesList = new ArrayList<>();
+            for (Ticket t : tickets) {
+                String conteudo = URL_VALIDACAO + t.getQrToken();
+                qrBytesList.add(qrCodeService.generateQrCodeBytes(conteudo, 300, 300));
+            }
+
+            emailService.sendMultiplosTicketsAvulsos(
+                    primeiro.getEmailCliente(),
+                    primeiro.getNomeCliente(),
+                    primeiro.getTelefoneCliente(),
+                    primeiro.getCpfCliente(),
+                    primeiro.getNome(),
+                    tickets,
+                    qrBytesList
+            );
+
+            System.out.println("✔ TICKETS AVULSOS MULTIPLOS ENVIADOS");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("❌ ERRO AO PROCESSAR AVULSO MULTIPLO: " + e.getMessage());
+        }
+    }
+
+    // -------------------------------
+    // PACOTE (DIFERENTES TICKETS)
+    // -------------------------------
+
+    public void processarPacote(List<Ticket> tickets) {
+        try {
+
+            if (tickets == null || tickets.isEmpty()) {
+                throw new IllegalArgumentException("Lista de tickets vazia");
+            }
+
+            if (tickets.size() == 1) {
+                // SE só existe 1 ticket, NÃO É PACOTE → envia como ticket único
+                processarCompra(tickets.get(0));
+                return;
+            }
+
+            Ticket primeiro = tickets.get(0);
+
+            List<byte[]> qrBytesList = new ArrayList<>();
+            for (Ticket t : tickets) {
+                String conteudo = URL_VALIDACAO + t.getQrToken();
+                qrBytesList.add(qrCodeService.generateQrCodeBytes(conteudo, 300, 300));
             }
 
             emailService.sendPacoteTicketsEmail(
-                    emailDestino,
-                    nomeCliente,
-                    telefone,
-                    cpf,
+                    primeiro.getEmailCliente(),
+                    primeiro.getNomeCliente(),
+                    primeiro.getTelefoneCliente(),
+                    primeiro.getCpfCliente(),
                     tickets,
                     qrBytesList
             );
@@ -80,25 +144,31 @@ public class TicketService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("❌ ERRO AO PROCESSAR PACOTE");
+            System.out.println("❌ ERRO AO PROCESSAR PACOTE: " + e.getMessage());
         }
     }
+
+    // -------------------------------
+    // VERIFICAR / USAR
+    // -------------------------------
 
     public Ticket verificar(UUID idPublico) {
         return ticketRepository.findByIdPublico(idPublico)
                 .orElseThrow(() -> new RuntimeException("Ticket não encontrado"));
     }
 
-    public Ticket confirmar(UUID idPublico) {
-        Ticket t = verificar(idPublico);
+    public Ticket confirmarUso(String qrToken) {
 
-        if (t.isUsado()) {
-            throw new RuntimeException("Ticket já utilizado!");
+        Ticket ticket = ticketRepository.findByQrToken(qrToken)
+                .orElseThrow(() -> new RuntimeException("TICKET_NAO_ENCONTRADO"));
+
+        if (ticket.isUsado()) {
+            throw new IllegalStateException("TICKET_JA_USADO");
         }
 
-        t.setUsado(true);
-        t.setUsadoEm(java.time.LocalDateTime.now());
+        ticket.setUsado(true);
+        ticket.setUsadoEm(LocalDateTime.now());
 
-        return ticketRepository.save(t);
+        return ticketRepository.save(ticket);
     }
 }

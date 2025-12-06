@@ -6,46 +6,34 @@ spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:prod}
 
-    spring:
-      datasource:
-        url: postgresql://guia_rq_user:tbksHYYiSgPKYZmAzDkbsnPagL2uNODj@dpg-d4f9a1drnu6s73due9f0-a.oregon-postgres.render.com/guia_rq
-        username: guia_rq_user
-        password: tbksHYYiSgPKYZmAzDkbsnPagL2uNODj
-        driver-class-name: org.postgresql.Driver
+  datasource:
+    url: jdbc:postgresql://dpg-d4f9a1drnu6s73due9f0-a.oregon-postgres.render.com/guia_rq
+    username: guia_rq_user
+    password: tbksHYYiSgPKYZmAzDkbsnPagL2uNODj
+    driver-class-name: org.postgresql.Driver
 
-
-      hikari:
-        maximum-pool-size: 10
-        connection-timeout: 30000
-        idle-timeout: 600000
-        max-lifetime: 1800000
-
+  hikari:
+    maximum-pool-size: 10
+    connection-timeout: 30000
+    idle-timeout: 600000
+    max-lifetime: 1800000
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: false
     show-sql: false
     open-in-view: false
 
-  # Configuração de Email
   mail:
     host: smtp.gmail.com
     port: 587
     username: ${EMAIL_USERNAME:}
     password: ${EMAIL_PASSWORD:}
     properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-        transport:
-          protocol: smtp
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
     default-encoding: UTF-8
 
 stripe:
@@ -58,3 +46,5 @@ logging:
     root: INFO
     org.springframework.web: INFO
     org.hibernate: WARN
+
+
