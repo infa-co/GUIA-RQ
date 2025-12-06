@@ -1,1 +1,1 @@
-window.API_URL = "https://guia-rq-backend.onrender.com";
+window.API_URL = "http://localhost:10000";

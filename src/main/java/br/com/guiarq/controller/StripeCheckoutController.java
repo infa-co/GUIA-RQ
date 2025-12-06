@@ -27,10 +27,7 @@ public class StripeCheckoutController {
             throw new IllegalArgumentException("Valor inválido.");
         }
 
-        // valor total em centavos
         Long amountInCents = Math.round(req.getAmount() * 100);
-
-        // quantidade de tickets avulsos
         Long quantidade = req.getQuantidade() != null ? req.getQuantidade() : 1L;
 
         SessionCreateParams.Builder builder = SessionCreateParams.builder()
@@ -54,16 +51,17 @@ public class StripeCheckoutController {
                                 .build()
                 );
 
-        // metadata obrigatório para gerar tickets
         builder.putMetadata("quantidade", quantidade.toString());
 
-        // ticket avulso
+        boolean isPacote = Boolean.TRUE.equals(req.getPacote());
+
+        // ticket avulso sempre tem ticketId → nunca deve ser pacote
         if (req.getTicketId() != null) {
             builder.putMetadata("ticketId", req.getTicketId().toString());
         }
 
-        // indicador de pacote
-        if (Boolean.TRUE.equals(req.getPacote())) {
+        // só marca pacote quando NÃO é ticket avulso + cliente realmente escolheu pacote
+        if (isPacote && req.getTicketId() == null) {
             builder.putMetadata("pacote", "true");
         }
 
@@ -76,7 +74,6 @@ public class StripeCheckoutController {
         SessionCreateParams params = builder.build();
         Session session = Session.create(params);
 
-        // Resposta
         Map<String, Object> response = new HashMap<>();
         response.put("url", session.getUrl());
         return response;

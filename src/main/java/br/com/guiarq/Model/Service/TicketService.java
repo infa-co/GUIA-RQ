@@ -25,12 +25,22 @@ public class TicketService {
     private static final String URL_VALIDACAO =
             "https://guiaranchoqueimado.com.br/pages/validar-ticket.html?qr=";
 
+    // -------------------------------
+    // SALVAR / LISTAR
+    // -------------------------------
+
     public Ticket salvar(Ticket ticket) {
         return ticketRepository.save(ticket);
     }
+
     public List<Ticket> listarTodos() {
         return ticketRepository.findAll();
     }
+
+    // -------------------------------
+    // TICKET ÚNICO
+    // -------------------------------
+
     public void processarCompra(Ticket ticket) {
         try {
             String conteudo = URL_VALIDACAO + ticket.getQrToken();
@@ -41,7 +51,7 @@ public class TicketService {
                     ticket.getNomeCliente(),
                     ticket.getTelefoneCliente(),
                     ticket.getCpfCliente(),
-                    ticket.getNome(),   // Nome do ticket agora vem correto
+                    ticket.getNome(),
                     qrBytes
             );
 
@@ -52,33 +62,80 @@ public class TicketService {
             System.out.println("❌ ERRO AO PROCESSAR COMPRA (TICKET ÚNICO)");
         }
     }
-    public void processarPacote(List<Ticket> tickets) {
+
+    // -------------------------------
+    // AVULSO MÚLTIPLO (MESMO TICKET)
+    // -------------------------------
+
+    public void processarCompraAvulsaMultipla(List<Ticket> tickets) {
         try {
+
             if (tickets == null || tickets.isEmpty()) {
                 throw new IllegalArgumentException("Lista de tickets vazia");
             }
 
-            // O PRIMEIRO ticket contém os dados do comprador
+            if (tickets.size() == 1) {
+                // SE tiver só 1 ticket, manda como compra avulsa normal
+                processarCompra(tickets.get(0));
+                return;
+            }
+
             Ticket primeiro = tickets.get(0);
 
-            String emailDestino = primeiro.getEmailCliente();
-            String nomeCliente = primeiro.getNomeCliente();
-            String telefone = primeiro.getTelefoneCliente();
-            String cpf = primeiro.getCpfCliente();
+            List<byte[]> qrBytesList = new ArrayList<>();
+            for (Ticket t : tickets) {
+                String conteudo = URL_VALIDACAO + t.getQrToken();
+                qrBytesList.add(qrCodeService.generateQrCodeBytes(conteudo, 300, 300));
+            }
+
+            emailService.sendMultiplosTicketsAvulsos(
+                    primeiro.getEmailCliente(),
+                    primeiro.getNomeCliente(),
+                    primeiro.getTelefoneCliente(),
+                    primeiro.getCpfCliente(),
+                    primeiro.getNome(),
+                    tickets,
+                    qrBytesList
+            );
+
+            System.out.println("✔ TICKETS AVULSOS MULTIPLOS ENVIADOS");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("❌ ERRO AO PROCESSAR AVULSO MULTIPLO: " + e.getMessage());
+        }
+    }
+
+    // -------------------------------
+    // PACOTE (DIFERENTES TICKETS)
+    // -------------------------------
+
+    public void processarPacote(List<Ticket> tickets) {
+        try {
+
+            if (tickets == null || tickets.isEmpty()) {
+                throw new IllegalArgumentException("Lista de tickets vazia");
+            }
+
+            if (tickets.size() == 1) {
+                // SE só existe 1 ticket, NÃO É PACOTE → envia como ticket único
+                processarCompra(tickets.get(0));
+                return;
+            }
+
+            Ticket primeiro = tickets.get(0);
 
             List<byte[]> qrBytesList = new ArrayList<>();
-
-            for (Ticket ticket : tickets) {
-                String conteudo = URL_VALIDACAO + ticket.getQrToken();
-                byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
-                qrBytesList.add(qrBytes);
+            for (Ticket t : tickets) {
+                String conteudo = URL_VALIDACAO + t.getQrToken();
+                qrBytesList.add(qrCodeService.generateQrCodeBytes(conteudo, 300, 300));
             }
 
             emailService.sendPacoteTicketsEmail(
-                    emailDestino,
-                    nomeCliente,
-                    telefone,
-                    cpf,
+                    primeiro.getEmailCliente(),
+                    primeiro.getNomeCliente(),
+                    primeiro.getTelefoneCliente(),
+                    primeiro.getCpfCliente(),
                     tickets,
                     qrBytesList
             );
@@ -90,6 +147,11 @@ public class TicketService {
             System.out.println("❌ ERRO AO PROCESSAR PACOTE: " + e.getMessage());
         }
     }
+
+    // -------------------------------
+    // VERIFICAR / USAR
+    // -------------------------------
+
     public Ticket verificar(UUID idPublico) {
         return ticketRepository.findByIdPublico(idPublico)
                 .orElseThrow(() -> new RuntimeException("Ticket não encontrado"));

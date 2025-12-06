@@ -22,11 +22,6 @@ public class StripeWebhookController {
 
     private static final Logger logger = LoggerFactory.getLogger(StripeWebhookController.class);
 
-    private static final List<Long> IDS_TICKETS_PACOTE = Arrays.asList(
-            1L, 2L, 3L, 4L, 5L,
-            6L, 7L, 8L, 9L, 10L
-    );
-
     @Autowired
     private TicketRepository ticketRepository;
 
@@ -69,7 +64,7 @@ public class StripeWebhookController {
             return;
         }
 
-        // Evitar tickets duplicados em caso de reenvio do webhook
+        // Evitar duplicação
         if (ticketRepository.existsByStripeSessionId(sessionId)) {
             logger.warn("⚠️ Webhook duplicado ignorado para sessionId {}", sessionId);
             return;
@@ -78,7 +73,7 @@ public class StripeWebhookController {
         // Metadata
         JSONObject metadata = data.optJSONObject("metadata");
         if (metadata == null) {
-            logger.error("❌ Metadata ausente no checkout.");
+            logger.error("❌ Metadata ausente.");
             return;
         }
 
@@ -90,21 +85,24 @@ public class StripeWebhookController {
         String cpf = metadata.optString("cpf", "");
 
         if (email.isBlank() || nome.isBlank()) {
-            logger.error("❌ Metadata incompleto: nome/email faltando.");
+            logger.error("❌ Nome/email ausentes no metadata.");
             return;
         }
 
+        // quantidade comprada
+        int quantidade = metadata.optInt("quantidade", 1);
+
         if (isPacote) {
-            processarPacote(sessionId, data, email, nome, telefone, cpf);
+            processarPacote(sessionId, data, email, nome, telefone, cpf, quantidade);
         } else {
             String ticketIdStr = metadata.optString("ticketId", null);
 
             if (ticketIdStr == null || ticketIdStr.isBlank()) {
-                logger.error("❌ ticketId ausente no metadata para ticket avulso.");
+                logger.error("❌ ticketId ausente no avulso.");
                 return;
             }
 
-            processarTicketAvulso(sessionId, data, email, nome, telefone, cpf, ticketIdStr);
+            processarTicketAvulso(sessionId, data, email, nome, telefone, cpf, ticketIdStr, quantidade);
         }
     }
 
@@ -115,11 +113,11 @@ public class StripeWebhookController {
             String nome,
             String telefone,
             String cpf,
-            String ticketIdStr
+            String ticketIdStr,
+            int quantidade
     ) {
 
-        TicketCatalogo catalogo = null;
-
+        TicketCatalogo catalogo;
         try {
             Long ticketCatalogoId = Long.parseLong(ticketIdStr);
             catalogo = ticketCatalogoRepository.findById(ticketCatalogoId).orElse(null);
@@ -128,32 +126,49 @@ public class StripeWebhookController {
             return;
         }
 
-        Ticket ticket = new Ticket();
-        ticket.setStripeSessionId(sessionId);
-        ticket.setTicketCatalogoId(catalogo != null ? catalogo.getId() : null);
-        ticket.setNome(catalogo != null ? catalogo.getNome() : "Ticket Guia RQ");
+        List<Ticket> ticketsGerados = new ArrayList<>();
+        UUID compraId = UUID.randomUUID();
+        LocalDateTime agora = LocalDateTime.now();
 
-        ticket.setEmailCliente(email);
-        ticket.setNomeCliente(nome);
-        ticket.setTelefoneCliente(telefone);
-        ticket.setCpfCliente(cpf);
+        double totalPaid = data.optDouble("amount_total") / 100.0;
+        double valorUnitario = totalPaid / quantidade;
 
-        ticket.setStatus("PAGO");
-        ticket.setUsado(false);
-        ticket.setDataCompra(LocalDateTime.now());
-        ticket.setCriadoEm(LocalDateTime.now());
-        ticket.setIdPublico(UUID.randomUUID());
-        ticket.setCompraId(UUID.randomUUID());
-        ticket.setQrToken(UUID.randomUUID().toString());
+        for (int i = 0; i < quantidade; i++) {
+            Ticket ticket = new Ticket();
 
-        ticket.setValorPago(data.optDouble("amount_total") / 100.0);
+            if (i == 0) {
+                ticket.setStripeSessionId(sessionId);
+            }
 
-        ticketRepository.save(ticket);
+            ticket.setTicketCatalogoId(catalogo != null ? catalogo.getId() : null);
+            ticket.setNome(catalogo != null ? catalogo.getNome() : "Ticket Guia RQ");
+            ticket.setEmailCliente(email);
+            ticket.setNomeCliente(nome);
+            ticket.setTelefoneCliente(telefone);
+            ticket.setCpfCliente(cpf);
 
-        logger.info("🎫 Ticket avulso criado: {}", ticket.getNome());
+            ticket.setStatus("PAGO");
+            ticket.setUsado(false);
+            ticket.setDataCompra(agora);
+            ticket.setCriadoEm(agora);
 
-        ticketService.processarCompra(ticket);
-        logger.info("📨 Email enviado para ticket avulso!");
+            ticket.setIdPublico(UUID.randomUUID());
+            ticket.setCompraId(compraId);
+            ticket.setQrToken(UUID.randomUUID().toString());
+            ticket.setValorPago(valorUnitario);
+
+            ticketRepository.save(ticket);
+            ticketsGerados.add(ticket);
+        }
+
+        logger.info("🎫 {} tickets avulsos gerados!", quantidade);
+
+        // CORREÇÃO DEFINITIVA
+        if (quantidade == 1) {
+            ticketService.processarCompra(ticketsGerados.get(0)); // avulso único
+        } else {
+            ticketService.processarCompraAvulsaMultipla(ticketsGerados); // múltiplos avulsos
+        }
     }
 
     private void processarPacote(
@@ -162,58 +177,46 @@ public class StripeWebhookController {
             String email,
             String nome,
             String telefone,
-            String cpf
+            String cpf,
+            int quantidade
     ) {
 
-        LocalDateTime agora = LocalDateTime.now();
-        Double valorTotal = data.optDouble("amount_total") / 100.0;
-        int qtd = IDS_TICKETS_PACOTE.size();
-        Double valorPorTicket = valorTotal / qtd;
-
-        UUID compraIdPacote = UUID.randomUUID();
-
         List<Ticket> ticketsGerados = new ArrayList<>();
-        boolean primeiro = true;
+        UUID compraId = UUID.randomUUID();
+        LocalDateTime agora = LocalDateTime.now();
 
-        for (Long idCat : IDS_TICKETS_PACOTE) {
+        double totalPaid = data.optDouble("amount_total") / 100.0;
+        double valorUnitario = totalPaid / quantidade;
 
-            TicketCatalogo cat = ticketCatalogoRepository.findById(idCat).orElse(null);
+        for (int i = 0; i < quantidade; i++) {
 
-            if (cat == null) {
-                logger.error("❌ Ticket catálogo ID {} não encontrado", idCat);
-                continue;
-            }
+            Ticket ticket = new Ticket();
 
-            Ticket t = new Ticket();
+            if (i == 0) ticket.setStripeSessionId(sessionId);
 
-            if (primeiro) {
-                t.setStripeSessionId(sessionId);
-                primeiro = false;
-            }
+            ticket.setTicketCatalogoId(null);
+            ticket.setNome("Pacote Guia Rancho Queimado");
+            ticket.setEmailCliente(email);
+            ticket.setNomeCliente(nome);
+            ticket.setTelefoneCliente(telefone);
+            ticket.setCpfCliente(cpf);
 
-            t.setTicketCatalogoId(cat.getId());
-            t.setNome(cat.getNome());
-            t.setEmailCliente(email);
-            t.setNomeCliente(nome);
-            t.setTelefoneCliente(telefone);
-            t.setCpfCliente(cpf);
-            t.setStatus("PAGO");
-            t.setUsado(false);
-            t.setDataCompra(agora);
-            t.setCriadoEm(agora);
-            t.setIdPublico(UUID.randomUUID());
-            t.setCompraId(compraIdPacote);
-            t.setQrToken(UUID.randomUUID().toString());
+            ticket.setStatus("PAGO");
+            ticket.setUsado(false);
+            ticket.setDataCompra(agora);
+            ticket.setCriadoEm(agora);
 
-            t.setValorPago(valorPorTicket);
+            ticket.setIdPublico(UUID.randomUUID());
+            ticket.setCompraId(compraId);
+            ticket.setQrToken(UUID.randomUUID().toString());
+            ticket.setValorPago(valorUnitario);
 
-            ticketRepository.save(t);
-            ticketsGerados.add(t);
-
-            logger.info("🎟 Ticket do pacote criado: {}", t.getNome());
+            ticketRepository.save(ticket);
+            ticketsGerados.add(ticket);
         }
 
+        logger.info("🎁 Pacote com {} tickets gerado!", quantidade);
+
         ticketService.processarPacote(ticketsGerados);
-        logger.info("📨 Email enviado com pacote de {} tickets!", ticketsGerados.size());
     }
 }
