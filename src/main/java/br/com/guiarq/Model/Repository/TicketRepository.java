@@ -17,8 +17,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     boolean existsByStripeSessionId(String stripeSessionId);
 
-    Ticket findTopByCpfClienteOrderByDataCompraDesc(String cpfCliente);
+    Ticket findTop1ByCpfClienteOrderByDataCompraDesc(String cpfCliente);
 
-    List<Ticket> findByCpfCliente(String cpfCliente);
 }
 

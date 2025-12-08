@@ -1,6 +1,7 @@
 package br.com.guiarq.controller;
 
 import br.com.guiarq.DTO.CheckoutRequest;
+import br.com.guiarq.Model.Service.VoucherService;
 import com.stripe.Stripe;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
@@ -18,8 +19,18 @@ public class StripeCheckoutController {
     @Value("${STRIPE_SECRET_KEY}")
     private String secretKey;
 
+    private final VoucherService voucherService;
+
+    public StripeCheckoutController(VoucherService voucherService) {
+        this.voucherService = voucherService;
+    }
+
     @PostMapping("/create-checkout")
     public Map<String, Object> createCheckout(@RequestBody CheckoutRequest req) throws Exception {
+
+        if (req.getCpf() != null && voucherService.usuarioPossuiVoucherAtivo(req.getCpf())) {
+            throw new IllegalStateException("CPF_JA_POSSUI_TICKET_ATIVO");
+        }
 
         Stripe.apiKey = secretKey;
 
@@ -55,17 +66,19 @@ public class StripeCheckoutController {
 
         boolean isPacote = Boolean.TRUE.equals(req.getPacote());
 
-        // ticket avulso sempre tem ticketId → nunca deve ser pacote
         if (req.getTicketId() != null) {
             builder.putMetadata("ticketId", req.getTicketId().toString());
+            builder.putMetadata("pacote", "false"); // garante que NUNCA vira pacote
+        } else {
+            // Se NÃO tem ticketId → pode ser pacote ou avulso múltiplo
+            if (isPacote) {
+                builder.putMetadata("pacote", "true");
+            } else {
+                builder.putMetadata("pacote", "false"); // avulso múltiplo
+            }
         }
 
-        // só marca pacote quando NÃO é ticket avulso + cliente realmente escolheu pacote
-        if (isPacote && req.getTicketId() == null) {
-            builder.putMetadata("pacote", "true");
-        }
 
-        // dados do comprador
         if (req.getEmail() != null) builder.putMetadata("email", req.getEmail());
         if (req.getNome() != null) builder.putMetadata("nome", req.getNome());
         if (req.getTelefone() != null) builder.putMetadata("telefone", req.getTelefone());

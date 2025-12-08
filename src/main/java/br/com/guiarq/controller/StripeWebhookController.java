@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @RestController
@@ -49,18 +51,32 @@ public class StripeWebhookController {
         return ResponseEntity.ok("OK");
     }
 
-    private boolean clientePodeComprar(String cpf) {
+    // CPFs que NÃO entram na regra dos 3 meses
+    private static final Set<String> CPFS_LIBERADOS = Set.of(
+            "11999143981",
+            "13544956918"
+    );
 
-        Ticket ultimo = ticketRepository.findTopByCpfClienteOrderByDataCompraDesc(cpf);
+    public boolean podeComprarNovamente(String cpf, LocalDate ultimaCompra) {
 
-        if (ultimo == null) return true; // nunca comprou → pode comprar
+        if (CPFS_LIBERADOS.contains(cpf)) {
+            logger.warn("⚠ CPF liberado (bypass): " + cpf);
+            return true;
+        }
 
-        // limite de 3 meses
-        LocalDateTime limite = ultimo.getDataCompra().plusMonths(3);
+        if (ultimaCompra == null) {
+            return true;
+        }
 
-        return LocalDateTime.now().isAfter(limite);
+        long dias = ChronoUnit.DAYS.between(ultimaCompra, LocalDate.now());
+
+        if (dias >= 90) {
+            return true;
+        }
+
+        logger.warn("❌ CPF bloqueado, última compra há {} dias: {}", dias, cpf);
+        return false;
     }
-
 
     private void processCheckout(JSONObject json) {
 
@@ -72,29 +88,25 @@ public class StripeWebhookController {
             return;
         }
 
-        // Evita duplicação do webhook
         if (ticketRepository.existsByStripeSessionId(sessionId)) {
-            logger.warn("⚠️ Webhook duplicado ignorado para sessionId: {}", sessionId);
+            logger.warn("⚠️ Webhook duplicado ignorado: {}", sessionId);
             return;
         }
 
         JSONObject metadata = data.optJSONObject("metadata");
 
         if (metadata == null) {
-            logger.error("❌ Metadata vazio no checkout.session");
+            logger.error("❌ Metadata vazio");
             return;
         }
 
-        // Dados principais do cliente
         String email = metadata.optString("email");
         String nome = metadata.optString("nome");
         String telefone = metadata.optString("telefone");
         String cpf = metadata.optString("cpf");
-
-        // Aqui corrigimos a duplicação
         String ticketIdStr = metadata.optString("ticketId", null);
 
-        // Aqui está a regra CORRETA:
+        // regra final e definitiva:
         boolean isPacote = "11".equals(ticketIdStr);
 
         if (email == null || nome == null) {
@@ -109,6 +121,17 @@ public class StripeWebhookController {
         }
     }
 
+    private boolean clientePodeComprar(String cpf) {
+
+        Ticket ultimo = ticketRepository.findTop1ByCpfClienteOrderByDataCompraDesc(cpf);
+
+        LocalDate ultimaData = (ultimo != null && ultimo.getDataCompra() != null)
+                ? ultimo.getDataCompra().toLocalDate()
+                : null;
+
+        return podeComprarNovamente(cpf, ultimaData);
+    }
+
     private void processarTicketAvulso(String sessionId,
                                        JSONObject data,
                                        String email,
@@ -117,12 +140,10 @@ public class StripeWebhookController {
                                        String cpf,
                                        String ticketIdStr) {
 
-        // --- Regra C: trava de 3 meses ---
         if (!clientePodeComprar(cpf)) {
-            logger.warn("❌ Cliente com CPF " + cpf + " ainda não pode comprar novamente.");
+            logger.warn("❌ Compra bloqueada (ticket avulso) CPF: {}", cpf);
             return;
         }
-
 
         Long ticketCatalogoId = null;
         String nomeTicket = "Guia Rancho Queimado - Ticket";
@@ -137,10 +158,9 @@ public class StripeWebhookController {
             }
 
         } catch (Exception e) {
-            logger.error("Erro ao buscar ticket catálogo: {}", e.getMessage());
+            logger.error("Erro ao buscar catálogo: {}", e.getMessage());
         }
 
-        // Criar ticket único
         Ticket ticket = new Ticket();
         ticket.setStripeSessionId(sessionId);
         ticket.setTicketCatalogoId(ticketCatalogoId);
@@ -151,21 +171,22 @@ public class StripeWebhookController {
         ticket.setTelefoneCliente(telefone);
         ticket.setCpfCliente(cpf);
 
-        // --- Regra D: registrar data da compra ---
-        ticket.setDataCompra(LocalDateTime.now());
+        ticket.setStatus("PAGO");
+        ticket.setUsado(false);
 
-        // gerar token único
+        ticket.setDataCompra(LocalDateTime.now());
+        ticket.setCriadoEm(LocalDateTime.now());
+
         ticket.setIdPublico(UUID.randomUUID());
         ticket.setQrToken(UUID.randomUUID().toString());
 
-        // salvar no banco
-        ticket = ticketRepository.save(ticket);
+        ticketRepository.save(ticket);
 
-        // disparar email
         ticketService.processarCompra(ticket);
 
-        logger.info("✔ Ticket avulso criado e processado com sucesso");
+        logger.info("✔ Ticket avulso criado com sucesso");
     }
+
     private void processarPacote(String sessionId,
                                  JSONObject data,
                                  String email,
@@ -173,43 +194,55 @@ public class StripeWebhookController {
                                  String telefone,
                                  String cpf) {
 
-        // --- Regra C: trava de 3 meses ---
         if (!clientePodeComprar(cpf)) {
-            logger.warn("❌ Cliente com CPF " + cpf + " ainda não pode comprar pacote novamente.");
+            logger.warn("❌ Compra bloqueada (pacote) CPF: {}", cpf);
             return;
         }
 
-        // O catálogo do pacote é sempre o ID 11
-        Long ticketCatalogoId = 11L;
+        LocalDateTime agora = LocalDateTime.now();
 
-        Optional<TicketCatalogo> cat = ticketCatalogoRepository.findById(ticketCatalogoId);
-        String nomeTicket = cat.map(TicketCatalogo::getNome)
-                .orElse("Guia Rancho Queimado - Pacote Completo");
+        Double valorTotal = data.optDouble("amount_total") / 100.0;
+        int quantidade = 10;
 
-        // Criar o ticket principal
-        Ticket ticket = new Ticket();
-        ticket.setStripeSessionId(sessionId);
-        ticket.setTicketCatalogoId(ticketCatalogoId);
-        ticket.setNome(nomeTicket);
+        double valorUnitario = valorTotal / quantidade;
 
-        ticket.setEmailCliente(email);
-        ticket.setNomeCliente(nome);
-        ticket.setTelefoneCliente(telefone);
-        ticket.setCpfCliente(cpf);
+        UUID compraId = UUID.randomUUID();
 
-        // --- Regra D: registrar data da compra ---
-        ticket.setDataCompra(LocalDateTime.now());
+        List<Ticket> tickets = new ArrayList<>();
 
-        // tokens únicos
-        ticket.setIdPublico(UUID.randomUUID());
-        ticket.setQrToken(UUID.randomUUID().toString());
+        for (int i = 0; i < quantidade; i++) {
 
-        // salvar no banco
-        ticket = ticketRepository.save(ticket);
+            Ticket ticket = new Ticket();
 
-        // disparar email
-        ticketService.processarCompra(ticket);
+            if (i == 0) {
+                ticket.setStripeSessionId(sessionId);
+            }
 
-        logger.info("✔ Pacote processado com sucesso para CPF {}", cpf);
+            ticket.setTicketCatalogoId(11L);
+            ticket.setNome("Pacote 10 Tickets - Guia Rancho Queimado");
+
+            ticket.setEmailCliente(email);
+            ticket.setNomeCliente(nome);
+            ticket.setTelefoneCliente(telefone);
+            ticket.setCpfCliente(cpf);
+
+            ticket.setStatus("PAGO");
+            ticket.setUsado(false);
+
+            ticket.setDataCompra(agora);
+            ticket.setCriadoEm(agora);
+
+            ticket.setIdPublico(UUID.randomUUID());
+            ticket.setQrToken(UUID.randomUUID().toString());
+
+            ticket.setValorPago(valorUnitario);
+            ticket.setCompraId(compraId);
+
+            ticketRepository.save(ticket);
+            tickets.add(ticket);
+        }
+
+        ticketService.processarPacote(tickets);
+        logger.info("🎁 Pacote criado com sucesso!");
     }
 }
