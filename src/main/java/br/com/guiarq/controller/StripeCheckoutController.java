@@ -1,15 +1,18 @@
 package br.com.guiarq.controller;
 
 import br.com.guiarq.DTO.CheckoutRequest;
-import br.com.guiarq.Model.Service.VoucherService;
+import br.com.guiarq.Model.Entities.Ticket;
+import br.com.guiarq.Model.Repository.TicketRepository;
+import br.com.guiarq.Model.Repository.TicketCatalogoRepository;
+import br.com.guiarq.Model.Service.TicketService;
 import com.stripe.Stripe;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/stripe")
@@ -19,18 +22,17 @@ public class StripeCheckoutController {
     @Value("${STRIPE_SECRET_KEY}")
     private String secretKey;
 
-    private final VoucherService voucherService;
+    private final TicketRepository ticketRepository;
+    private final TicketService ticketService;
 
-    public StripeCheckoutController(VoucherService voucherService) {
-        this.voucherService = voucherService;
+    public StripeCheckoutController(TicketRepository ticketRepository,
+                                    TicketService ticketService) {
+        this.ticketRepository = ticketRepository;
+        this.ticketService = ticketService;
     }
 
     @PostMapping("/create-checkout")
     public Map<String, Object> createCheckout(@RequestBody CheckoutRequest req) throws Exception {
-
-        if (req.getCpf() != null && voucherService.usuarioPossuiVoucherAtivo(req.getCpf())) {
-            throw new IllegalStateException("CPF_JA_POSSUI_TICKET_ATIVO");
-        }
 
         Stripe.apiKey = secretKey;
 
@@ -61,16 +63,15 @@ public class StripeCheckoutController {
                                 )
                                 .build()
                 );
-
+        // metadata para o webhook identificar o que foi comprado
         builder.putMetadata("quantidade", quantidade.toString());
-
-        boolean isPacote = Boolean.TRUE.equals(req.getPacote());
-
-        if (req.getTicketId() != null) {
-            builder.putMetadata("ticketId", req.getTicketId().toString());
-            builder.putMetadata("pacote", "false"); // ticket avulso
+        if (req.getTicketId() != null) builder.putMetadata("ticketId", req.getTicketId().toString());
+        // marque explicitamente pacote quando for o caso
+        if ("Guia Rancho Queimado - Ticket".equalsIgnoreCase(req.getDescription())
+                || (req.getTicketId() != null && req.getTicketId() == 11L)) {
+            builder.putMetadata("pacote", "true");
         } else {
-            builder.putMetadata("pacote", isPacote ? "true" : "false");
+            builder.putMetadata("pacote", "false");
         }
 
         if (req.getEmail() != null) builder.putMetadata("email", req.getEmail());
@@ -81,18 +82,9 @@ public class StripeCheckoutController {
         SessionCreateParams params = builder.build();
         Session session = Session.create(params);
 
-        // 🔽 Aqui está a integração com o VoucherService
-        if (isPacote) {
-            voucherService.gerarPacoteCompleto(req.getEmail(), req.getNome(), req.getTelefone(), req.getCpf());
-        } else if (req.getTicketId() != null) {
-            voucherService.gerarTicketAvulso(req.getTicketId(), req.getEmail(), req.getNome(), req.getTelefone(), req.getCpf());
-        } else {
-            voucherService.gerarMultiplosTickets(req.getTicketId(), quantidade, req.getEmail(), req.getNome(), req.getTelefone(), req.getCpf());
-
-        }
-
         Map<String, Object> response = new HashMap<>();
         response.put("url", session.getUrl());
         return response;
+
     }
 }

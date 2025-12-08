@@ -5,11 +5,11 @@ import br.com.guiarq.Model.Entities.TicketCatalogo;
 import br.com.guiarq.Model.Repository.TicketCatalogoRepository;
 import br.com.guiarq.Model.Repository.TicketRepository;
 import br.com.guiarq.Model.Service.TicketService;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +19,10 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+/**
+ * Webhook controller para processar eventos Stripe.
+ * Detecta pacote usando metadata.description / data.description / line_items.
+ */
 @RestController
 @RequestMapping("/api/stripe")
 public class StripeWebhookController {
@@ -34,16 +38,14 @@ public class StripeWebhookController {
     @Autowired
     private TicketService ticketService;
 
-    @Value("${STRIPE_WEBHOOK_SECRET}")
-    private String endpointSecret;
-
     private static final Set<String> CPFS_LIBERADOS = Set.of(
             "11999143981",
             "13544956918"
     );
+
     @PostMapping("/webhook")
     public ResponseEntity<String> handleWebhook(@RequestBody String payload) {
-        logger.info("📩 Payload recebido: {}", payload);
+        logger.info("Webhook recebido");
         try {
             JSONObject json = new JSONObject(payload);
             String eventType = json.optString("type");
@@ -63,35 +65,45 @@ public class StripeWebhookController {
         return cleaned.isBlank() ? null : cleaned;
     }
 
-    public boolean podeComprarNovamente(String cpf, LocalDate ultimaCompra) {
+    private boolean podeComprarNovamente(String cpf, LocalDate ultimaCompra) {
         if (cpf != null && CPFS_LIBERADOS.contains(cpf)) {
-            logger.warn("⚠ CPF liberado (bypass regra 3 meses): {}", cpf);
+            logger.warn("CPF liberado pela lista: {}", cpf);
             return true;
         }
         if (ultimaCompra == null) return true;
         long dias = ChronoUnit.DAYS.between(ultimaCompra, LocalDate.now());
         if (dias >= 90) return true;
-        logger.warn("❌ CPF bloqueado, última compra há {} dias: {}", dias, cpf);
+        logger.warn("Compra bloqueada: última compra há {} dias (CPF={})", dias, cpf);
         return false;
+    }
+
+    private boolean clientePodeComprar(String cpf) {
+        if (cpf == null) return true;
+        Ticket ultimo = ticketRepository.findTop1ByCpfClienteOrderByDataCompraDesc(cpf);
+        LocalDate ultimaData = (ultimo != null && ultimo.getDataCompra() != null)
+                ? ultimo.getDataCompra().toLocalDate()
+                : null;
+        return podeComprarNovamente(cpf, ultimaData);
     }
 
     private void processCheckout(JSONObject json) {
         JSONObject data = json.getJSONObject("data").getJSONObject("object");
         String sessionId = data.optString("id");
         if (sessionId == null || sessionId.isBlank()) {
-            logger.error("❌ sessionId inválido");
+            logger.error("sessionId inválido no webhook");
             return;
         }
 
         if (ticketRepository.existsByStripeSessionId(sessionId)) {
-            logger.warn("⚠️ Webhook duplicado ignorado: {}", sessionId);
+            logger.warn("Webhook já processado para sessionId={}", sessionId);
             return;
         }
+
         JSONObject metadata = data.optJSONObject("metadata");
-        if (metadata == null) {
-            logger.error("❌ Metadata vazio");
-            return;
-        }
+        if (metadata == null) metadata = new JSONObject();
+
+        String description = extractDescription(data, metadata);
+        if (description == null) description = "";
 
         String email = metadata.optString("email", "").trim();
         String nome = metadata.optString("nome", "").trim();
@@ -102,7 +114,7 @@ public class StripeWebhookController {
         String quantidadeStr = metadata.optString("quantidade", "1");
 
         if (email.isBlank() || nome.isBlank()) {
-            logger.error("❌ Metadata insuficiente: email ou nome ausentes. email='{}' nome='{}'", email, nome);
+            logger.error("Metadata insuficiente: email='{}' nome='{}'", email, nome);
             return;
         }
 
@@ -113,7 +125,7 @@ public class StripeWebhookController {
             quantidade = Integer.parseInt(quantidadeStr);
             if (quantidade <= 0) quantidade = 1;
         } catch (NumberFormatException e) {
-            logger.warn("quantidade inválida ('{}'), usando 1", quantidadeStr);
+            logger.warn("quantidade inválida no metadata ('{}'), usando 1", quantidadeStr);
             quantidade = 1;
         }
 
@@ -130,28 +142,68 @@ public class StripeWebhookController {
         boolean isPacoteMetadata = "true".equalsIgnoreCase(pacoteStr);
         boolean isCatalogoPacote = (ticketCatalogoId != null && ticketCatalogoId == 11L);
 
-        // **Regra principal**: se o catálogo for 11, tratar sempre como pacote
-        boolean isPacote = isPacoteMetadata || isCatalogoPacote;
-        logger.info("🔍 Decisão: isPacoteMetadata={}, isCatalogoPacote={}, isPacote={}, quantidade={}, ticketId={}",
-                isPacoteMetadata, isCatalogoPacote, isPacote, quantidade, ticketCatalogoId);
+        String descNormalized = description.trim().toLowerCase(Locale.ROOT);
+
+        // comparação exata (case-insensitive) para "Pacote Completo Guia RQ"
+        boolean isDescriptionPacoteExact = "pacote completo guia rq".equals(descNormalized);
+        // fallback: contém "pacote"
+        boolean isDescriptionPacoteContains = descNormalized.contains("pacote");
+        boolean isDescriptionPacote = isDescriptionPacoteExact || isDescriptionPacoteContains;
+
+        boolean isPacote = isPacoteMetadata || isCatalogoPacote || isDescriptionPacote;
+
+        logger.info("Decisão pacote? metadata={}, catalogo={}, descriptionExact={}, descriptionContains={} -> isPacote={} | desc='{}' | quantidade={}",
+                isPacoteMetadata, isCatalogoPacote, isDescriptionPacoteExact, isDescriptionPacoteContains, isPacote, description, quantidade);
 
         if (isPacote) {
-            // Mesmo que quantidade == 1, se o catálogo for 11 tratamos como pacote
             processarPacote(sessionId, data, email, nome, telefone, cpf, ticketCatalogoId);
-        } else if (ticketCatalogoId != null && quantidade > 1) {
+            return;
+        }
+
+        if (ticketCatalogoId != null && quantidade > 1) {
             processarMultiplosTicketsAvulsos(sessionId, data, email, nome, telefone, cpf, ticketCatalogoId, quantidade);
         } else {
             processarTicketAvulso(sessionId, data, email, nome, telefone, cpf, ticketCatalogoId);
         }
     }
 
-    private boolean clientePodeComprar(String cpf) {
-        if (cpf == null) return true;
-        Ticket ultimo = ticketRepository.findTop1ByCpfClienteOrderByDataCompraDesc(cpf);
-        LocalDate ultimaData = (ultimo != null && ultimo.getDataCompra() != null)
-                ? ultimo.getDataCompra().toLocalDate()
-                : null;
-        return podeComprarNovamente(cpf, ultimaData);
+    /**
+     * Extrai a descrição do payload Stripe.
+     * Prioridade: metadata.description -> data.description -> line_items[*].price_data.product_data.name
+     */
+    private String extractDescription(JSONObject data, JSONObject metadata) {
+        String desc = metadata.optString("description", "").trim();
+        if (!desc.isBlank()) return desc;
+
+        desc = data.optString("description", "").trim();
+        if (!desc.isBlank()) return desc;
+
+        try {
+            if (data.has("line_items")) {
+                Object liObj = data.get("line_items");
+                if (liObj instanceof JSONArray) {
+                    JSONArray lineItems = data.getJSONArray("line_items");
+                    for (int i = 0; i < lineItems.length(); i++) {
+                        JSONObject li = lineItems.getJSONObject(i);
+                        if (li.has("price_data")) {
+                            JSONObject priceData = li.optJSONObject("price_data");
+                            if (priceData != null && priceData.has("product_data")) {
+                                JSONObject productData = priceData.optJSONObject("product_data");
+                                if (productData != null) {
+                                    String name = productData.optString("name", "").trim();
+                                    if (!name.isBlank()) return name;
+                                }
+                            }
+                        }
+                        String liDesc = li.optString("description", "").trim();
+                        if (!liDesc.isBlank()) return liDesc;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.debug("Não foi possível extrair description de line_items: {}", e.getMessage());
+        }
+        return null;
     }
 
     @Transactional
@@ -164,16 +216,10 @@ public class StripeWebhookController {
                                        Long ticketCatalogoId) {
 
         if (!clientePodeComprar(cpf)) {
-            logger.warn("❌ Compra bloqueada (ticket avulso) CPF: {}", cpf);
+            logger.warn("Compra bloqueada (ticket avulso) CPF={}", cpf);
             return;
         }
 
-        // Se o catálogo for 11, redireciona para pacote (proteção extra)
-        if (ticketCatalogoId != null && ticketCatalogoId == 11L) {
-            logger.info("Ticket avulso com ticketCatalogoId==11 detectado — tratando como pacote");
-            processarPacote(sessionId, data, email, nome, telefone, cpf, ticketCatalogoId);
-            return;
-        }
         String nomeTicket = "Guia Rancho Queimado - Ticket";
         try {
             if (ticketCatalogoId != null) {
@@ -181,7 +227,7 @@ public class StripeWebhookController {
                 if (cat.isPresent()) nomeTicket = cat.get().getNome();
             }
         } catch (Exception e) {
-            logger.error("Erro ao buscar catálogo: {}", e.getMessage());
+            logger.debug("Erro buscando catálogo: {}", e.getMessage());
         }
 
         Ticket ticket = new Ticket();
@@ -207,8 +253,7 @@ public class StripeWebhookController {
 
         ticketRepository.save(ticket);
         ticketService.processarCompra(ticket);
-
-        logger.info("✔ Ticket avulso ÚNICO criado com sucesso");
+        logger.info("Ticket avulso criado para sessionId={}", sessionId);
     }
 
     @Transactional
@@ -220,8 +265,9 @@ public class StripeWebhookController {
                                                   String cpf,
                                                   Long ticketCatalogoId,
                                                   int quantidade) {
+
         if (!clientePodeComprar(cpf)) {
-            logger.warn("❌ Compra bloqueada (múltiplos avulsos) CPF: {}", cpf);
+            logger.warn("Compra bloqueada (múltiplos avulsos) CPF={}", cpf);
             return;
         }
 
@@ -232,14 +278,12 @@ public class StripeWebhookController {
                 if (cat.isPresent()) nomeTicket = cat.get().getNome();
             }
         } catch (Exception e) {
-            logger.error("Erro ao buscar catálogo: {}", e.getMessage());
+            logger.debug("Erro buscando catálogo: {}", e.getMessage());
         }
 
         LocalDateTime agora = LocalDateTime.now();
         UUID compraId = UUID.randomUUID();
         List<Ticket> tickets = new ArrayList<>();
-
-        boolean isPacote = (ticketCatalogoId != null && ticketCatalogoId == 11L);
 
         for (int i = 0; i < quantidade; i++) {
             Ticket ticket = new Ticket();
@@ -255,8 +299,9 @@ public class StripeWebhookController {
 
             ticket.setStatus("PAGO");
             ticket.setUsado(false);
-            ticket.setPacote(isPacote);
+            ticket.setPacote(false);
             ticket.setQuantidadeComprada(quantidade);
+
             ticket.setDataCompra(agora);
             ticket.setCriadoEm(agora);
 
@@ -270,7 +315,7 @@ public class StripeWebhookController {
         }
 
         ticketService.processarCompraAvulsaMultipla(tickets);
-        logger.info("✔ {} tickets avulsos MÚLTIPLOS criados com sucesso! (isPacote={})", quantidade, isPacote);
+        logger.info("Criados {} tickets avulsos para sessionId={}", quantidade, sessionId);
     }
 
     @Transactional
@@ -283,13 +328,12 @@ public class StripeWebhookController {
                                  Long ticketCatalogoId) {
 
         if (!clientePodeComprar(cpf)) {
-            logger.warn("❌ Compra bloqueada (pacote) CPF: {}", cpf);
+            logger.warn("Compra bloqueada (pacote) CPF={}", cpf);
             return;
         }
 
         LocalDateTime agora = LocalDateTime.now();
-
-        Double valorTotal = data.optDouble("amount_total") / 100.0;
+        Double valorTotal = data.optDouble("amount_total", 0.0) / 100.0;
         int quantidade = 10;
         double valorUnitario = quantidade > 0 ? (valorTotal / quantidade) : 0.0;
 
@@ -303,7 +347,7 @@ public class StripeWebhookController {
                 if (cat.isPresent()) nomeTicket = cat.get().getNome();
             }
         } catch (Exception e) {
-            logger.error("Erro ao buscar catálogo: {}", e.getMessage());
+            logger.debug("Erro buscando catálogo: {}", e.getMessage());
         }
 
         for (int i = 0; i < quantidade; i++) {
@@ -337,6 +381,6 @@ public class StripeWebhookController {
         }
 
         ticketService.processarPacote(tickets);
-        logger.info("🎁 Pacote criado com sucesso!");
+        logger.info("Pacote processado ({} tickets) para sessionId={}", tickets.size(), sessionId);
     }
 }

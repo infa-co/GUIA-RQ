@@ -31,15 +31,14 @@ public class EmailService {
             byte[] qrBytes
     ) {
         try {
-
             String html = """
-                <h2>Seu Ticket Está Pronto 🎟️</h2>
-                <p>Olá <strong>%s</strong>,</p>
-                <p><strong>Ticket:</strong> %s</p>
-                <p><strong>Telefone:</strong> %s<br><strong>CPF:</strong> %s</p>
-                <p>O QR Code está anexado a este e-mail.</p>
-                <p>Apresente no estabelecimento participante.</p>
-                """.formatted(nomeCliente, nomeTicket, telefone, cpf);
+                    <h2>Seu Ticket Está Pronto 🎟️</h2>
+                    <p>Olá <strong>%s</strong>,</p>
+                    <p><strong>Ticket:</strong> %s</p>
+                    <p><strong>Telefone:</strong> %s<br><strong>CPF:</strong> %s</p>
+                    <p>O QR Code está anexado a este e-mail.</p>
+                    <p>Apresente no estabelecimento participante DO MEU PAU GRANDAO.</p>
+                    """.formatted(nomeCliente, nomeTicket, telefone, cpf);
 
             String qrBase64 = Base64.getEncoder().encodeToString(qrBytes);
 
@@ -71,6 +70,7 @@ public class EmailService {
             throw new RuntimeException("Erro ao enviar email de ticket: " + e.getMessage());
         }
     }
+
     public void sendMultiplosTicketsAvulsos(
             String emailDestino,
             String nomeCliente,
@@ -81,9 +81,7 @@ public class EmailService {
             List<byte[]> qrBytesList
     ) {
         try {
-
             StringBuilder html = new StringBuilder();
-
             html.append("<h2>Seus Tickets Estão Prontos 🎟️</h2>");
             html.append("<p>Olá <strong>").append(nomeCliente).append("</strong>,</p>");
             html.append("<p>Você comprou <strong>")
@@ -91,15 +89,12 @@ public class EmailService {
                     .append(" tickets</strong> do estabelecimento <strong>")
                     .append(nomeTicket)
                     .append("</strong>.</p>");
-
             html.append("<p>Os QR Codes estão anexados a este e-mail.</p>");
 
             List<Map<String, Object>> attachments = new ArrayList<>();
-
             for (int i = 0; i < tickets.size(); i++) {
                 Ticket t = tickets.get(i);
                 byte[] qrBytes = qrBytesList.get(i);
-
                 String base64Qr = Base64.getEncoder().encodeToString(qrBytes);
 
                 Map<String, Object> attachment = new HashMap<>();
@@ -108,14 +103,12 @@ public class EmailService {
 
                 attachments.add(attachment);
             }
-
             Map<String, Object> body = new HashMap<>();
             body.put("from", "Guia Rancho Queimado <no-reply@guiaranchoqueimado.com.br>");
             body.put("to", new String[]{emailDestino});
             body.put("subject", "Seus " + tickets.size() + " Tickets – " + nomeTicket);
             body.put("html", html.toString());
             body.put("attachments", attachments.toArray(new Map[0]));
-
 
             String json = mapper.writeValueAsString(body);
 
@@ -162,16 +155,28 @@ public class EmailService {
             html.append("<p>Aqui estão seus <strong>").append(tickets.size()).append(" tickets</strong>.</p>");
             html.append("<p>Os QR Codes estão anexados a este e-mail.</p>");
 
-            List<Map<String, Object>> attachments = new ArrayList<>();
+            // 🔽 Adiciona a lista de locais
+            html.append("<h3>O que você vai ter acesso:</h3>");
+            html.append("<ul>");
+            html.append("<li>🍕 Ticket Pizzaria Forno e Serra • Desconto de R$16</li>");
+            html.append("<li>🏍️ Ticket RJ Off-Road • Desconto de R$25</li>");
+            html.append("<li>🏡 Ticket Chalé Encantado • Desconto de R$50</li>");
+            html.append("<li>☕ Ticket Bergkafee Café Colonial • Desconto de R$15</li>");
+            html.append("<li>🥗 Ticket Da Roça • Desconto de R$10 a cada R$50 gasto</li>");
+            html.append("<li>🌿 Ticket Espaço Floresta • Desconto de R$50</li>");
+            html.append("<li>🍺 Ticket Bierhaus • 10% extra na compra</li>");
+            html.append("<li>🌄 Ticket Mirante Boa Vista • Desconto de R$30</li>");
+            html.append("<li>🍷 Ticket Goyah Vinhos • Desconto de R$14</li>");
+            html.append("<li>🪵 Ticket Atafona (Aos finais de semana) • Desconto de R$10</li>");
+            html.append("</ul>");
 
+            List<Map<String, Object>> attachments = new ArrayList<>();
             for (int i = 0; i < tickets.size(); i++) {
                 Ticket t = tickets.get(i);
                 byte[] qrBytes = qrBytesList.get(i);
-
                 String base64Qr = Base64.getEncoder().encodeToString(qrBytes);
 
                 Map<String, Object> attachment = new HashMap<>();
-                // nome do arquivo com index e nome do ticket para ficar claro
                 String filename = String.format("Pacote - %02d - %s.png", i + 1,
                         t.getNome() != null ? t.getNome().replaceAll("[^a-zA-Z0-9\\- ]", "") : "ticket");
                 attachment.put("filename", filename);
@@ -189,7 +194,6 @@ public class EmailService {
 
             String json = mapper.writeValueAsString(body);
             System.out.println("DEBUG - JSON de envio (sendPacoteTicketsEmail): " + json);
-
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://api.resend.com/emails"))
                     .header("Authorization", "Bearer " + apiKey)
@@ -211,17 +215,17 @@ public class EmailService {
             String linkVerificacao = "https://guiaranchoqueimado.com.br/verificar?token=" + token;
 
             String html = """
-            <h2>Verifique sua conta 🔐</h2>
-            <p>Para ativar sua conta, clique no botão abaixo:</p>
-            <p>
-                <a href="%s" 
-                   style="display:inline-block;padding:12px 20px;background:#4CAF50;color:white;
-                          text-decoration:none;border-radius:6px;font-weight:bold;">
-                   Verificar Conta
-                </a>
-            </p>
-            <p>Se você não solicitou esta criação de conta, ignore este e-mail.</p>
-            """.formatted(linkVerificacao);
+                    <h2>Verifique sua conta 🔐</h2>
+                    <p>Para ativar sua conta, clique no botão abaixo:</p>
+                    <p>
+                        <a href="%s" 
+                           style="display:inline-block;padding:12px 20px;background:#4CAF50;color:white;
+                                  text-decoration:none;border-radius:6px;font-weight:bold;">
+                           Verificar Conta
+                           </a>
+                    </p>
+                    <p>Se você não solicitou esta criação de conta, ignore este e-mail.</p>
+                    """.formatted(linkVerificacao);
 
             Map<String, Object> body = new HashMap<>();
             body.put("from", "Guia Rancho Queimado <no-reply@guiaranchoqueimado.com.br>");
@@ -241,10 +245,8 @@ public class EmailService {
             HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 
             System.out.println("📨 Email de verificação enviado!");
-
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao enviar email de verificação: " + e.getMessage());
+            throw new RuntimeException("Erro ao enviar email de verificação: " + e.getMessage(), e);
         }
     }
-
 }
