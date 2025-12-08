@@ -148,12 +148,22 @@ public class EmailService {
             List<byte[]> qrBytesList
     ) {
         try {
+            if (tickets == null || tickets.isEmpty()) {
+                throw new IllegalArgumentException("Lista de tickets vazia (pacote).");
+            }
+            if (qrBytesList == null) {
+                throw new IllegalArgumentException("qrBytesList é nulo. Não há QRs para anexar.");
+            }
+            if (qrBytesList.size() < tickets.size()) {
+                throw new IllegalArgumentException(String.format(
+                        "Quantidade de QRs (%d) é menor que quantidade de tickets (%d).",
+                        qrBytesList.size(), tickets.size()));
+            }
 
             StringBuilder html = new StringBuilder();
-
             html.append("<h2>Seu Pacote Está Pronto 🎟️</h2>");
             html.append("<p>Olá <strong>").append(nomeCliente).append("</strong>,</p>");
-            html.append("<p>Aqui estão seus <strong>10 tickets</strong>.</p>");
+            html.append("<p>Aqui estão seus <strong>").append(tickets.size()).append(" tickets</strong>.</p>");
             html.append("<p>Os QR Codes estão anexados a este e-mail.</p>");
 
             List<Map<String, Object>> attachments = new ArrayList<>();
@@ -165,7 +175,10 @@ public class EmailService {
                 String base64Qr = Base64.getEncoder().encodeToString(qrBytes);
 
                 Map<String, Object> attachment = new HashMap<>();
-                attachment.put("filename", "Pacote - Ticket " + (i + 1) + ".png");
+                // nome do arquivo com index e nome do ticket para ficar claro
+                String filename = String.format("Pacote - %02d - %s.png", i + 1,
+                        t.getNome() != null ? t.getNome().replaceAll("[^a-zA-Z0-9\\- ]", "") : "ticket");
+                attachment.put("filename", filename);
                 attachment.put("content", base64Qr);
 
                 attachments.add(attachment);
@@ -174,11 +187,12 @@ public class EmailService {
             Map<String, Object> body = new HashMap<>();
             body.put("from", "Guia Rancho Queimado <no-reply@guiaranchoqueimado.com.br>");
             body.put("to", new String[]{emailDestino});
-            body.put("subject", "Seu Pacote de Tickets (10 unidades)");
+            body.put("subject", "Seu Pacote de Tickets (" + tickets.size() + " unidades)");
             body.put("html", html.toString());
-            body.put("attachments", attachments.toArray());
+            body.put("attachments", attachments.toArray(new Map[0]));
 
             String json = mapper.writeValueAsString(body);
+            System.out.println("DEBUG - JSON de envio (sendPacoteTicketsEmail): " + json);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://api.resend.com/emails"))
@@ -192,9 +206,10 @@ public class EmailService {
             System.out.println("📨 Email de pacote enviado!");
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao enviar email do pacote: " + e.getMessage());
+            throw new RuntimeException("Erro ao enviar email do pacote: " + e.getMessage(), e);
         }
     }
+
     public void enviarVerificacaoEmail(String emailDestino, String token) {
         try {
             String linkVerificacao = "https://guiaranchoqueimado.com.br/verificar?token=" + token;

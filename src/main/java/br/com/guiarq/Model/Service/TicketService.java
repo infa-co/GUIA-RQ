@@ -37,13 +37,9 @@ public class TicketService {
         return ticketRepository.findAll();
     }
 
-    // -------------------------------
-    // TICKET ÚNICO
-    // -------------------------------
-
     public void processarCompra(Ticket ticket) {
         try {
-            String conteudo = URL_VALIDACAO + ticket.getQrToken();
+            String conteudo = URL_VALIDACAO + "/" + ticket.getQrToken();
             byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
 
             emailService.sendTicketEmail(
@@ -62,11 +58,6 @@ public class TicketService {
             System.out.println("❌ ERRO AO PROCESSAR COMPRA (TICKET ÚNICO)");
         }
     }
-
-    // -------------------------------
-    // AVULSO MÚLTIPLO (MESMO TICKET)
-    // -------------------------------
-
     public void processarCompraAvulsaMultipla(List<Ticket> tickets) {
         try {
 
@@ -85,9 +76,10 @@ public class TicketService {
             List<byte[]> qrBytesList = new ArrayList<>();
             for (Ticket t : tickets) {
                 String conteudo = URL_VALIDACAO + t.getQrToken();
-                qrBytesList.add(qrCodeService.generateQrCodeBytes(conteudo, 300, 300));
+                byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
+                if (qrBytes == null) throw new RuntimeException("Falha ao gerar QR do ticket: " + t.getIdPublico());
+                qrBytesList.add(qrBytes);
             }
-
             emailService.sendMultiplosTicketsAvulsos(
                     primeiro.getEmailCliente(),
                     primeiro.getNomeCliente(),
@@ -106,13 +98,8 @@ public class TicketService {
         }
     }
 
-    // -------------------------------
-    // PACOTE (DIFERENTES TICKETS)
-    // -------------------------------
-
     public void processarPacote(List<Ticket> tickets) {
         try {
-
             if (tickets == null || tickets.isEmpty()) {
                 throw new IllegalArgumentException("Lista de tickets vazia");
             }
@@ -147,10 +134,6 @@ public class TicketService {
             System.out.println("❌ ERRO AO PROCESSAR PACOTE: " + e.getMessage());
         }
     }
-
-    // -------------------------------
-    // VERIFICAR / USAR
-    // -------------------------------
 
     public Ticket verificar(UUID idPublico) {
         return ticketRepository.findByIdPublico(idPublico)

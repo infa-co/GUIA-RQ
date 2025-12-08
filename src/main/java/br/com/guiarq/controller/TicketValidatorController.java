@@ -93,6 +93,7 @@ public class TicketValidatorController {
                     ticket.setEstabelecimentoValidacao(dadosValidacao.get("estabelecimento"));
                     ticket.setValidadoPor(dadosValidacao.get("validadoPor"));
 
+                    ticket.setDataCompra(LocalDateTime.now());
                     ticketRepository.save(ticket);
 
                     return ResponseEntity.ok(

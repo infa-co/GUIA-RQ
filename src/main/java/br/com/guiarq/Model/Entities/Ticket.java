@@ -77,7 +77,27 @@ public class Ticket {
     @Column(name = "stripe_session_id", unique = true)
     private String stripeSessionId;
 
+    @Column(name = "quantidade", nullable = false)
+    private Integer quantidadeComprada;
+
+    @Column(name = "is_pacote")
+    private Boolean pacote;
+
     public Ticket() {}
+
+    public Integer getQuantidadeComprada() {
+        return quantidadeComprada;
+    }
+    public void setQuantidadeComprada(Integer quantidadeComprada) {
+        this.quantidadeComprada = quantidadeComprada;
+    }
+    public Boolean getPacote() {
+        return pacote;
+    }
+
+    public void setPacote(Boolean pacote) {
+        this.pacote = pacote;
+    }
 
     public Long getId() {
         return id;
@@ -260,5 +280,13 @@ public class Ticket {
     }
     public boolean getUsado(){
         return usado;
+    }
+
+    public void setDescricao(String s) {
+        this.descricao = s;
+    }
+
+    public void setTipo(String pacote) {
+        this.tipo = pacote;
     }
 }

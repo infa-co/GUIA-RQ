@@ -11,13 +11,14 @@ import java.util.UUID;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
-    List<Ticket> findByEmailCliente(String emailCliente);
-
     Optional<Ticket> findByIdPublico(UUID idPublico);
 
     Optional<Ticket> findByQrToken(String qrToken);
 
     boolean existsByStripeSessionId(String stripeSessionId);
 
-    List<Ticket> findByTicketCatalogoId(Long ticketCatalogoId);
+    Ticket findTopByCpfClienteOrderByDataCompraDesc(String cpfCliente);
+
+    List<Ticket> findByCpfCliente(String cpfCliente);
 }
+
