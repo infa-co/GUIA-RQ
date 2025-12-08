@@ -22,10 +22,6 @@ public class EmailService {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    // ============================================================
-    //   ENVIO DE 1 TICKET (AVULSO)
-    // ============================================================
-
     public void sendTicketEmail(
             String emailDestino,
             String nomeCliente,

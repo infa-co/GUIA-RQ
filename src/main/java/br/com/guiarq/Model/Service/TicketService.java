@@ -39,7 +39,7 @@ public class TicketService {
 
     public void processarCompra(Ticket ticket) {
         try {
-            String conteudo = URL_VALIDACAO + "/" + ticket.getQrToken();
+            String conteudo = URL_VALIDACAO + ticket.getQrToken();
             byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
 
             emailService.sendTicketEmail(
