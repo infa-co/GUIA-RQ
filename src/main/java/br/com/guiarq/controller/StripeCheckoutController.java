@@ -64,14 +64,21 @@ public class StripeCheckoutController {
                                 .build()
                 );
         // metadata para o webhook identificar o que foi comprado
+        // dentro de createCheckout(...) antes de Session.create(params);
+
         builder.putMetadata("quantidade", quantidade.toString());
-        if (req.getTicketId() != null) builder.putMetadata("ticketId", req.getTicketId().toString());
-        // marque explicitamente pacote quando for o caso
-        boolean pacote = "Guia Rancho Queimado - Ticket".equalsIgnoreCase(req.getDescription())
-                || (req.getTicketId() != null && req.getTicketId() == 11L);
 
-        builder.putMetadata("pacote", String.valueOf(pacote));
+        // if explicit package chosen by front-end
+        if (Boolean.TRUE.equals(req.getPacote())) {
+            // marque pacote explicitamente
+            builder.putMetadata("pacote", "true");
+            // preferencialmente também envie ticketId = 11 para rastreio
+            builder.putMetadata("ticketId", "11");
+        }
 
+        if (req.getTicketId() != null) {
+            builder.putMetadata("ticketId", req.getTicketId().toString());
+        }
         if (req.getEmail() != null) builder.putMetadata("email", req.getEmail());
         if (req.getNome() != null) builder.putMetadata("nome", req.getNome());
         if (req.getTelefone() != null) builder.putMetadata("telefone", req.getTelefone());

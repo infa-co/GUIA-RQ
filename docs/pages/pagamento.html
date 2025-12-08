@@ -122,53 +122,57 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
 </div>
 
 <script>
-    // fallback
+    // fallback para API
     if (!window.API_URL) {
         window.API_URL = "https://guia-rq-backend.onrender.com";
     }
 
-    // ====== CAPTURA DOS CAMPOS ======
     const nomeInput = document.getElementById("nome");
     const emailInput = document.getElementById("email");
     const telefoneInput = document.getElementById("telefone");
     const cpfInput = document.getElementById("cpf");
-
-    // ====== BOTÃO FINALIZAR COMPRA → CHAMA BACKEND STRIPE ======
     const payBtn = document.getElementById("pay-btn");
 
+    // função de validação
+    function validarDados(nome, email, telefone, cpf) {
+        return nome && email && telefone && cpf;
+    }
+
+    // função para detectar se é pacote
+    function isCompraPacote(carrinho) {
+        return carrinho.length === 1 && carrinho[0]?.id === 11;
+    }
+
     payBtn.addEventListener("click", async () => {
+        payBtn.disabled = true;
+        payBtn.textContent = "Processando...";
+
         try {
-            // ---- valida dados pessoais ----
             const nome = nomeInput.value.trim();
             const email = emailInput.value.trim();
             const telefone = telefoneInput.value.trim();
             const cpf = cpfInput.value.trim();
 
-            if (!nome || !email || !telefone || !cpf) {
+            if (!validarDados(nome, email, telefone, cpf)) {
                 alert("Preencha todos os dados antes de continuar.");
                 return;
             }
 
             const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-            const resumo   = JSON.parse(localStorage.getItem("resumoCompra")) || {};
+            const resumo = JSON.parse(localStorage.getItem("resumoCompra")) || {};
 
             if (!carrinho.length) {
                 alert("Seu carrinho está vazio.");
                 return;
             }
 
-            // total final
             const total = Number(resumo.totalFinal);
+            const isPacote = isCompraPacote(carrinho);
 
-            // determina se é pacote
-            const isPacote = carrinho.length > 1;
-
-            // determina ticket avulso
             let ticketId = null;
             let quantidade = 1;
             let descricao = "Compra de ingresso(s) – Guia Rancho Queimado";
 
-            // ticket avulso → 1 item no carrinho
             if (!isPacote) {
                 const item = carrinho[0];
                 ticketId = item?.id || null;
@@ -199,11 +203,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
                     email,
                     telefone,
                     cpf,
-
-                    // flags essenciais para o backend
                     pacote: isPacote,
-                    ticketId: ticketId,
-                    quantidade: quantidade
+                    ticketId,
+                    quantidade
                 })
             });
 
@@ -220,12 +222,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
                 throw new Error("URL de checkout não recebida.");
             }
 
-            // redireciona para Stripe Checkout
             window.location.href = data.url;
 
         } catch (err) {
             console.error("Erro ao iniciar pagamento:", err);
             alert("Erro ao iniciar pagamento. Recarregue a página e tente novamente.");
+        } finally {
+            payBtn.disabled = false;
+            payBtn.textContent = "Pagar";
         }
     });
 </script>

@@ -110,7 +110,6 @@ public class StripeWebhookController {
         String telefone = metadata.optString("telefone", "").trim();
         String cpfRaw = metadata.optString("cpf", "").trim();
         String ticketIdStr = metadata.optString("ticketId", null);
-        String pacoteStr = metadata.optString("pacote", "false");
         String quantidadeStr = metadata.optString("quantidade", "1");
 
         if (email.isBlank() || nome.isBlank()) {
@@ -139,18 +138,11 @@ public class StripeWebhookController {
             }
         }
 
-        boolean isPacoteMetadata = "true".equalsIgnoreCase(pacoteStr);
-        boolean isCatalogoPacote = (ticketCatalogoId != null && ticketCatalogoId == 11L);
+        // ✅ Simplificação: só o id 11 define pacote
+        boolean isPacote = (ticketCatalogoId != null && ticketCatalogoId == 11);
 
-        String descNormalized = description.trim();
-
-        // comparação exata para "Pacote Completo Guia RQ"
-        boolean isDescriptionPacoteExact = "Pacote Completo Guia RQ".equalsIgnoreCase(descNormalized);
-
-        boolean isPacote = isPacoteMetadata || isCatalogoPacote || isDescriptionPacoteExact;
-
-        logger.info("Decisão pacote? metadata={}, catalogo={}, descriptionExact={} -> isPacote={} | desc='{}' | quantidade={}",
-                isPacoteMetadata, isCatalogoPacote, isDescriptionPacoteExact, isPacote, description, quantidade);
+        logger.info("Decisão pacote? ticketCatalogoId={} -> isPacote={} | desc='{}' | quantidade={}",
+                ticketCatalogoId, isPacote, description, quantidade);
 
         if (isPacote) {
             processarPacote(sessionId, data, email, nome, telefone, cpf, ticketCatalogoId);
@@ -163,7 +155,6 @@ public class StripeWebhookController {
             processarTicketAvulso(sessionId, data, email, nome, telefone, cpf, ticketCatalogoId);
         }
     }
-
     private String extractDescription(JSONObject data, JSONObject metadata) {
         String desc = metadata.optString("description", "").trim();
         if (!desc.isBlank()) return desc;
@@ -294,6 +285,9 @@ public class StripeWebhookController {
             ticket.setUsado(false);
             ticket.setPacote(false);
             ticket.setQuantidadeComprada(quantidade);
+            if(quantidade > 1){
+                ticket.setPacote(false);
+            }
 
             ticket.setDataCompra(agora);
             ticket.setCriadoEm(agora);
@@ -328,52 +322,53 @@ public class StripeWebhookController {
         LocalDateTime agora = LocalDateTime.now();
         Double valorTotal = data.optDouble("amount_total", 0.0) / 100.0;
         int quantidade = 10; // pacote fixo de 10
-        double valorUnitario = quantidade > 0 ? (valorTotal / quantidade) : 0.0;
+        if(valorTotal == 77.00) {
 
-        UUID compraId = UUID.randomUUID();
-        List<Ticket> tickets = new ArrayList<>();
+            UUID compraId = UUID.randomUUID();
+            List<Ticket> tickets = new ArrayList<>();
 
-        String nomeTicket = "Pacote Completo Guia RQ";
-        try {
-            if (ticketCatalogoId != null) {
-                Optional<TicketCatalogo> cat = ticketCatalogoRepository.findById(ticketCatalogoId);
-                if (cat.isPresent()) nomeTicket = cat.get().getNome();
+            String nomeTicket = "Pacote Completo Guia RQ";
+            try {
+                if (ticketCatalogoId != null) {
+                    Optional<TicketCatalogo> cat = ticketCatalogoRepository.findById(ticketCatalogoId);
+                    if (cat.isPresent()) nomeTicket = cat.get().getNome();
+                }
+            } catch (Exception e) {
+                logger.debug("Erro buscando catálogo: {}", e.getMessage());
             }
-        } catch (Exception e) {
-            logger.debug("Erro buscando catálogo: {}", e.getMessage());
+
+            for (int i = 0; i < quantidade; i++) {
+                Ticket ticket = new Ticket();
+                if (i == 0) ticket.setStripeSessionId(sessionId);
+
+                ticket.setTicketCatalogoId(ticketCatalogoId != null ? ticketCatalogoId : 11);
+                ticket.setNome(nomeTicket);
+
+                ticket.setEmailCliente(email);
+                ticket.setNomeCliente(nome);
+                ticket.setTelefoneCliente(telefone);
+                ticket.setCpfCliente(cpf);
+
+                ticket.setStatus("PAGO");
+                ticket.setUsado(false);
+                ticket.setPacote(true);
+                ticket.setQuantidadeComprada(quantidade);
+
+                ticket.setDataCompra(agora);
+                ticket.setCriadoEm(agora);
+
+                ticket.setIdPublico(UUID.randomUUID());
+                ticket.setQrToken(UUID.randomUUID().toString());
+
+                ticket.setValorPago(77.00);
+                ticket.setCompraId(compraId);
+
+                ticketRepository.save(ticket);
+                tickets.add(ticket);
+            }
+
+            ticketService.processarPacote(tickets);
+            logger.info("Pacote processado ({} tickets) para sessionId={}", tickets.size(), sessionId);
         }
-
-        for (int i = 0; i < quantidade; i++) {
-            Ticket ticket = new Ticket();
-            if (i == 0) ticket.setStripeSessionId(sessionId);
-
-            ticket.setTicketCatalogoId(ticketCatalogoId != null ? ticketCatalogoId : 11L);
-            ticket.setNome(nomeTicket);
-
-            ticket.setEmailCliente(email);
-            ticket.setNomeCliente(nome);
-            ticket.setTelefoneCliente(telefone);
-            ticket.setCpfCliente(cpf);
-
-            ticket.setStatus("PAGO");
-            ticket.setUsado(false);
-            ticket.setPacote(true);
-            ticket.setQuantidadeComprada(quantidade);
-
-            ticket.setDataCompra(agora);
-            ticket.setCriadoEm(agora);
-
-            ticket.setIdPublico(UUID.randomUUID());
-            ticket.setQrToken(UUID.randomUUID().toString());
-
-            ticket.setValorPago(valorUnitario);
-            ticket.setCompraId(compraId);
-
-            ticketRepository.save(ticket);
-            tickets.add(ticket);
-        }
-
-        ticketService.processarPacote(tickets);
-        logger.info("Pacote processado ({} tickets) para sessionId={}", tickets.size(), sessionId);
     }
 }
