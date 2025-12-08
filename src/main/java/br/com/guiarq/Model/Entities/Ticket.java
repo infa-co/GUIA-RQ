@@ -289,4 +289,8 @@ public class Ticket {
     public void setTipo(String pacote) {
         this.tipo = pacote;
     }
+
+    public void setId(Long ticketId) {
+        this.id = ticketId;
+    }
 }

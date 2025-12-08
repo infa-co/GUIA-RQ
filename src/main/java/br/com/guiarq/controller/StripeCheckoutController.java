@@ -68,16 +68,10 @@ public class StripeCheckoutController {
 
         if (req.getTicketId() != null) {
             builder.putMetadata("ticketId", req.getTicketId().toString());
-            builder.putMetadata("pacote", "false"); // garante que NUNCA vira pacote
+            builder.putMetadata("pacote", "false"); // ticket avulso
         } else {
-            // Se NÃO tem ticketId → pode ser pacote ou avulso múltiplo
-            if (isPacote) {
-                builder.putMetadata("pacote", "true");
-            } else {
-                builder.putMetadata("pacote", "false"); // avulso múltiplo
-            }
+            builder.putMetadata("pacote", isPacote ? "true" : "false");
         }
-
 
         if (req.getEmail() != null) builder.putMetadata("email", req.getEmail());
         if (req.getNome() != null) builder.putMetadata("nome", req.getNome());
@@ -86,6 +80,16 @@ public class StripeCheckoutController {
 
         SessionCreateParams params = builder.build();
         Session session = Session.create(params);
+
+        // 🔽 Aqui está a integração com o VoucherService
+        if (isPacote) {
+            voucherService.gerarPacoteCompleto(req.getEmail(), req.getNome(), req.getTelefone(), req.getCpf());
+        } else if (req.getTicketId() != null) {
+            voucherService.gerarTicketAvulso(req.getTicketId(), req.getEmail(), req.getNome(), req.getTelefone(), req.getCpf());
+        } else {
+            voucherService.gerarMultiplosTickets(req.getTicketId(), quantidade, req.getEmail(), req.getNome(), req.getTelefone(), req.getCpf());
+
+        }
 
         Map<String, Object> response = new HashMap<>();
         response.put("url", session.getUrl());
