@@ -67,12 +67,10 @@ public class StripeCheckoutController {
         builder.putMetadata("quantidade", quantidade.toString());
         if (req.getTicketId() != null) builder.putMetadata("ticketId", req.getTicketId().toString());
         // marque explicitamente pacote quando for o caso
-        if ("Guia Rancho Queimado - Ticket".equalsIgnoreCase(req.getDescription())
-                || (req.getTicketId() != null && req.getTicketId() == 11L)) {
-            builder.putMetadata("pacote", "true");
-        } else {
-            builder.putMetadata("pacote", "false");
-        }
+        boolean pacote = "Guia Rancho Queimado - Ticket".equalsIgnoreCase(req.getDescription())
+                || (req.getTicketId() != null && req.getTicketId() == 11L);
+
+        builder.putMetadata("pacote", String.valueOf(pacote));
 
         if (req.getEmail() != null) builder.putMetadata("email", req.getEmail());
         if (req.getNome() != null) builder.putMetadata("nome", req.getNome());

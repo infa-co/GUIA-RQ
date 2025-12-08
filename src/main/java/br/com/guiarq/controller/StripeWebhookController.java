@@ -142,18 +142,15 @@ public class StripeWebhookController {
         boolean isPacoteMetadata = "true".equalsIgnoreCase(pacoteStr);
         boolean isCatalogoPacote = (ticketCatalogoId != null && ticketCatalogoId == 11L);
 
-        String descNormalized = description.trim().toLowerCase(Locale.ROOT);
+        String descNormalized = description.trim();
 
-        // comparação exata (case-insensitive) para "Pacote Completo Guia RQ"
-        boolean isDescriptionPacoteExact = "pacote completo guia rq".equals(descNormalized);
-        // fallback: contém "pacote"
-        boolean isDescriptionPacoteContains = descNormalized.contains("pacote");
-        boolean isDescriptionPacote = isDescriptionPacoteExact || isDescriptionPacoteContains;
+        // comparação exata para "Pacote Completo Guia RQ"
+        boolean isDescriptionPacoteExact = "Pacote Completo Guia RQ".equalsIgnoreCase(descNormalized);
 
-        boolean isPacote = isPacoteMetadata || isCatalogoPacote || isDescriptionPacote;
+        boolean isPacote = isPacoteMetadata || isCatalogoPacote || isDescriptionPacoteExact;
 
-        logger.info("Decisão pacote? metadata={}, catalogo={}, descriptionExact={}, descriptionContains={} -> isPacote={} | desc='{}' | quantidade={}",
-                isPacoteMetadata, isCatalogoPacote, isDescriptionPacoteExact, isDescriptionPacoteContains, isPacote, description, quantidade);
+        logger.info("Decisão pacote? metadata={}, catalogo={}, descriptionExact={} -> isPacote={} | desc='{}' | quantidade={}",
+                isPacoteMetadata, isCatalogoPacote, isDescriptionPacoteExact, isPacote, description, quantidade);
 
         if (isPacote) {
             processarPacote(sessionId, data, email, nome, telefone, cpf, ticketCatalogoId);
@@ -167,10 +164,6 @@ public class StripeWebhookController {
         }
     }
 
-    /**
-     * Extrai a descrição do payload Stripe.
-     * Prioridade: metadata.description -> data.description -> line_items[*].price_data.product_data.name
-     */
     private String extractDescription(JSONObject data, JSONObject metadata) {
         String desc = metadata.optString("description", "").trim();
         if (!desc.isBlank()) return desc;
@@ -334,13 +327,13 @@ public class StripeWebhookController {
 
         LocalDateTime agora = LocalDateTime.now();
         Double valorTotal = data.optDouble("amount_total", 0.0) / 100.0;
-        int quantidade = 10;
+        int quantidade = 10; // pacote fixo de 10
         double valorUnitario = quantidade > 0 ? (valorTotal / quantidade) : 0.0;
 
         UUID compraId = UUID.randomUUID();
         List<Ticket> tickets = new ArrayList<>();
 
-        String nomeTicket = "Pacote 10 Tickets - Guia Rancho Queimado";
+        String nomeTicket = "Pacote Completo Guia RQ";
         try {
             if (ticketCatalogoId != null) {
                 Optional<TicketCatalogo> cat = ticketCatalogoRepository.findById(ticketCatalogoId);
