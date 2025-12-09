@@ -122,7 +122,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
 </div>
 
 <script>
-    // fallback para API
     if (!window.API_URL) {
         window.API_URL = "https://guia-rq-backend.onrender.com";
     }
@@ -133,14 +132,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
     const cpfInput = document.getElementById("cpf");
     const payBtn = document.getElementById("pay-btn");
 
-    // função de validação
     function validarDados(nome, email, telefone, cpf) {
         return nome && email && telefone && cpf;
     }
 
-    // função para detectar se é pacote
-    function isCompraPacote(carrinho) {
-        return carrinho.length === 1 && carrinho[0]?.id === 11;
+    function isCompraPacote(descricao) {
+        return descricao?.toLowerCase().trim() === "pacote completo guia rq";
     }
 
     payBtn.addEventListener("click", async () => {
@@ -167,18 +164,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
             }
 
             const total = Number(resumo.totalFinal);
-            const isPacote = isCompraPacote(carrinho);
 
-            let ticketId = null;
-            let quantidade = 1;
-            let descricao = "Compra de ingresso(s) – Guia Rancho Queimado";
+            const item = carrinho[0];
+            const descricao = item?.nome || "Compra de ingresso(s) – Guia Rancho Queimado";
+            const isPacote = isCompraPacote(descricao);
 
-            if (!isPacote) {
-                const item = carrinho[0];
-                ticketId = item?.id || null;
-                quantidade = item?.quantidade || 1;
-                descricao = item?.nome || descricao;
-            }
+            const ticketId = item?.id || null;
+            const quantidade = item?.quantidade || 1;
 
             console.log("📦 Tipo de compra:", isPacote ? "Pacote" : "Ticket avulso");
             console.log("➡️ Enviando para Stripe:", {
@@ -209,18 +201,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
                 })
             });
 
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error("Erro Stripe:", errorText);
-                throw new Error("Falha ao criar sessão de pagamento.");
-            }
-
             const data = await response.json();
-
-            if (!data.url) {
-                console.error("Resposta inválida:", data);
-                throw new Error("URL de checkout não recebida.");
-            }
+            if (!data.url) throw new Error("URL de checkout não recebida.");
 
             window.location.href = data.url;
 

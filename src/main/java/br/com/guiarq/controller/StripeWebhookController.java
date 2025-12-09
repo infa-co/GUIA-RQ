@@ -137,9 +137,7 @@ public class StripeWebhookController {
                 ticketCatalogoId = null;
             }
         }
-
-        // ✅ Simplificação: só o id 11 define pacote
-        boolean isPacote = (ticketCatalogoId != null && ticketCatalogoId == 11);
+        boolean isPacote = metadata.optBoolean("isPacote", false);
 
         logger.info("Decisão pacote? ticketCatalogoId={} -> isPacote={} | desc='{}' | quantidade={}",
                 ticketCatalogoId, isPacote, description, quantidade);
