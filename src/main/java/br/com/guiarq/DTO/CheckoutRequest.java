@@ -14,8 +14,6 @@ public class CheckoutRequest {
 
     private Boolean pacote;      // indica se é compra de pacote
 
-    // GETTERS E SETTERS
-
     public Double getAmount() {
         return amount;
     }

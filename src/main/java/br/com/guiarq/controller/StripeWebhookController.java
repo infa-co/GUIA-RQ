@@ -102,6 +102,13 @@ public class StripeWebhookController {
         JSONObject metadata = data.optJSONObject("metadata");
         if (metadata == null) metadata = new JSONObject();
 
+        // Verifica status do pagamento antes de processar
+        String paymentStatus = data.optString("payment_status", "").trim();
+        if (!"paid".equalsIgnoreCase(paymentStatus)) {
+            logger.warn("Pagamento não confirmado (payment_status={}) para sessionId={}", paymentStatus, sessionId);
+            return;
+        }
+
         String description = extractDescription(data, metadata);
         if (description == null) description = "";
 
@@ -137,22 +144,28 @@ public class StripeWebhookController {
                 ticketCatalogoId = null;
             }
         }
-        boolean isPacote = metadata.optBoolean("isPacote", false);
 
-        logger.info("Decisão pacote? ticketCatalogoId={} -> isPacote={} | desc='{}' | quantidade={}",
-                ticketCatalogoId, isPacote, description, quantidade);
+        // Alinha com o frontend: chave enviada é "pacote"
+        boolean isPacote = metadata.optBoolean("pacote", false);
+
+        logger.info("Webhook recebido: sessionId={} payment_status={} | Decisão pacote? ticketCatalogoId={} -> isPacote={} | desc='{}' | quantidade={}",
+                sessionId, paymentStatus, ticketCatalogoId, isPacote, description, quantidade);
 
         if (isPacote) {
+            logger.info("Chamando processarPacote para sessionId={}", sessionId);
             processarPacote(sessionId, data, email, nome, telefone, cpf, ticketCatalogoId);
             return;
         }
 
         if (ticketCatalogoId != null && quantidade > 1) {
+            logger.info("Chamando processarMultiplosTicketsAvulsos para sessionId={}", sessionId);
             processarMultiplosTicketsAvulsos(sessionId, data, email, nome, telefone, cpf, ticketCatalogoId, quantidade);
         } else {
+            logger.info("Chamando processarTicketAvulso para sessionId={}", sessionId);
             processarTicketAvulso(sessionId, data, email, nome, telefone, cpf, ticketCatalogoId);
         }
     }
+
     private String extractDescription(JSONObject data, JSONObject metadata) {
         String desc = metadata.optString("description", "").trim();
         if (!desc.isBlank()) return desc;
@@ -269,7 +282,7 @@ public class StripeWebhookController {
 
         for (int i = 0; i < quantidade; i++) {
             Ticket ticket = new Ticket();
-            if (i == 0) ticket.setStripeSessionId(sessionId);
+            ticket.setStripeSessionId(sessionId); //MUDEI AQUI AGORA tirei if(i==0)
 
             ticket.setTicketCatalogoId(ticketCatalogoId);
             ticket.setNome(nomeTicket);
@@ -283,7 +296,7 @@ public class StripeWebhookController {
             ticket.setUsado(false);
             ticket.setPacote(false);
             ticket.setQuantidadeComprada(quantidade);
-            if(quantidade > 1){
+            if (quantidade > 1) {
                 ticket.setPacote(false);
             }
 
@@ -320,7 +333,7 @@ public class StripeWebhookController {
         LocalDateTime agora = LocalDateTime.now();
         Double valorTotal = data.optDouble("amount_total", 0.0) / 100.0;
         int quantidade = 10; // pacote fixo de 10
-        if(valorTotal == 77.00) {
+        if (valorTotal == 77.00) {
 
             UUID compraId = UUID.randomUUID();
             List<Ticket> tickets = new ArrayList<>();

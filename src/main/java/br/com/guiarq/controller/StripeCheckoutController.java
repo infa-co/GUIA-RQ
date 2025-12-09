@@ -63,8 +63,6 @@ public class StripeCheckoutController {
                                 )
                                 .build()
                 );
-        // metadata para o webhook identificar o que foi comprado
-        // dentro de createCheckout(...) antes de Session.create(params);
 
         builder.putMetadata("quantidade", quantidade.toString());
 

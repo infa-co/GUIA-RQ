@@ -10,6 +10,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class EmailService {
@@ -21,6 +23,7 @@ public class EmailService {
     private String baseUrl;
 
     private final ObjectMapper mapper = new ObjectMapper();
+    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
     public void sendTicketEmail(
             String emailDestino,
@@ -136,6 +139,13 @@ public class EmailService {
             List<Ticket> tickets,
             List<byte[]> qrBytesList
     ) {
+        StackTraceElement caller = Thread.currentThread().getStackTrace()[2];
+        logger.info("EmailService.{} chamado por {}.{}:{} -> email={} attachments={}",
+                "sendPacoteTicketsEmail", // ajuste o nome do método aqui
+                caller.getClassName(), caller.getMethodName(), caller.getLineNumber(),
+                emailDestino,
+                qrBytesList != null ? qrBytesList.size() : 0
+        );
         try {
             if (tickets == null || tickets.isEmpty()) {
                 throw new IllegalArgumentException("Lista de tickets vazia (pacote).");
@@ -154,8 +164,6 @@ public class EmailService {
             html.append("<p>Olá <strong>").append(nomeCliente).append("</strong>,</p>");
             html.append("<p>Aqui estão seus <strong>").append(tickets.size()).append(" tickets</strong>.</p>");
             html.append("<p>Os QR Codes estão anexados a este e-mail.</p>");
-
-            // 🔽 Adiciona a lista de locais
             html.append("<h3>O que você vai ter acesso:</h3>");
             html.append("<ul>");
             html.append("<li>🍕 Ticket Pizzaria Forno e Serra • Desconto de R$16</li>");
