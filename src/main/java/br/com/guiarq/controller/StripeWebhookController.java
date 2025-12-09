@@ -19,10 +19,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-/**
- * Webhook controller para processar eventos Stripe.
- * Detecta pacote usando metadata.description / data.description / line_items.
- */
 @RestController
 @RequestMapping("/api/stripe")
 public class StripeWebhookController {
@@ -43,13 +39,13 @@ public class StripeWebhookController {
             "13544956918"
     );
 
+    // ===================== WEBHOOK =====================
+
     @PostMapping("/webhook")
     public ResponseEntity<String> handleWebhook(@RequestBody String payload) {
-        logger.info("Webhook recebido");
         try {
             JSONObject json = new JSONObject(payload);
-            String eventType = json.optString("type");
-            if ("checkout.session.completed".equals(eventType)) {
+            if ("checkout.session.completed".equals(json.optString("type"))) {
                 processCheckout(json);
             }
             return ResponseEntity.ok("OK");
@@ -59,38 +55,13 @@ public class StripeWebhookController {
         }
     }
 
-    private String normalizeCpf(String cpf) {
-        if (cpf == null) return null;
-        String cleaned = cpf.replaceAll("\\D", "");
-        return cleaned.isBlank() ? null : cleaned;
-    }
-
-    private boolean podeComprarNovamente(String cpf, LocalDate ultimaCompra) {
-        if (cpf != null && CPFS_LIBERADOS.contains(cpf)) {
-            logger.warn("CPF liberado pela lista: {}", cpf);
-            return true;
-        }
-        if (ultimaCompra == null) return true;
-        long dias = ChronoUnit.DAYS.between(ultimaCompra, LocalDate.now());
-        if (dias >= 90) return true;
-        logger.warn("Compra bloqueada: última compra há {} dias (CPF={})", dias, cpf);
-        return false;
-    }
-
-    private boolean clientePodeComprar(String cpf) {
-        if (cpf == null) return true;
-        Ticket ultimo = ticketRepository.findTop1ByCpfClienteOrderByDataCompraDesc(cpf);
-        LocalDate ultimaData = (ultimo != null && ultimo.getDataCompra() != null)
-                ? ultimo.getDataCompra().toLocalDate()
-                : null;
-        return podeComprarNovamente(cpf, ultimaData);
-    }
-
     private void processCheckout(JSONObject json) {
+
         JSONObject data = json.getJSONObject("data").getJSONObject("object");
         String sessionId = data.optString("id");
+
         if (sessionId == null || sessionId.isBlank()) {
-            logger.error("sessionId inválido no webhook");
+            logger.error("sessionId inválido");
             return;
         }
 
@@ -99,287 +70,149 @@ public class StripeWebhookController {
             return;
         }
 
-        JSONObject metadata = data.optJSONObject("metadata");
-        if (metadata == null) metadata = new JSONObject();
-
-        // Verifica status do pagamento antes de processar
-        String paymentStatus = data.optString("payment_status", "").trim();
-        if (!"paid".equalsIgnoreCase(paymentStatus)) {
-            logger.warn("Pagamento não confirmado (payment_status={}) para sessionId={}", paymentStatus, sessionId);
+        if (!"paid".equalsIgnoreCase(data.optString("payment_status"))) {
+            logger.warn("Pagamento não confirmado para sessionId={}", sessionId);
             return;
         }
 
-        String description = extractDescription(data, metadata);
-        if (description == null) description = "";
+        JSONObject metadata = Optional.ofNullable(data.optJSONObject("metadata"))
+                .orElse(new JSONObject());
 
         String email = metadata.optString("email", "").trim();
         String nome = metadata.optString("nome", "").trim();
         String telefone = metadata.optString("telefone", "").trim();
-        String cpfRaw = metadata.optString("cpf", "").trim();
-        String ticketIdStr = metadata.optString("ticketId", null);
-        String quantidadeStr = metadata.optString("quantidade", "1");
-
-        if (email.isBlank() || nome.isBlank()) {
-            logger.error("Metadata insuficiente: email='{}' nome='{}'", email, nome);
-            return;
-        }
-
-        String cpf = normalizeCpf(cpfRaw);
-
-        int quantidade = 1;
-        try {
-            quantidade = Integer.parseInt(quantidadeStr);
-            if (quantidade <= 0) quantidade = 1;
-        } catch (NumberFormatException e) {
-            logger.warn("quantidade inválida no metadata ('{}'), usando 1", quantidadeStr);
-            quantidade = 1;
-        }
-
-        Long ticketCatalogoId = null;
-        if (ticketIdStr != null && !ticketIdStr.isBlank()) {
-            try {
-                ticketCatalogoId = Long.parseLong(ticketIdStr);
-            } catch (NumberFormatException e) {
-                logger.warn("ticketId inválido no metadata: {}", ticketIdStr);
-                ticketCatalogoId = null;
-            }
-        }
-
-        // Alinha com o frontend: chave enviada é "pacote"
+        String cpf = normalizeCpf(metadata.optString("cpf", ""));
         boolean isPacote = metadata.optBoolean("pacote", false);
 
-        logger.info("Webhook recebido: sessionId={} payment_status={} | Decisão pacote? ticketCatalogoId={} -> isPacote={} | desc='{}' | quantidade={}",
-                sessionId, paymentStatus, ticketCatalogoId, isPacote, description, quantidade);
+        int quantidade = parseInt(metadata.optString("quantidade", "1"), 1);
+        Long ticketCatalogoId = parseLong(metadata.optString("ticketId", null));
+
+        if (email.isBlank() || nome.isBlank()) {
+            logger.error("Metadata incompleta");
+            return;
+        }
+
+        logger.info("Checkout confirmado sessionId={} pacote={} quantidade={}",
+                sessionId, isPacote, quantidade);
 
         if (isPacote) {
-            logger.info("Chamando processarPacote para sessionId={}", sessionId);
-            processarPacote(sessionId, data, email, nome, telefone, cpf, ticketCatalogoId);
+            processarPacote(sessionId, email, nome, telefone, cpf, ticketCatalogoId);
             return;
         }
 
-        if (ticketCatalogoId != null && quantidade > 1) {
-            logger.info("Chamando processarMultiplosTicketsAvulsos para sessionId={}", sessionId);
-            processarMultiplosTicketsAvulsos(sessionId, data, email, nome, telefone, cpf, ticketCatalogoId, quantidade);
+        if (quantidade > 1) {
+            processarMultiplosTicketsAvulsos(sessionId, email, nome, telefone, cpf, ticketCatalogoId, quantidade);
         } else {
-            logger.info("Chamando processarTicketAvulso para sessionId={}", sessionId);
-            processarTicketAvulso(sessionId, data, email, nome, telefone, cpf, ticketCatalogoId);
+            processarTicketAvulso(sessionId, email, nome, telefone, cpf, ticketCatalogoId);
         }
     }
 
-    private String extractDescription(JSONObject data, JSONObject metadata) {
-        String desc = metadata.optString("description", "").trim();
-        if (!desc.isBlank()) return desc;
-
-        desc = data.optString("description", "").trim();
-        if (!desc.isBlank()) return desc;
-
-        try {
-            if (data.has("line_items")) {
-                Object liObj = data.get("line_items");
-                if (liObj instanceof JSONArray) {
-                    JSONArray lineItems = data.getJSONArray("line_items");
-                    for (int i = 0; i < lineItems.length(); i++) {
-                        JSONObject li = lineItems.getJSONObject(i);
-                        if (li.has("price_data")) {
-                            JSONObject priceData = li.optJSONObject("price_data");
-                            if (priceData != null && priceData.has("product_data")) {
-                                JSONObject productData = priceData.optJSONObject("product_data");
-                                if (productData != null) {
-                                    String name = productData.optString("name", "").trim();
-                                    if (!name.isBlank()) return name;
-                                }
-                            }
-                        }
-                        String liDesc = li.optString("description", "").trim();
-                        if (!liDesc.isBlank()) return liDesc;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            logger.debug("Não foi possível extrair description de line_items: {}", e.getMessage());
-        }
-        return null;
-    }
+    // ===================== PROCESSAMENTOS =====================
 
     @Transactional
-    private void processarTicketAvulso(String sessionId,
-                                       JSONObject data,
-                                       String email,
-                                       String nome,
-                                       String telefone,
-                                       String cpf,
-                                       Long ticketCatalogoId) {
+    private void processarTicketAvulso(String sessionId, String email, String nome,
+                                       String telefone, String cpf, Long ticketCatalogoId) {
 
-        if (!clientePodeComprar(cpf)) {
-            logger.warn("Compra bloqueada (ticket avulso) CPF={}", cpf);
-            return;
-        }
+        if (!clientePodeComprar(cpf)) return;
 
-        String nomeTicket = "Guia Rancho Queimado - Ticket";
-        try {
-            if (ticketCatalogoId != null) {
-                Optional<TicketCatalogo> cat = ticketCatalogoRepository.findById(ticketCatalogoId);
-                if (cat.isPresent()) nomeTicket = cat.get().getNome();
-            }
-        } catch (Exception e) {
-            logger.debug("Erro buscando catálogo: {}", e.getMessage());
-        }
-
-        Ticket ticket = new Ticket();
-        ticket.setStripeSessionId(sessionId);
-        ticket.setTicketCatalogoId(ticketCatalogoId);
-        ticket.setNome(nomeTicket);
-
-        ticket.setEmailCliente(email);
-        ticket.setNomeCliente(nome);
-        ticket.setTelefoneCliente(telefone);
-        ticket.setCpfCliente(cpf);
-
-        ticket.setStatus("PAGO");
-        ticket.setUsado(false);
+        Ticket ticket = criarTicketBase(sessionId, email, nome, telefone, cpf, ticketCatalogoId);
         ticket.setPacote(false);
         ticket.setQuantidadeComprada(1);
 
-        ticket.setDataCompra(LocalDateTime.now());
-        ticket.setCriadoEm(LocalDateTime.now());
-
-        ticket.setIdPublico(UUID.randomUUID());
-        ticket.setQrToken(UUID.randomUUID().toString());
-
         ticketRepository.save(ticket);
         ticketService.processarCompra(ticket);
-        logger.info("Ticket avulso criado para sessionId={}", sessionId);
+
+        logger.info("Ticket avulso criado sessionId={}", sessionId);
     }
 
     @Transactional
-    private void processarMultiplosTicketsAvulsos(String sessionId,
-                                                  JSONObject data,
-                                                  String email,
-                                                  String nome,
-                                                  String telefone,
-                                                  String cpf,
-                                                  Long ticketCatalogoId,
+    private void processarMultiplosTicketsAvulsos(String sessionId, String email, String nome,
+                                                  String telefone, String cpf, Long ticketCatalogoId,
                                                   int quantidade) {
 
-        if (!clientePodeComprar(cpf)) {
-            logger.warn("Compra bloqueada (múltiplos avulsos) CPF={}", cpf);
-            return;
-        }
+        if (!clientePodeComprar(cpf)) return;
 
-        String nomeTicket = "Guia Rancho Queimado - Ticket";
-        try {
-            if (ticketCatalogoId != null) {
-                Optional<TicketCatalogo> cat = ticketCatalogoRepository.findById(ticketCatalogoId);
-                if (cat.isPresent()) nomeTicket = cat.get().getNome();
-            }
-        } catch (Exception e) {
-            logger.debug("Erro buscando catálogo: {}", e.getMessage());
-        }
-
-        LocalDateTime agora = LocalDateTime.now();
         UUID compraId = UUID.randomUUID();
         List<Ticket> tickets = new ArrayList<>();
 
         for (int i = 0; i < quantidade; i++) {
-            Ticket ticket = new Ticket();
-            ticket.setStripeSessionId(sessionId); //MUDEI AQUI AGORA tirei if(i==0)
-
-            ticket.setTicketCatalogoId(ticketCatalogoId);
-            ticket.setNome(nomeTicket);
-
-            ticket.setEmailCliente(email);
-            ticket.setNomeCliente(nome);
-            ticket.setTelefoneCliente(telefone);
-            ticket.setCpfCliente(cpf);
-
-            ticket.setStatus("PAGO");
-            ticket.setUsado(false);
-            ticket.setPacote(false);
-            ticket.setQuantidadeComprada(quantidade);
-            if (quantidade > 1) {
-                ticket.setPacote(false);
-            }
-
-            ticket.setDataCompra(agora);
-            ticket.setCriadoEm(agora);
-
-            ticket.setIdPublico(UUID.randomUUID());
-            ticket.setQrToken(UUID.randomUUID().toString());
-
-            ticket.setCompraId(compraId);
-
-            ticketRepository.save(ticket);
-            tickets.add(ticket);
+            Ticket t = criarTicketBase(sessionId, email, nome, telefone, cpf, ticketCatalogoId);
+            t.setPacote(false);
+            t.setQuantidadeComprada(quantidade);
+            t.setCompraId(compraId);
+            ticketRepository.save(t);
+            tickets.add(t);
         }
 
         ticketService.processarCompraAvulsaMultipla(tickets);
-        logger.info("Criados {} tickets avulsos para sessionId={}", quantidade, sessionId);
+        logger.info("Tickets avulsos múltiplos criados sessionId={}", sessionId);
     }
 
     @Transactional
-    private void processarPacote(String sessionId,
-                                 JSONObject data,
-                                 String email,
-                                 String nome,
-                                 String telefone,
-                                 String cpf,
-                                 Long ticketCatalogoId) {
+    private void processarPacote(String sessionId, String email, String nome,
+                                 String telefone, String cpf, Long ticketCatalogoId) {
 
-        if (!clientePodeComprar(cpf)) {
-            logger.warn("Compra bloqueada (pacote) CPF={}", cpf);
-            return;
+        if (!clientePodeComprar(cpf)) return;
+
+        int quantidade = 10;
+        UUID compraId = UUID.randomUUID();
+        List<Ticket> tickets = new ArrayList<>();
+
+        for (int i = 0; i < quantidade; i++) {
+            Ticket t = criarTicketBase(sessionId, email, nome, telefone, cpf,
+                    ticketCatalogoId != null ? ticketCatalogoId : 11);
+            t.setPacote(true);
+            t.setQuantidadeComprada(quantidade);
+            t.setCompraId(compraId);
+            ticketRepository.save(t);
+            tickets.add(t);
         }
 
-        LocalDateTime agora = LocalDateTime.now();
-        Double valorTotal = data.optDouble("amount_total", 0.0) / 100.0;
-        int quantidade = 10; // pacote fixo de 10
-        if (valorTotal == 77.00) {
+        ticketService.processarPacote(tickets);
+        logger.info("Pacote processado sessionId={}", sessionId);
+    }
 
-            UUID compraId = UUID.randomUUID();
-            List<Ticket> tickets = new ArrayList<>();
+    private Ticket criarTicketBase(String sessionId, String email, String nome,
+                                   String telefone, String cpf, Long catalogoId) {
 
-            String nomeTicket = "Pacote Completo Guia RQ";
-            try {
-                if (ticketCatalogoId != null) {
-                    Optional<TicketCatalogo> cat = ticketCatalogoRepository.findById(ticketCatalogoId);
-                    if (cat.isPresent()) nomeTicket = cat.get().getNome();
-                }
-            } catch (Exception e) {
-                logger.debug("Erro buscando catálogo: {}", e.getMessage());
-            }
+        String nomeTicket = ticketCatalogoRepository.findById(catalogoId)
+                .map(TicketCatalogo::getNome)
+                .orElse("Guia Rancho Queimado - Ticket");
 
-            for (int i = 0; i < quantidade; i++) {
-                Ticket ticket = new Ticket();
-                if (i == 0) ticket.setStripeSessionId(sessionId);
+        Ticket t = new Ticket();
+        t.setStripeSessionId(sessionId);
+        t.setTicketCatalogoId(catalogoId);
+        t.setNome(nomeTicket);
+        t.setEmailCliente(email);
+        t.setNomeCliente(nome);
+        t.setTelefoneCliente(telefone);
+        t.setCpfCliente(cpf);
+        t.setStatus("PAGO");
+        t.setUsado(false);
+        t.setDataCompra(LocalDateTime.now());
+        t.setCriadoEm(LocalDateTime.now());
+        t.setIdPublico(UUID.randomUUID());
+        t.setQrToken(UUID.randomUUID().toString());
+        return t;
+    }
 
-                ticket.setTicketCatalogoId(ticketCatalogoId != null ? ticketCatalogoId : 11);
-                ticket.setNome(nomeTicket);
+    private String normalizeCpf(String cpf) {
+        return cpf == null ? null : cpf.replaceAll("\\D", "");
+    }
 
-                ticket.setEmailCliente(email);
-                ticket.setNomeCliente(nome);
-                ticket.setTelefoneCliente(telefone);
-                ticket.setCpfCliente(cpf);
+    private boolean clientePodeComprar(String cpf) {
+        if (cpf != null && CPFS_LIBERADOS.contains(cpf)) return true;
+        Ticket ultimo = ticketRepository.findTop1ByCpfClienteOrderByDataCompraDesc(cpf);
+        if (ultimo == null || ultimo.getDataCompra() == null) return true;
+        return ChronoUnit.DAYS.between(
+                ultimo.getDataCompra().toLocalDate(), LocalDate.now()) >= 90;
+    }
 
-                ticket.setStatus("PAGO");
-                ticket.setUsado(false);
-                ticket.setPacote(true);
-                ticket.setQuantidadeComprada(quantidade);
+    private int parseInt(String v, int def) {
+        try { return Integer.parseInt(v); } catch (Exception e) { return def; }
+    }
 
-                ticket.setDataCompra(agora);
-                ticket.setCriadoEm(agora);
-
-                ticket.setIdPublico(UUID.randomUUID());
-                ticket.setQrToken(UUID.randomUUID().toString());
-
-                ticket.setValorPago(77.00);
-                ticket.setCompraId(compraId);
-
-                ticketRepository.save(ticket);
-                tickets.add(ticket);
-            }
-
-            ticketService.processarPacote(tickets);
-            logger.info("Pacote processado ({} tickets) para sessionId={}", tickets.size(), sessionId);
-        }
+    private Long parseLong(String v) {
+        try { return v == null ? null : Long.parseLong(v); } catch (Exception e) { return null; }
     }
 }

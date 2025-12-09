@@ -25,10 +25,6 @@ public class TicketService {
     private static final String URL_VALIDACAO =
             "https://guiaranchoqueimado.com.br/pages/validar-ticket.html?qr=";
 
-    // -------------------------------
-    // SALVAR / LISTAR
-    // -------------------------------
-
     public Ticket salvar(Ticket ticket) {
         return ticketRepository.save(ticket);
     }
@@ -38,6 +34,10 @@ public class TicketService {
     }
 
     public void processarCompra(Ticket ticket) {
+        if (ticket.getStripeSessionId() == null) {
+            System.out.println("⚠️ Ticket sem pagamento confirmado. Email NÃO enviado.");
+            return;
+        }
         try {
             String conteudo = URL_VALIDACAO + ticket.getQrToken();
             byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
@@ -59,6 +59,10 @@ public class TicketService {
         }
     }
     public void processarCompraAvulsaMultipla(List<Ticket> tickets) {
+        if (tickets.stream().anyMatch(t -> t.getStripeSessionId() == null)) {
+            System.out.println("⚠️ Existem tickets sem pagamento confirmado. Email NÃO enviado.");
+            return;
+        }
         try {
 
             if (tickets == null || tickets.isEmpty()) {
@@ -66,7 +70,6 @@ public class TicketService {
             }
 
             if (tickets.size() == 1) {
-                // SE tiver só 1 ticket, manda como compra avulsa normal
                 processarCompra(tickets.get(0));
                 return;
             }
@@ -99,6 +102,10 @@ public class TicketService {
     }
 
     public void processarPacote(List<Ticket> tickets) {
+        if (tickets.stream().anyMatch(t -> t.getStripeSessionId() == null)) {
+            System.out.println("⚠️ Existem tickets sem pagamento confirmado. Email NÃO enviado.");
+            return;
+        }
         try {
             if (tickets == null || tickets.isEmpty()) {
                 throw new IllegalArgumentException("Lista de tickets vazia");
