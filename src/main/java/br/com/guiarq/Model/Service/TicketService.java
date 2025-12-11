@@ -112,7 +112,6 @@ public class TicketService {
             }
 
             if (tickets.size() == 1) {
-                // SE só existe 1 ticket, NÃO É PACOTE → envia como ticket único
                 processarCompra(tickets.get(0));
                 return;
             }

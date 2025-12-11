@@ -82,18 +82,25 @@ public class StripeWebhookController {
         String nome = metadata.optString("nome", "").trim();
         String telefone = metadata.optString("telefone", "").trim();
         String cpf = normalizeCpf(metadata.optString("cpf", ""));
+
+        // ✅ CORREÇÃO: verifica tanto pelo campo "pacote" quanto pelo ticketId
         boolean isPacote = metadata.optBoolean("pacote", false);
+        Long ticketCatalogoId = parseLong(metadata.optString("ticketId", null));
+
+        // se o ID for 11, É PACOTE COM CERTEZA
+        if (ticketCatalogoId != null && ticketCatalogoId == 11) {
+            isPacote = true;
+        }
 
         int quantidade = parseInt(metadata.optString("quantidade", "1"), 1);
-        Long ticketCatalogoId = parseLong(metadata.optString("ticketId", null));
 
         if (email.isBlank() || nome.isBlank()) {
             logger.error("Metadata incompleta");
             return;
         }
 
-        logger.info("Checkout confirmado sessionId={} pacote={} quantidade={}",
-                sessionId, isPacote, quantidade);
+        logger.info("Checkout confirmado sessionId={} pacote={} quantidade={} ticketId={}",
+                sessionId, isPacote, quantidade, ticketCatalogoId);
 
         if (isPacote) {
             processarPacote(sessionId, email, nome, telefone, cpf, ticketCatalogoId);
@@ -145,18 +152,25 @@ public class StripeWebhookController {
         }
 
         ticketService.processarCompraAvulsaMultipla(tickets);
-        logger.info("Tickets avulsos múltiplos criados sessionId={}", sessionId);
+        logger.info("Tickets avulsos múltiplos criados sessionId={} quantidade={}", sessionId, quantidade);
     }
 
     @Transactional
     private void processarPacote(String sessionId, String email, String nome,
                                  String telefone, String cpf, Long ticketCatalogoId) {
 
-        if (!clientePodeComprar(cpf)) return;
+        logger.info("🎁 INICIANDO PROCESSAMENTO DE PACOTE sessionId={}", sessionId);
+
+        if (!clientePodeComprar(cpf)) {
+            logger.warn("⚠️ Cliente bloqueado por regra 90 dias cpf={}", cpf);
+            return;
+        }
 
         int quantidade = 10;
         UUID compraId = UUID.randomUUID();
         List<Ticket> tickets = new ArrayList<>();
+
+        logger.info("📝 Criando {} tickets para o pacote compraId={}", quantidade, compraId);
 
         for (int i = 0; i < quantidade; i++) {
             Ticket t = criarTicketBase(sessionId, email, nome, telefone, cpf,
@@ -166,10 +180,12 @@ public class StripeWebhookController {
             t.setCompraId(compraId);
             ticketRepository.save(t);
             tickets.add(t);
+            logger.debug("✔️ Ticket {}/{} criado id={}", i+1, quantidade, t.getIdPublico());
         }
 
+        logger.info("📧 Enviando email de pacote para {}", email);
         ticketService.processarPacote(tickets);
-        logger.info("Pacote processado sessionId={}", sessionId);
+        logger.info("✅ Pacote processado com sucesso sessionId={}", sessionId);
     }
 
     private Ticket criarTicketBase(String sessionId, String email, String nome,

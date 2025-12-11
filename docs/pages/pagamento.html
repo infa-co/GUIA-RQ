@@ -91,8 +91,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
                 </p>
             </div>
 
-            <!-- ❌ REMOVIDO: OPÇÃO PIX  -->
-
             <!-- CARTEIRA DIGITAL -->
             <div class="payment-option border-2 border-gray-200 rounded-xl p-4 cursor-pointer hover:border-blue-600 transition" onclick="selectPayment('wallet', event)">
                 <div class="flex justify-between items-center">
@@ -167,10 +165,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
 
             const item = carrinho[0];
             const descricao = item?.nome || "Compra de ingresso(s) – Guia Rancho Queimado";
-            const isPacote = isCompraPacote(descricao);
-
             const ticketId = item?.id || null;
             const quantidade = item?.quantidade || 1;
+
+            const isPacote = ticketId === 11 || isCompraPacote(descricao);
 
             console.log("📦 Tipo de compra:", isPacote ? "Pacote" : "Ticket avulso");
             console.log("➡️ Enviando para Stripe:", {

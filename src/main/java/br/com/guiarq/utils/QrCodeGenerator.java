@@ -13,14 +13,19 @@ import java.io.ByteArrayOutputStream;
 public class QrCodeGenerator {
 
     public byte[] generateQrCode(String text) throws Exception {
-        QRCodeWriter writer = new QRCodeWriter();
-        var matrix = writer.encode(text, BarcodeFormat.QR_CODE, 300, 300);
+        try {
+            QRCodeWriter writer = new QRCodeWriter();
+            var matrix = writer.encode(text, BarcodeFormat.QR_CODE, 300, 300);
 
-        BufferedImage image = MatrixToImageWriter.toBufferedImage(matrix);
+            BufferedImage image = MatrixToImageWriter.toBufferedImage(matrix);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        javax.imageio.ImageIO.write(image, "png", baos);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            javax.imageio.ImageIO.write(image, "png", baos);
 
-        return baos.toByteArray();
+            return baos.toByteArray();
+        }catch (Exception e){
+            throw new Exception("deu algo errado");
+        }
     }
 }
+

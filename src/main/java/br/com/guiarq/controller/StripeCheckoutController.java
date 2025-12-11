@@ -88,6 +88,5 @@ public class StripeCheckoutController {
         Map<String, Object> response = new HashMap<>();
         response.put("url", session.getUrl());
         return response;
-
     }
 }
