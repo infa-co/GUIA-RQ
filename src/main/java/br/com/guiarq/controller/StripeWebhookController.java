@@ -83,7 +83,7 @@ public class StripeWebhookController {
         String telefone = metadata.optString("telefone", "").trim();
         String cpf = normalizeCpf(metadata.optString("cpf", ""));
 
-        // ✅ CORREÇÃO: verifica tanto pelo campo "pacote" quanto pelo ticketId
+        // CORREÇÃO: verifica tanto pelo campo "pacote" quanto pelo ticketId
         boolean isPacote = metadata.optBoolean("pacote", false);
         Long ticketCatalogoId = parseLong(metadata.optString("ticketId", null));
 
