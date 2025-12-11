@@ -39,8 +39,6 @@ public class StripeWebhookController {
             "13544956918"
     );
 
-    // ===================== WEBHOOK =====================
-
     @PostMapping("/webhook")
     public ResponseEntity<String> handleWebhook(@RequestBody String payload) {
         try {
@@ -113,8 +111,6 @@ public class StripeWebhookController {
             processarTicketAvulso(sessionId, email, nome, telefone, cpf, ticketCatalogoId);
         }
     }
-
-    // ===================== PROCESSAMENTOS =====================
 
     @Transactional
     private void processarTicketAvulso(String sessionId, String email, String nome,
@@ -193,6 +189,7 @@ public class StripeWebhookController {
 
         String nomeTicket = ticketCatalogoRepository.findById(catalogoId)
                 .map(TicketCatalogo::getNome)
+                //REVER
                 .orElse("Guia Rancho Queimado - Ticket");
 
         Ticket t = new Ticket();
