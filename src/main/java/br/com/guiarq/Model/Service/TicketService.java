@@ -35,7 +35,7 @@ public class TicketService {
 
     public void processarCompra(Ticket ticket) {
         if (ticket.getStripeSessionId() == null) {
-            System.out.println("⚠️ Ticket sem pagamento confirmado. Email NÃO enviado.");
+            System.out.println("Ticket sem pagamento confirmado. Email NÃO enviado.");
             return;
         }
         try {
@@ -55,12 +55,12 @@ public class TicketService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("❌ ERRO AO PROCESSAR COMPRA (TICKET ÚNICO)");
+            System.out.println("ERRO AO PROCESSAR COMPRA (TICKET ÚNICO)");
         }
     }
     public void processarCompraAvulsaMultipla(List<Ticket> tickets) {
         if (tickets.stream().anyMatch(t -> t.getStripeSessionId() == null)) {
-            System.out.println("⚠️ Existem tickets sem pagamento confirmado. Email NÃO enviado.");
+            System.out.println("Existem tickets sem pagamento confirmado. Email NÃO enviado.");
             return;
         }
         try {

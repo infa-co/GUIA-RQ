@@ -162,26 +162,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
                 return;
             }
 
+            // criar array ticketIDS
+            // for que passa pelo carrinho e armazena os ids no ticketIDs
             const total = Number(resumo.totalFinal);
 
-            const item = carrinho[0];
-            const descricao = item?.nome || "Compra de ingresso(s) – Guia Rancho Queimado";
-            const ticketId = item?.id || null;
-            const quantidade = item?.quantidade || 1;
+                const item = carrinho[0];
+                const descricao = item?.nome || "Compra de ingresso(s) – Guia Rancho Queimado";
+                const ticketId = item?.id || null;
+                const quantidade = item?.quantidade || 1;
 
-            const isPacote = ticketId === 11 || isCompraPacote(descricao);
+                const isPacote = ticketId === 11 || isCompraPacote(descricao);
 
-            console.log("📦 Tipo de compra:", isPacote ? "Pacote" : "Ticket avulso");
-            console.log("➡️ Enviando para Stripe:", {
-                amount: total,
-                description: descricao,
-                nome,
-                email,
-                telefone,
-                cpf,
-                pacote: isPacote,
-                ticketId,
-                quantidade
+                console.log("📦 Tipo de compra:", isPacote ? "Pacote" : "Ticket avulso");
+                console.log("➡️ Enviando para Stripe:", {
+                    amount: total,
+                    description: descricao,
+                    nome,
+                    email,
+                    telefone,
+                    cpf,
+                    pacote: isPacote,
+                    ticketId,
+                    quantidade
             });
 
             const response = await fetch(`${window.API_URL}/api/stripe/create-checkout`, {
@@ -195,6 +197,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
                     telefone,
                     cpf,
                     pacote: isPacote,
+                    //ticketIds
                     ticketId,
                     quantidade
                 })

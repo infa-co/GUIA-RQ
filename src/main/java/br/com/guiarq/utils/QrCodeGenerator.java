@@ -24,7 +24,7 @@ public class QrCodeGenerator {
 
             return baos.toByteArray();
         }catch (Exception e){
-            throw new Exception("deu algo errado");
+            throw new Exception("Falha na geração do QR code");
         }
     }
 }

@@ -40,7 +40,8 @@ public class EmailService {
                     <p><strong>Ticket:</strong> %s</p>
                     <p><strong>Telefone:</strong> %s<br><strong>CPF:</strong> %s</p>
                     <p>O QR Code está anexado a este e-mail.</p>
-                    <p>Apresente no estabelecimento participante.</p>
+                    <p>Apresente no 
+                    estabelecimento participante.</p>
                     """.formatted(nomeCliente, nomeTicket, telefone, cpf);
 
             String qrBase64 = Base64.getEncoder().encodeToString(qrBytes);
