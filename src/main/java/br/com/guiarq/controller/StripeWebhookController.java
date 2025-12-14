@@ -5,7 +5,6 @@ import br.com.guiarq.Model.Entities.TicketCatalogo;
 import br.com.guiarq.Model.Repository.TicketCatalogoRepository;
 import br.com.guiarq.Model.Repository.TicketRepository;
 import br.com.guiarq.Model.Service.TicketService;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,34 +80,37 @@ public class StripeWebhookController {
         String telefone = metadata.optString("telefone", "").trim();
         String cpf = normalizeCpf(metadata.optString("cpf", ""));
 
-        // CORREÇÃO: verifica tanto pelo campo "pacote" quanto pelo ticketId
         boolean isPacote = metadata.optBoolean("pacote", false);
-        // recuperar ticket IDs
-        // long[] ticketCatalogoIDs
+
+        String idsString = metadata.optString("ids", null);
         Long ticketCatalogoId = parseLong(metadata.optString("ticketId", null));
 
-        // se o ID for 11, É PACOTE COM CERTEZA
-        if (ticketCatalogoId != null && ticketCatalogoId == 11) {
+        List<Long> catalogoIds = new ArrayList<>();
+        if(idsString != null && !idsString.isBlank()) {
+            catalogoIds = Arrays.stream(idsString.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .map(this::parseLong)
+                    .filter(Objects::nonNull)
+                    .toList();
+        } else if (ticketCatalogoId != null) {
+            catalogoIds = Collections.singletonList(ticketCatalogoId);
+        }
+        if(catalogoIds.contains(11L)){
             isPacote = true;
         }
-
         int quantidade = parseInt(metadata.optString("quantidade", "1"), 1);
 
         if (email.isBlank() || nome.isBlank()) {
             logger.error("Metadata incompleta");
             return;
         }
-
         logger.info("Checkout confirmado sessionId={} pacote={} quantidade={} ticketId={}",
-                sessionId, isPacote, quantidade, ticketCatalogoId);
-
-        if (isPacote) {
-            processarPacote(sessionId, email, nome, telefone, cpf, ticketCatalogoId);
-            return;
-        }
-
-        if (quantidade > 1) {
-            processarMultiplosTicketsAvulsos(sessionId, email, nome, telefone, cpf, ticketCatalogoId, quantidade);
+                sessionId, isPacote, quantidade, catalogoIds);
+        if(isPacote) {
+            processarPacote(sessionId, email, nome, telefone, cpf, catalogoIds);
+        } else if (quantidade > 1) {
+            processarMultiplosTicketsAvulsos(sessionId, email, nome, telefone, cpf, catalogoIds, quantidade);
         } else {
             processarTicketAvulso(sessionId, email, nome, telefone, cpf, ticketCatalogoId);
         }
@@ -132,31 +134,35 @@ public class StripeWebhookController {
 
     @Transactional
     private void processarMultiplosTicketsAvulsos(String sessionId, String email, String nome,
-                                                  String telefone, String cpf, Long catalogoId,
+                                                  String telefone, String cpf, List<Long> ticketCatalogoIds,
                                                   int quantidade) {
 
         if (!clientePodeComprar(cpf)) return;
 
         UUID compraId = UUID.randomUUID();
         List<Ticket> tickets = new ArrayList<>();
+        List<TicketCatalogo> catalogos = ticketCatalogoRepository.findByIdIn(ticketCatalogoIds);
 
-        logger.warn("CatalogoId{} não encontrado, ignorando...");
+        for (TicketCatalogo catalogo : catalogos) {
+            Long catalogoId = catalogo.getId();
+            for (int i = 0; i < quantidade; i++) {
+                Ticket t = criarTicketBase(sessionId, email, nome, telefone, cpf, catalogoId);
+                t.setPacote(false);
+                t.setQuantidadeComprada(quantidade);
+                t.setCompraId(compraId);
 
-        for (int i = 0; i < quantidade; i++) {
-            Ticket t = criarTicketBase(sessionId, email, nome, telefone, cpf, catalogoId);
-            t.setPacote(false);
-            t.setQuantidadeComprada(quantidade);
-            t.setCompraId(compraId);
-            ticketRepository.save(t);
-            tickets.add(t);
+                ticketRepository.save(t);
+                tickets.add(t);
+            }
         }
+
         ticketService.processarCompraAvulsaMultipla(tickets);
         logger.info("Tickets avulsos múltiplos criados sessionId={} quantidade={}", sessionId, quantidade);
     }
 
     @Transactional
     private void processarPacote(String sessionId, String email, String nome,
-                                 String telefone, String cpf, Long ticketCatalogoId) {
+                                 String telefone, String cpf, List<Long> ticketCatalogoIds) {
 
         logger.info("INICIANDO PROCESSAMENTO DE PACOTE sessionId={}", sessionId);
 
@@ -171,15 +177,18 @@ public class StripeWebhookController {
 
         logger.info("Criando {} tickets para o pacote compraId={}", quantidade, compraId);
 
-        for (int i = 0; i < quantidade; i++) {
-            Ticket t = criarTicketBase(sessionId, email, nome, telefone, cpf,
-                    ticketCatalogoId != null ? ticketCatalogoId : 11);
-            t.setPacote(true);
-            t.setQuantidadeComprada(quantidade);
-            t.setCompraId(compraId);
-            ticketRepository.save(t);
-            tickets.add(t);
-            logger.debug("✔️ Ticket {}/{} criado id={}", i+1, quantidade, t.getIdPublico());
+        List<TicketCatalogo> catalogos = ticketCatalogoRepository.findByIdIn(ticketCatalogoIds);
+        for (TicketCatalogo catalogo : catalogos) {
+            Long catalogoId = catalogo.getId();
+            for (int i = 0; i < quantidade; i++) {
+                Ticket t = criarTicketBase(sessionId, email, nome, telefone, cpf, catalogoId);
+                t.setPacote(true);
+                t.setQuantidadeComprada(quantidade);
+                t.setCompraId(compraId);
+                ticketRepository.save(t);
+                tickets.add(t);
+                logger.debug("✔️ Ticket {}/{} criado id={}", i + 1, quantidade, t.getIdPublico());
+            }
         }
 
         logger.info("Enviando email de pacote para {}", email);

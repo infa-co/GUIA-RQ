@@ -278,7 +278,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     });
   });
 
-  // 🔹 Clique no botão "Ir para o pagamento"
+  // Clique no botão "Ir para o pagamento"
   document.getElementById("go-to-payment").addEventListener("click", () => {
     // Monta carrinho
     //Arrumar depois
@@ -287,7 +287,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       id: Date.now(),
       nome: nome,
       preco: totalAmount - addedItems.reduce((acc, i) => acc + i.price, 0),
-      qtd: nome == "Pacote Completo Guia RQ"? 10 : 1,
+      qtd: 1,
       local: "Rancho Queimado",
       img: document.getElementById("package-image").getAttribute("src") // Caminho relativo
     }];
