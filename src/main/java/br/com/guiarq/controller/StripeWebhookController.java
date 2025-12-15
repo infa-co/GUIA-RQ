@@ -5,6 +5,8 @@ import br.com.guiarq.Model.Entities.TicketCatalogo;
 import br.com.guiarq.Model.Repository.TicketCatalogoRepository;
 import br.com.guiarq.Model.Repository.TicketRepository;
 import br.com.guiarq.Model.Service.TicketService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,11 +82,25 @@ public class StripeWebhookController {
         String cpf = normalizeCpf(metadata.optString("cpf", ""));
 
         boolean isPacote = metadata.optBoolean("pacote", false);
+        Map<Integer, Integer> pedidos = new HashMap<>();
+        JSONObject pedidosJson = metadata.optJSONObject("pedidos");
 
-        String idsString = metadata.optString("ids", null);
-        Long ticketCatalogoId = parseLong(metadata.optString("ticketId", null));
+        if (pedidosJson != null) {
+            for (String key : pedidosJson.keySet()) {
+                Integer chave = Integer.valueOf(key);
 
-        List<Long> catalogoIds = new ArrayList<>();
+                Number valor = (Number) pedidosJson.get(key);
+                pedidos.put(chave, valor.intValue());
+            }
+        }
+        pedidos.forEach((id, quantidade) -> {
+            System.out.println("ticketID: " + id  + "  ->  quantidade: " + quantidade);
+        });
+
+        //String idsString = metadata.optString("ids", null);
+
+
+        /*List<Long> catalogoIds = new ArrayList<>();
         if (idsString != null && !idsString.isBlank()) {
             catalogoIds = Arrays.stream(idsString.split(","))
                     .map(String::trim)
@@ -94,11 +110,11 @@ public class StripeWebhookController {
                     .toList();
         } else if (ticketCatalogoId != null) {
             catalogoIds = Collections.singletonList(ticketCatalogoId);
-        }
+        }*/
 
-        if (catalogoIds.contains(11L)) {
-            isPacote = true;
-        }
+        //if (catalogoIds.contains(11L)) {
+          //  isPacote = true;
+        //}
 
         int quantidade = parseInt(metadata.optString("quantidade", "1"), 1);
 
@@ -108,18 +124,18 @@ public class StripeWebhookController {
         }
 
         // Log principal do checkout
-        logger.info("Checkout confirmado sessionId={} | pacote={} | quantidade={} | ticketIds={} | cliente={} ({})",
-                sessionId, isPacote, quantidade, catalogoIds, nome, email);
+        //logger.info("Checkout confirmado sessionId={} | pacote={} | quantidade={} | ticketIds={} | cliente={} ({})",
+          //      sessionId, isPacote, quantidade, catalogoIds, nome, email);
 
         if (isPacote) {
             logger.info("Tipo de compra identificado: PACOTE");
-            processarPacote(sessionId, email, nome, telefone, cpf, catalogoIds);
-        } else if (quantidade > 1 || catalogoIds.size() > 1) {
+            //processarPacote(sessionId, email, nome, telefone, cpf, catalogoIds);
+        } else if (quantidade > 1) {
             logger.info("Tipo de compra identificado: TICKETS AVULSOS (múltiplos)");
-            processarMultiplosTicketsAvulsos(sessionId, email, nome, telefone, cpf, catalogoIds, quantidade);
+            //processarMultiplosTicketsAvulsos(sessionId, email, nome, telefone, cpf, catalogoIds, quantidade);
         } else {
             logger.info("Tipo de compra identificado: TICKET AVULSO (único)");
-            processarTicketAvulso(sessionId, email, nome, telefone, cpf, ticketCatalogoId);
+            //processarTicketAvulso(sessionId, email, nome, telefone, cpf, ticketCatalogoId);
         }
     }
 

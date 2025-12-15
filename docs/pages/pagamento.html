@@ -170,8 +170,7 @@ payBtn.addEventListener("click", async () => {
             : carrinho[0]?.nome || "Compra de ingresso(s) – Guia Rancho Queimado";
 
         const ticketId = carrinho.length === 1 ? carrinho[0].id : null;
-        const quantidade = carrinho.length === 1 ? (carrinho[0].quantidade || 1) : 1;
-
+        let quantidade = 0;
         const isPacote = ticketId === 11 || isCompraPacote(descricaoCarrinho);
         const isMultiplosAvulsos = carrinho.length > 1 || (quantidade > 1 && !isPacote);
         const isAvulso = !isPacote && !isMultiplosAvulsos;
@@ -180,6 +179,12 @@ payBtn.addEventListener("click", async () => {
         if (isPacote) tipoCompra = "Pacote";
         else if (isMultiplosAvulsos) tipoCompra = "Tickets avulsos";
 
+        let pedidos = new Map();
+        for(const item of carrinho){
+            pedidos.set(item.id, item.qtd);
+            quantidade = quantidade + item.qtd;
+        }
+        pedidos = Object.fromEntries(pedidos)
         const payload = {
             amount: total,
             description: descricaoCarrinho,
@@ -188,14 +193,14 @@ payBtn.addEventListener("click", async () => {
             telefone,
             cpf,
             pacote: isPacote,
-            ticketId: isAvulso ? ticketId : null,
             ids: isMultiplosAvulsos ? ticketIds : null,
+            pedidos: pedidos,
             quantidade
         };
 
         console.log("📦 Tipo de compra:", tipoCompra);
         console.log("➡️ Enviando para Stripe:", payload);
-
+        debugger;
         const response = await fetch(`${window.API_URL}/api/stripe/create-checkout`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
