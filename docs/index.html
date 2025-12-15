@@ -151,76 +151,55 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </main>
 
 <section id="package-highlight" class="py-16 px-4 bg-gradient-to-b from-blue-50 to-white">
-  <div class="max-w-4xl mx-auto text-center">
-    <h2 class="text-3xl font-extrabold text-gray-800 mb-4">Pacote Guia RQ 🎒</h2>
-    <p class="text-gray-600 text-lg mb-8">
-      Viva o melhor de <strong>Rancho Queimado</strong> em um único pacote!<br>
-      São <strong>R$230 em experiências incríveis</strong> por apenas <span class="text-blue-600 font-semibold">R$ 77</span>.
-    </p>
+    <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-3xl font-extrabold text-gray-800 mb-4">Pacote Guia RQ 🎒</h2>
+        <p class="text-gray-600 text-lg mb-8">
+            Viva o melhor de <strong>Rancho Queimado</strong> em um único pacote!<br>
+            São <strong>R$230 em experiências incríveis</strong> por apenas <span class="text-blue-600 font-semibold">R$ 77</span>.
+        </p>
 
-    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8 flex flex-col md:flex-row items-center gap-6">
-      <img src="assets/images/entrada.jpeg" alt="Pacote Rancho Completo"
-           class="w-full md:w-64 h-48 object-cover rounded-xl">
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8 flex flex-col md:flex-row items-center gap-6">
+            <img src="assets/images/entrada.jpeg" alt="Pacote Rancho Completo"
+                 class="w-full md:w-64 h-48 object-cover rounded-xl">
 
-      <div class="flex-1 text-left">
-        <div class="flex items-center justify-between mb-3">
-          <span class="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Mais vendido</span>
-          <span class="text-2xl font-bold text-blue-600">R$ 77</span>
+            <div class="flex-1 text-left">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Mais vendido</span>
+                    <span class="text-2xl font-bold text-blue-600">R$ 77</span>
+                </div>
+
+                <h3 class="text-xl font-bold text-gray-900 mb-3">Pacote Completo</h3>
+
+                <ul class="text-gray-700 text-sm space-y-2 mb-4 list-disc list-inside">
+                    <li>10 tickets válidos nas principais experiências</li>
+
+                    <!-- 🔽 LISTA COMPLETA ESCONDIDA NO MOBILE -->
+                    <ul id="ticket-list" class="ml-5 mt-2 text-gray-700 text-sm space-y-1 max-h-0 overflow-hidden transition-all duration-500 md:max-h-none md:overflow-visible">
+                        <li>O que você vai ter acesso:</li>
+                        <li>🍕 Ticket Pizzaria Forno e Serra • Desconto de R$16</li>
+                        <li>🏍️ Ticket RJ Off-Road • Desconto de R$25</li>
+                        <li>🏡 Ticket Chalé Encantado • Desconto de R$50</li>
+                        <li>☕ Ticket Bergkafee Café Colonial • Desconto de R$15</li>
+                        <li>🥗 Ticket Da Roça • Desconto de R$10 a cada R$50 gasto</li>
+                        <li>🌿 Ticket Espaço Floresta • Desconto de R$50</li>
+                        <li>🍺 Ticket Bierhaus • 10% extra na compra</li>
+                        <li>🌄 Ticket Mirante Boa Vista • Desconto de R$30</li>
+                        <li>🍷 Ticket Goyah Vinhos • Desconto de R$14</li>
+                        <li>🪵 Ticket Atafona (Aos finais de semana) • Desconto de R$10</li>
+                    </ul>
+
+                    <li>Transforme R$77 em mais de R$230 em experiências em Rancho Queimado</li>
+                    <li>Uso flexível durante 6 meses</li>
+                </ul>
+
+                <!-- MENSAGEM DE MANUTENÇÃO -->
+                <div class="w-full bg-yellow-100 text-yellow-800 py-3 px-4 rounded-xl font-semibold text-center shadow-md">
+                    🚧 Pacote temporariamente em manutenção.<br>
+                    Em breve estará disponível novamente!
+                </div>
+            </div>
         </div>
-
-        <h3 class="text-xl font-bold text-gray-900 mb-3">Pacote Completo</h3>
-
-        <ul class="text-gray-700 text-sm space-y-2 mb-4 list-disc list-inside">
-          <li>10 tickets válidos nas principais experiências</li>
-
-          <!-- 🔽 LISTA COMPLETA ESCONDIDA NO MOBILE -->
-          <ul id="ticket-list" class="ml-5 mt-2 text-gray-700 text-sm space-y-1 max-h-0 overflow-hidden transition-all duration-500 md:max-h-none md:overflow-visible">
-            <li>O que você vai ter acesso:</li>
-            <li>🍕 Ticket Pizzaria Forno e Serra • Desconto de R$16</li>
-            <li>🏍️ Ticket RJ Off-Road • Desconto de R$25</li>
-            <li>🏡 Ticket Chalé Encantado • Desconto de R$50</li>
-            <li>☕ Ticket Bergkafee Café Colonial • Desconto de R$15</li>
-            <li>🥗 Ticket Da Roça • Desconto de R$10 a cada R$50 gasto</li>
-            <li>🌿 Ticket Espaço Floresta • Desconto de R$50</li>
-            <li>🍺 Ticket Bierhaus • 10% extra na compra</li>
-            <li>🌄 Ticket Mirante Boa Vista • Desconto de R$30</li>
-            <li>🍷 Ticket Goyah Vinhos • Desconto de R$14</li>
-            <li>🪵 Ticket Atafona (Aos finais de semana) • Desconto de R$10</li>
-          </ul>
-
-          <li>Transforme R$77 em mais de R$230 em experiências em Rancho Queimado</li>
-          <li>Uso flexível durante 6 meses</li>
-        </ul>
-
-        <!-- BOTÃO MOSTRAR MAIS (somente mobile) -->
-        <button id="toggle-list"
-          class="md:hidden flex items-center gap-2 text-blue-600 font-semibold text-sm mb-4">
-          <span>Mostrar mais</span>
-          <i class="fa-solid fa-chevron-down transition-transform duration-300"></i>
-        </button>
-
-          <button onclick="window.location.href='pages/resumo.html?pacote=rancho-completo'"
-                  class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-md">
-              Garantir meu pacote completo
-          </button>
-      </div>
     </div>
-  </div>
-
-  <!-- SCRIPT -->
-  <script>
-    const toggleBtn = document.getElementById("toggle-list");
-    const list = document.getElementById("ticket-list");
-    const arrow = toggleBtn.querySelector("i");
-    const text = toggleBtn.querySelector("span");
-
-    toggleBtn.addEventListener("click", () => {
-      const isOpen = list.classList.toggle("max-h-[1000px]");
-      list.classList.toggle("overflow-hidden", !isOpen);
-      arrow.classList.toggle("rotate-180", isOpen);
-      text.textContent = isOpen ? "Mostrar menos" : "Mostrar mais";
-    });
-  </script>
 </section>
 
 <section id="cta-section" class="py-16 gradient-bg">

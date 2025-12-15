@@ -64,7 +64,6 @@ public class TicketService {
             return;
         }
         try {
-
             if (tickets == null || tickets.isEmpty()) {
                 throw new IllegalArgumentException("Lista de tickets vazia");
             }
@@ -83,21 +82,22 @@ public class TicketService {
                 if (qrBytes == null) throw new RuntimeException("Falha ao gerar QR do ticket: " + t.getIdPublico());
                 qrBytesList.add(qrBytes);
             }
+
             emailService.sendMultiplosTicketsAvulsos(
                     primeiro.getEmailCliente(),
                     primeiro.getNomeCliente(),
                     primeiro.getTelefoneCliente(),
                     primeiro.getCpfCliente(),
-                    primeiro.getNome(),
+                    "Tickets Avulsos",
                     tickets,
                     qrBytesList
             );
 
-            System.out.println("✔ TICKETS AVULSOS MULTIPLOS ENVIADOS");
+            System.out.println("TICKETS AVULSOS MULTIPLOS ENVIADOS");
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("❌ ERRO AO PROCESSAR AVULSO MULTIPLO: " + e.getMessage());
+            System.out.println("ERRO AO PROCESSAR AVULSO MULTIPLO: " + e.getMessage());
         }
     }
 

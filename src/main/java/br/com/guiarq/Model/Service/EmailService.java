@@ -85,7 +85,7 @@ public class EmailService {
     ) {
         try {
             StringBuilder html = new StringBuilder();
-            html.append("<h2>Seus Tickets Estão Prontos </h2>");
+            html.append("<h2>Seus Tickets Estão Prontos</h2>");
             html.append("<p>Olá <strong>").append(nomeCliente).append("</strong>,</p>");
             html.append("<p>Você comprou <strong>")
                     .append(tickets.size())
@@ -128,12 +128,11 @@ public class EmailService {
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
 
-            HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-
-            System.out.println("📨 Email de múltiplos tickets avulsos enviado para " + emailDestino);
+            HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println("Email de múltiplos tickets avulsos enviado para " + emailDestino + " | Status: " + response.statusCode());
 
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao enviar múltiplos tickets avulsos: " + e.getMessage());
+            throw new RuntimeException("Erro ao enviar múltiplos tickets avulsos: " + e.getMessage(), e);
         }
     }
 
