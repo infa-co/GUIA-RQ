@@ -84,6 +84,9 @@ public class EmailService {
             List<byte[]> qrBytesList
     ) {
         try {
+            if (qrBytesList.size() != tickets.size()) {
+                throw new IllegalStateException("Lista de QR codes não corresponde ao número de tickets");
+            }
             StringBuilder html = new StringBuilder();
             html.append("<h2>Seus Tickets Estão Prontos</h2>");
             html.append("<p>Olá <strong>").append(nomeCliente).append("</strong>,</p>");
@@ -109,6 +112,8 @@ public class EmailService {
                 Map<String, Object> attachment = new HashMap<>();
                 attachment.put("filename", t.getNome() + " - Ticket " + (i + 1) + ".png");
                 attachment.put("content", base64Qr);
+                attachment.put("type", "image/png");
+                attachment.put("disposition", "attachment");
                 attachments.add(attachment);
             }
 

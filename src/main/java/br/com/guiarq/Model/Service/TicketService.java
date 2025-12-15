@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class TicketService {
@@ -83,12 +84,16 @@ public class TicketService {
                 qrBytesList.add(qrBytes);
             }
 
+            String nomesTickets = tickets.stream()
+                    .map(Ticket::getNome)
+                    .collect(Collectors.joining(", "));
+
             emailService.sendMultiplosTicketsAvulsos(
                     primeiro.getEmailCliente(),
                     primeiro.getNomeCliente(),
                     primeiro.getTelefoneCliente(),
                     primeiro.getCpfCliente(),
-                    "Tickets Avulsos",
+                    nomesTickets, // lista de todos os nomes
                     tickets,
                     qrBytesList
             );
