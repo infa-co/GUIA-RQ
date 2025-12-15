@@ -178,11 +178,18 @@ public class StripeWebhookController {
     }
 
     private List<Ticket> criarTickets(String sessionId, String email, String nome,
-                                      String telefone, String cpf, List<Long> catalogoIds,
-                                      int quantidade, boolean isPacote, UUID compraId) {
+                                      String telefone, String cpf, List<Long> catalogoIds, int quantidade,
+                                      boolean isPacote, UUID compraId) {
+        if (catalogoIds == null || catalogoIds.isEmpty()) {
+            throw new IllegalArgumentException("Nenhum ID de catálogo recebido para criação de tickets.");
+        }
 
         List<Ticket> tickets = new ArrayList<>();
         List<TicketCatalogo> catalogos = ticketCatalogoRepository.findByIdIn(catalogoIds);
+
+        if (catalogos.isEmpty()) {
+            throw new IllegalStateException("Nenhum catálogo encontrado para os IDs fornecidos: " + catalogoIds);
+        }
 
         for (TicketCatalogo catalogo : catalogos) {
             Long catalogoId = catalogo.getId();
@@ -194,8 +201,12 @@ public class StripeWebhookController {
 
                 ticketRepository.save(t);
                 tickets.add(t);
+
+                System.out.println("Ticket criado: nome=" + t.getNome() + " | catálogoId=" + catalogoId + " | cliente=" + email);
             }
         }
+
+        System.out.println("Total de tickets criados: " + tickets.size());
         return tickets;
     }
 

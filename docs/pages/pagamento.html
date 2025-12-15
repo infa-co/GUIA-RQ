@@ -154,7 +154,7 @@ payBtn.addEventListener("click", async () => {
         }
 
         const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-        console.log(carrinho);
+        console.log("Carrinho:", carrinho);
         const resumo = JSON.parse(localStorage.getItem("resumoCompra")) || {};
 
         if (!carrinho.length) {
@@ -164,12 +164,15 @@ payBtn.addEventListener("click", async () => {
 
         const total = Number(resumo.totalFinal);
 
-        const item = carrinho[0];
-        const descricao = item?.nome || "Compra de ingresso(s) – Guia Rancho Queimado";
-        const ticketId = item?.id || null;
-        const quantidade = item?.quantidade || 1;
+        const ticketIds = carrinho.map(item => item.id).join(",");
+        const descricaoCarrinho = carrinho.length > 1
+            ? "Tickets Avulsos"
+            : carrinho[0]?.nome || "Compra de ingresso(s) – Guia Rancho Queimado";
 
-        const isPacote = ticketId === 11 || isCompraPacote(descricao);
+        const ticketId = carrinho.length === 1 ? carrinho[0].id : null;
+        const quantidade = carrinho.length === 1 ? (carrinho[0].quantidade || 1) : 1;
+
+        const isPacote = ticketId === 11 || isCompraPacote(descricaoCarrinho);
         const isMultiplosAvulsos = carrinho.length > 1 || (quantidade > 1 && !isPacote);
         const isAvulso = !isPacote && !isMultiplosAvulsos;
 
@@ -177,38 +180,26 @@ payBtn.addEventListener("click", async () => {
         if (isPacote) tipoCompra = "Pacote";
         else if (isMultiplosAvulsos) tipoCompra = "Tickets avulsos";
 
-        // mapeia todos os ids do carrinho
-        const ticketIds = carrinho.map(item => item.id).join(",");
-
-        console.log("📦 Tipo de compra:", tipoCompra);
-        console.log("➡️ Enviando para Stripe:", {
+        const payload = {
             amount: total,
-            description: descricao,
+            description: descricaoCarrinho,
             nome,
             email,
             telefone,
             cpf,
             pacote: isPacote,
-            ticketId,
+            ticketId: isAvulso ? ticketId : null,
             ids: isMultiplosAvulsos ? ticketIds : null,
             quantidade
-        });
+        };
+
+        console.log("📦 Tipo de compra:", tipoCompra);
+        console.log("➡️ Enviando para Stripe:", payload);
 
         const response = await fetch(`${window.API_URL}/api/stripe/create-checkout`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                amount: total,
-                description: descricao,
-                nome,
-                email,
-                telefone,
-                cpf,
-                pacote: isPacote,
-                ticketId, // usado para avulso
-                ids: isMultiplosAvulsos ? ticketIds : null, // lista de ids para múltiplos
-                quantidade
-            })
+            body: JSON.stringify(payload)
         });
 
         const data = await response.json();
