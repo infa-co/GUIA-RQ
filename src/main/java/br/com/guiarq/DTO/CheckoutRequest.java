@@ -1,5 +1,9 @@
 package br.com.guiarq.DTO;
 
+import org.json.JSONObject;
+
+import java.util.Map;
+
 public class CheckoutRequest {
 
     private Double amount;
@@ -11,6 +15,7 @@ public class CheckoutRequest {
     private String nome;
     private String telefone;
     private String cpf;
+    private JSONObject pedidos;
 
     private Boolean pacote;      // indica se é compra de pacote
 
@@ -84,5 +89,12 @@ public class CheckoutRequest {
 
     public void setPacote(Boolean pacote) {
         this.pacote = pacote;
+    }
+
+    public JSONObject getPedidos() {
+        return pedidos;
+    }
+    public void setPedidos(JSONObject pedidos) {
+        this.pedidos = pedidos;
     }
 }

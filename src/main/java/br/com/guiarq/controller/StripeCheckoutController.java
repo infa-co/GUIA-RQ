@@ -81,6 +81,7 @@ public class StripeCheckoutController {
         if (req.getNome() != null) builder.putMetadata("nome", req.getNome());
         if (req.getTelefone() != null) builder.putMetadata("telefone", req.getTelefone());
         if (req.getCpf() != null) builder.putMetadata("cpf", req.getCpf());
+        builder.putMetadata("pedidos", req.getPedidos().toString());
 
         SessionCreateParams params = builder.build();
         Session session = Session.create(params);
