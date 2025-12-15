@@ -43,6 +43,9 @@ public class StripeWebhookController {
     @PostMapping("/webhook")
     public ResponseEntity<String> handleWebhook(@RequestBody String payload) {
         try {
+            logger.info("INICIANDO WEBHOOK");
+            logger.warn("INICIANDO WEBHOOK");
+            logger.debug("INICIANDO WEBHOOK");
             JSONObject json = new JSONObject(payload);
             if ("checkout.session.completed".equals(json.optString("type"))) {
                 processCheckout(json);
@@ -94,11 +97,10 @@ public class StripeWebhookController {
             }
         }
         pedidos.forEach((id, quantidade) -> {
-            System.out.println("ticketID: " + id  + "  ->  quantidade: " + quantidade);
+            logger.info("ticketID: " + id  + "  ->  quantidade: " + quantidade);
         });
 
         //String idsString = metadata.optString("ids", null);
-
 
         /*List<Long> catalogoIds = new ArrayList<>();
         if (idsString != null && !idsString.isBlank()) {
