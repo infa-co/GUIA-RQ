@@ -12,4 +12,7 @@ import java.util.Optional;
 public interface TicketCatalogoRepository extends JpaRepository<TicketCatalogo, Long> {
 
     List<TicketCatalogo> findByIdIn(List<Long> ticketCatalogoId);
+
+    @Override
+    TicketCatalogo getReferenceById(Long ticketId);
 }

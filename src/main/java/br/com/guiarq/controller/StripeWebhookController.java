@@ -43,9 +43,6 @@ public class StripeWebhookController {
     @PostMapping("/webhook")
     public ResponseEntity<String> handleWebhook(@RequestBody String payload) {
         try {
-            logger.info("INICIANDO WEBHOOK");
-            logger.warn("INICIANDO WEBHOOK");
-            logger.debug("INICIANDO WEBHOOK");
             JSONObject json = new JSONObject(payload);
             if ("checkout.session.completed".equals(json.optString("type"))) {
                 processCheckout(json);
@@ -85,20 +82,20 @@ public class StripeWebhookController {
         String cpf = normalizeCpf(metadata.optString("cpf", ""));
 
         boolean isPacote = metadata.optBoolean("pacote", false);
-        Map<Integer, Integer> pedidos = new HashMap<>();
+        Map<Long, Integer> pedidos = new HashMap<>();
         JSONObject pedidosJson = metadata.optJSONObject("pedidos");
 
         if (pedidosJson != null) {
             for (String key : pedidosJson.keySet()) {
-                Integer chave = Integer.valueOf(key);
+                Long chave = Long.valueOf(key);
 
                 Number valor = (Number) pedidosJson.get(key);
                 pedidos.put(chave, valor.intValue());
             }
         }
-        pedidos.forEach((id, quantidade) -> {
-            logger.info("ticketID: " + id  + "  ->  quantidade: " + quantidade);
-        });
+        //pedidos.forEach((id, quantidade) -> {
+          //  String a = " ";
+        //});
 
         //String idsString = metadata.optString("ids", null);
 
@@ -134,11 +131,12 @@ public class StripeWebhookController {
             //processarPacote(sessionId, email, nome, telefone, cpf, catalogoIds);
         } else if (quantidade > 1) {
             logger.info("Tipo de compra identificado: TICKETS AVULSOS (múltiplos)");
-            //processarMultiplosTicketsAvulsos(sessionId, email, nome, telefone, cpf, catalogoIds, quantidade);
+            //processarMultiplosTicketsAvulsos(sessionId, email, nome, telefone, cpf, pedidos, quantidade);
         } else {
             logger.info("Tipo de compra identificado: TICKET AVULSO (único)");
             //processarTicketAvulso(sessionId, email, nome, telefone, cpf, ticketCatalogoId);
         }
+        processarMultiplosTicketsAvulsos(sessionId, email, nome, telefone, cpf, pedidos, quantidade);
     }
 
     @Transactional
@@ -159,7 +157,7 @@ public class StripeWebhookController {
 
     @Transactional
     private void processarMultiplosTicketsAvulsos(String sessionId, String email, String nome,
-                                                  String telefone, String cpf, List<Long> ticketCatalogoIds,
+                                                  String telefone, String cpf, Map<Long, Integer> pedidos,
                                                   int quantidade) {
         if (!clientePodeComprar(cpf)) {
             logger.warn("Cliente bloqueado por regra 90 dias cpf={}", cpf);
@@ -167,12 +165,16 @@ public class StripeWebhookController {
         }
 
         UUID compraId = UUID.randomUUID();
-        List<Ticket> tickets = criarTickets(sessionId, email, nome, telefone, cpf,
-                ticketCatalogoIds, quantidade, false, compraId);
+        List<Ticket> tickets = new ArrayList<>();
+        pedidos.forEach((id, qtdTicket) -> {
+            for(int i = 0; i < qtdTicket; i++) {
+                tickets.add(criarTicketBase(sessionId, email, nome, telefone, cpf, id));
+            }
+        });
 
         ticketService.processarCompraAvulsaMultipla(tickets);
         logger.info("Tickets avulsos múltiplos criados sessionId={} | quantidade={} | ids={} | cliente={}",
-                sessionId, quantidade, ticketCatalogoIds, email);
+                sessionId, quantidade, email);
     }
 
     @Transactional

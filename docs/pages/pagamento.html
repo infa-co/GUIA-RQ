@@ -122,25 +122,25 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
 <script>
     if (!window.API_URL) {
     window.API_URL = "https://guia-rq-backend.onrender.com";
-}
+        }
 
-const nomeInput = document.getElementById("nome");
-const emailInput = document.getElementById("email");
-const telefoneInput = document.getElementById("telefone");
-const cpfInput = document.getElementById("cpf");
-const payBtn = document.getElementById("pay-btn");
+        const nomeInput = document.getElementById("nome");
+        const emailInput = document.getElementById("email");
+        const telefoneInput = document.getElementById("telefone");
+        const cpfInput = document.getElementById("cpf");
+        const payBtn = document.getElementById("pay-btn");
 
-function validarDados(nome, email, telefone, cpf) {
-    return nome && email && telefone && cpf;
-}
+        function validarDados(nome, email, telefone, cpf) {
+            return nome && email && telefone && cpf;
+        }
 
-function isCompraPacote(descricao) {
-    return descricao?.toLowerCase().trim() === "pacote completo guia rq";
-}
+        function isCompraPacote(descricao) {
+            return descricao?.toLowerCase().trim() === "pacote completo guia rq";
+        }
 
-payBtn.addEventListener("click", async () => {
-    payBtn.disabled = true;
-    payBtn.textContent = "Processando...";
+        payBtn.addEventListener("click", async () => {
+            payBtn.disabled = true;
+            payBtn.textContent = "Processando...";
 
     try {
         const nome = nomeInput.value.trim();
@@ -200,7 +200,6 @@ payBtn.addEventListener("click", async () => {
 
         console.log("📦 Tipo de compra:", tipoCompra);
         console.log("➡️ Enviando para Stripe:", payload);
-        debugger;
         const response = await fetch(`${window.API_URL}/api/stripe/create-checkout`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -208,6 +207,7 @@ payBtn.addEventListener("click", async () => {
         });
 
         const data = await response.json();
+        debugger;
         if (!data.url) throw new Error("URL de checkout não recebida.");
 
         window.location.href = data.url;
