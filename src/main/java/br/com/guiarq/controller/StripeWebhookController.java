@@ -74,6 +74,7 @@ public class StripeWebhookController {
             logger.warn("⚠️ Pagamento não confirmado para sessionId={}", sessionId);
             return;
         }
+        // Alterar dps, bug anotado no bloco de notas
         if (lastSession.equalsIgnoreCase(sessionId)) {
             logger.info("Sessão já processada");
             return;

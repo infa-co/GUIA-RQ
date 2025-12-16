@@ -2,13 +2,16 @@ package br.com.guiarq.controller;
 
 import br.com.guiarq.DTO.CheckoutRequest;
 import br.com.guiarq.Model.Entities.Ticket;
+import br.com.guiarq.Model.Entities.TicketCatalogo;
 import br.com.guiarq.Model.Repository.TicketRepository;
 import br.com.guiarq.Model.Repository.TicketCatalogoRepository;
+import br.com.guiarq.Model.Service.TicketCatalogoService;
 import br.com.guiarq.Model.Service.TicketService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stripe.Stripe;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +22,8 @@ import java.util.*;
 @RequestMapping("/api/stripe")
 @CrossOrigin(origins = "*")
 public class StripeCheckoutController {
+    @Autowired
+    private TicketCatalogoService ticketCatalogoService;
 
     @Value("${STRIPE_SECRET_KEY}")
     private String secretKey;
@@ -41,29 +46,38 @@ public class StripeCheckoutController {
             throw new IllegalArgumentException("Valor inválido.");
         }
 
-        Long amountInCents = Math.round(req.getAmount() * 100);
         Long quantidade = req.getQuantidade() != null ? req.getQuantidade() : 1L;
 
         SessionCreateParams.Builder builder = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
                 .setSuccessUrl("https://guiaranchoqueimado.com.br/pages/sucesso.html")
-                .setCancelUrl("https://guiaranchoqueimado.com.br/pages/cancelado.html")
-                .addLineItem(
-                        SessionCreateParams.LineItem.builder()
-                                .setQuantity(quantidade)
-                                .setPriceData(
-                                        SessionCreateParams.LineItem.PriceData.builder()
-                                                .setCurrency("brl")
-                                                .setUnitAmount(amountInCents)
-                                                .setProductData(
-                                                        SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                                .setName(req.getDescription())
-                                                                .build()
-                                                )
-                                                .build()
-                                )
-                                .build()
-                );
+                .setCancelUrl("https://guiaranchoqueimado.com.br/pages/cancelado.html");
+        Map<String, Integer> pedidos = req.getPedidos();
+        pedidos.forEach((id, qtdTicket) -> {
+
+            // Supondo que você tenha um método para buscar o produto pelo ID
+            TicketCatalogo ticketCatalogo = ticketCatalogoService.buscarPorId(Long.valueOf(id));
+
+            Long amountInCents = Math.round(ticketCatalogo.getPreco() * 100);
+
+            builder.addLineItem(
+                    SessionCreateParams.LineItem.builder()
+                            .setQuantity(qtdTicket.longValue())
+                            .setPriceData(
+                                    SessionCreateParams.LineItem.PriceData.builder()
+                                            .setCurrency("brl")
+                                            .setUnitAmount(amountInCents)
+                                            .setProductData(
+                                                    SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                                            .setName(ticketCatalogo.getNome())
+                                                            .build()
+                                            )
+                                            .build()
+                            )
+                            .build()
+            );
+        });
+
 
         builder.putMetadata("quantidade", quantidade.toString());
 
