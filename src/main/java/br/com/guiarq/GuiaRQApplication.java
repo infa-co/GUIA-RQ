@@ -10,7 +10,7 @@ public class GuiaRQApplication {
     public static void main(String[] args) {
         SpringApplication.run(GuiaRQApplication.class, args);
 
-        String baseUrl = "http://localhost:8080";
+        String baseUrl = "http://localhost:10000";
         System.out.println("Aplicação rodando em: " + baseUrl);
     }
 }

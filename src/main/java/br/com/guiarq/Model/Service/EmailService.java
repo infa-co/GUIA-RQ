@@ -104,11 +104,6 @@ public class EmailService {
                 byte[] qrBytes = qrBytesList.get(i);
                 String base64Qr = Base64.getEncoder().encodeToString(qrBytes);
 
-                html.append("<div style='margin-bottom:20px;'>")
-                        .append("<p><strong>Ticket ").append(i + 1).append(" - ").append(t.getNome()).append("</strong></p>")
-                        .append("<img src='data:image/png;base64,").append(base64Qr).append("' alt='QR Code'/>")
-                        .append("</div>");
-
                 Map<String, Object> attachment = new HashMap<>();
                 attachment.put("filename", t.getNome() + " - Ticket " + (i + 1) + ".png");
                 attachment.put("content", base64Qr);
@@ -118,6 +113,7 @@ public class EmailService {
             }
 
             Map<String, Object> body = new HashMap<>();
+            logger.info(emailDestino);
             body.put("from", "Guia Rancho Queimado <no-reply@guiaranchoqueimado.com.br>");
             body.put("to", new String[]{emailDestino});
             body.put("subject", "Seus " + tickets.size() + " Tickets – " + nomeTicket);
@@ -133,8 +129,9 @@ public class EmailService {
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
 
+            logger.info(json);
             HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println("Email de múltiplos tickets avulsos enviado para " + emailDestino + " | Status: " + response.statusCode());
+            logger.info("Email de múltiplos tickets avulsos enviado para " + emailDestino + " | Status: " + response.statusCode());
 
         } catch (Exception e) {
             throw new RuntimeException("Erro ao enviar múltiplos tickets avulsos: " + e.getMessage(), e);

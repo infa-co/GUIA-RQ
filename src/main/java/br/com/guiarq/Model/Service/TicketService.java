@@ -2,6 +2,9 @@ package br.com.guiarq.Model.Service;
 
 import br.com.guiarq.Model.Entities.Ticket;
 import br.com.guiarq.Model.Repository.TicketRepository;
+import br.com.guiarq.controller.StripeWebhookController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class TicketService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TicketService.class);
 
     @Autowired
     private TicketRepository ticketRepository;
@@ -61,7 +66,7 @@ public class TicketService {
     }
     public void processarCompraAvulsaMultipla(List<Ticket> tickets) {
         if (tickets.stream().anyMatch(t -> t.getStripeSessionId() == null)) {
-            System.out.println("Existem tickets sem pagamento confirmado. Email NÃO enviado.");
+            logger.info("Existem tickets sem pagamento confirmado. Email NÃO enviado.");
             return;
         }
         try {
@@ -88,6 +93,7 @@ public class TicketService {
                     .map(Ticket::getNome)
                     .collect(Collectors.joining(", "));
 
+            logger.info(qrBytesList.toString() + " " + nomesTickets.toString());
             emailService.sendMultiplosTicketsAvulsos(
                     primeiro.getEmailCliente(),
                     primeiro.getNomeCliente(),
