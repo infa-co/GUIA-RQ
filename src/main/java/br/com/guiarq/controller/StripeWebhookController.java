@@ -175,6 +175,15 @@ public class StripeWebhookController {
         List<Ticket> tickets = new ArrayList<>();
         pedidos.forEach((id, qtdTicket) -> {
             for(int i = 0; i < qtdTicket; i++) {
+                if (Long.valueOf(id) == 11) {
+                    List<TicketCatalogo> todos_tickets = ticketCatalogoRepository.findAll();
+                    for (TicketCatalogo ticket : todos_tickets) {
+                        if (ticket.getId() != 11) {
+                            tickets.add(criarTicketBase(sessionId, email, nome, telefone, cpf, ticket.getId()));
+                        }
+                    }
+                    continue;
+                }
                 Ticket ticket = criarTicketBase(sessionId, email, nome, telefone, cpf, Long.valueOf(id));
                 logger.info(ticket.toString()  +" - "+ ticket.getNome() +" - "+ ticket.getEmailCliente());
                 tickets.add(ticket);
