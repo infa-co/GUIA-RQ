@@ -207,7 +207,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
         });
 
         const data = await response.json();
-        debugger;
+
         if (!data.url) throw new Error("URL de checkout não recebida.");
 
         window.location.href = data.url;
