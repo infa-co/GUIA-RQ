@@ -5,6 +5,7 @@ import br.com.guiarq.Model.Entities.Ticket;
 import br.com.guiarq.Model.Repository.TicketRepository;
 import br.com.guiarq.Model.Repository.TicketCatalogoRepository;
 import br.com.guiarq.Model.Service.TicketService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stripe.Stripe;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
@@ -81,7 +82,15 @@ public class StripeCheckoutController {
         if (req.getNome() != null) builder.putMetadata("nome", req.getNome());
         if (req.getTelefone() != null) builder.putMetadata("telefone", req.getTelefone());
         if (req.getCpf() != null) builder.putMetadata("cpf", req.getCpf());
-        builder.putMetadata("pedidos", req.getPedidos().toString());
+        ObjectMapper mapper = new ObjectMapper();
+        if (req.getPedidos() != null) {
+            builder.putMetadata(
+                    "pedidos",
+                    mapper.writeValueAsString(req.getPedidos())
+            );
+        }
+
+        System.out.println(req.getPedidos().toString() + " FLAG");
 
         SessionCreateParams params = builder.build();
         Session session = Session.create(params);

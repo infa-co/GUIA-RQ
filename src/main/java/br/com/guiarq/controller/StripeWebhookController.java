@@ -82,17 +82,16 @@ public class StripeWebhookController {
         String cpf = normalizeCpf(metadata.optString("cpf", ""));
 
         boolean isPacote = metadata.optBoolean("pacote", false);
-        Map<Long, Integer> pedidos = new HashMap<>();
-        JSONObject pedidosJson = metadata.optJSONObject("pedidos");
+        String pedidosJson = metadata.optString("pedidos");
 
-        if (pedidosJson != null) {
-            for (String key : pedidosJson.keySet()) {
-                Long chave = Long.valueOf(key);
-
-                Number valor = (Number) pedidosJson.get(key);
-                pedidos.put(chave, valor.intValue());
-            }
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Integer> pedidos = new HashMap<>();
+        try{
+            pedidos = mapper.readValue(pedidosJson, new TypeReference<Map<String, Integer>>() {});
+        }catch (Exception e){
+            logger.error("Erro processando pedidos", e);
         }
+
         //pedidos.forEach((id, quantidade) -> {
           //  String a = " ";
         //});
@@ -157,7 +156,7 @@ public class StripeWebhookController {
 
     @Transactional
     private void processarMultiplosTicketsAvulsos(String sessionId, String email, String nome,
-                                                  String telefone, String cpf, Map<Long, Integer> pedidos,
+                                                  String telefone, String cpf, Map<String, Integer> pedidos,
                                                   int quantidade) {
         if (!clientePodeComprar(cpf)) {
             logger.warn("Cliente bloqueado por regra 90 dias cpf={}", cpf);
@@ -168,7 +167,7 @@ public class StripeWebhookController {
         List<Ticket> tickets = new ArrayList<>();
         pedidos.forEach((id, qtdTicket) -> {
             for(int i = 0; i < qtdTicket; i++) {
-                tickets.add(criarTicketBase(sessionId, email, nome, telefone, cpf, id));
+                tickets.add(criarTicketBase(sessionId, email, nome, telefone, cpf, Long.valueOf(id)));
             }
         });
 
