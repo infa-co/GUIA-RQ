@@ -35,6 +35,8 @@ public class StripeWebhookController {
     @Autowired
     private TicketService ticketService;
 
+    private static String lastSession = "";
+
     private static final Set<String> CPFS_LIBERADOS = Set.of(
             "11999143981",
             "13544956918"
@@ -71,6 +73,12 @@ public class StripeWebhookController {
         if (!"paid".equalsIgnoreCase(data.optString("payment_status"))) {
             logger.warn("⚠️ Pagamento não confirmado para sessionId={}", sessionId);
             return;
+        }
+        if (lastSession.equalsIgnoreCase(sessionId)) {
+            logger.info("Sessão já processada");
+            return;
+        } else {
+            lastSession = sessionId;
         }
 
         JSONObject metadata = Optional.ofNullable(data.optJSONObject("metadata"))
