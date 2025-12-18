@@ -16,11 +16,19 @@ public class TicketCatalogo {
     private Double preco;
     private Long parceiroId;
     private String imagem;
+    private Long amountInCents;
 
     public TicketCatalogo() {}
 
     public Long getId() {
         return id;
+    }
+
+    public Long getAmountInCents() {
+        return amountInCents;
+    }
+    public void setAmountInCents(Long amountInCents) {
+        this.amountInCents = amountInCents;
     }
 
     public String getNome() {

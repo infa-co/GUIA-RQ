@@ -2,6 +2,7 @@ package br.com.guiarq.Model.Entities;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -77,172 +78,117 @@ public class Ticket {
     @Column(name = "stripe_session_id", unique = true)
     private String stripeSessionId;
 
+    @Column(name = "quantidade", nullable = false)
+    private Integer quantidadeComprada;
+
+    @Column(name = "is_pacote")
+    private Boolean pacote;
+
     public Ticket() {}
 
+    public Integer getQuantidadeComprada() {
+        return quantidadeComprada;
+    }
+    public void setQuantidadeComprada(Integer quantidadeComprada) {
+        this.quantidadeComprada = quantidadeComprada;
+    }
+    public Boolean getPacote() {
+        return pacote;
+    }
+    public void setPacote(Boolean pacote) {
+        this.pacote = pacote;
+    }
     public Long getId() {
         return id;
     }
-
     public UUID getIdPublico() {
         return idPublico;
     }
-
     public void setIdPublico(UUID idPublico) {
         this.idPublico = idPublico;
     }
-
-    public Long getTicketCatalogoId() {
-        return ticketCatalogoId;
-    }
-
     public void setTicketCatalogoId(Long ticketCatalogoId) {
         this.ticketCatalogoId = ticketCatalogoId;
     }
-
     public String getStripeSessionId() {
         return stripeSessionId;
     }
-
     public void setStripeSessionId(String stripeSessionId) {
         this.stripeSessionId = stripeSessionId;
     }
-
     public String getNome() {
         return nome;
     }
-
     public void setNome(String nome) {
         this.nome = nome;
     }
-
     public LocalDateTime getDataCompra() {
         return dataCompra;
     }
-
     public void setDataCompra(LocalDateTime dataCompra) {
         this.dataCompra = dataCompra;
     }
-
     public String getEmailCliente() {
         return emailCliente;
     }
-
     public void setEmailCliente(String emailCliente) {
         this.emailCliente = emailCliente;
     }
-
     public String getNomeCliente() {
         return nomeCliente;
     }
-
     public void setNomeCliente(String nomeCliente) {
         this.nomeCliente = nomeCliente;
     }
-
     public String getTelefoneCliente() {
         return telefoneCliente;
     }
-
     public void setTelefoneCliente(String telefoneCliente) {
         this.telefoneCliente = telefoneCliente;
     }
-
     public String getCpfCliente() {
         return cpfCliente;
     }
-
     public void setCpfCliente(String cpfCliente) {
         this.cpfCliente = cpfCliente;
     }
-
     public String getStatus() {
         return status;
     }
-
     public void setStatus(String status) {
         this.status = status;
     }
-
-    public Double getValorPago() {
-        return valorPago;
-    }
-
-    public void setValorPago(Double valorPago) {
-        this.valorPago = valorPago;
-    }
-
     public String getQrToken() {
         return qrToken;
     }
-
     public void setQrToken(String qrToken) {
         this.qrToken = qrToken;
     }
-
     public boolean isUsado() {
         return usado;
     }
-
     public void setUsado(boolean usado) {
         this.usado = usado;
     }
-
-    public LocalDateTime getUsadoEm() {
-        return usadoEm;
-    }
-
     public void setUsadoEm(LocalDateTime usadoEm) {
         this.usadoEm = usadoEm;
     }
-
-    public UUID getCompraId() {
-        return compraId;
-    }
-
     public void setCompraId(UUID compraId) {
         this.compraId = compraId;
     }
-
-    public LocalDateTime getCriadoEm() {
-        return criadoEm;
-    }
-
     public void setCriadoEm(LocalDateTime criadoEm) {
         this.criadoEm = criadoEm;
     }
-
-    public String getClienteUso() {
-        return clienteUso;
-    }
-
     public void setClienteUso(String clienteUso) {
         this.clienteUso = clienteUso;
     }
-
-    public String getEstabelecimentoValidacao() {
-        return estabelecimentoValidacao;
-    }
-
     public void setEstabelecimentoValidacao(String estabelecimentoValidacao) {
         this.estabelecimentoValidacao = estabelecimentoValidacao;
-    }
-
-    public String getValidadoPor() {
-        return validadoPor;
     }
 
     public void setValidadoPor(String validadoPor) {
         this.validadoPor = validadoPor;
     }
-
-    public Integer getUsosTotais() {
-        return usosTotais;
-    }
-
-    public void setUsosTotais(Integer usosTotais) {
-        this.usosTotais = usosTotais;
-    }
-
     public Integer getUsosRestantes() {
         return usosRestantes;
     }
@@ -254,11 +200,7 @@ public class Ticket {
     public Boolean getTipoPacote() {
         return tipoPacote;
     }
-
-    public void setTipoPacote(Boolean tipoPacote) {
-        this.tipoPacote = tipoPacote;
-    }
-    public boolean getUsado(){
-        return usado;
+    public void setId(Long ticketId) {
+        this.id = ticketId;
     }
 }

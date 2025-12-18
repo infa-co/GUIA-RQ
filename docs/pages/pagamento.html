@@ -91,8 +91,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
                 </p>
             </div>
 
-            <!-- ❌ REMOVIDO: OPÇÃO PIX  -->
-
             <!-- CARTEIRA DIGITAL -->
             <div class="payment-option border-2 border-gray-200 rounded-xl p-4 cursor-pointer hover:border-blue-600 transition" onclick="selectPayment('wallet', event)">
                 <div class="flex justify-between items-center">
@@ -122,112 +120,106 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+dl:'';j.async=true;j.src=
 </div>
 
 <script>
-    // fallback
     if (!window.API_URL) {
-        window.API_URL = "https://guia-rq-backend.onrender.com";
-    }
-
-    // ====== CAPTURA DOS CAMPOS ======
-    const nomeInput = document.getElementById("nome");
-    const emailInput = document.getElementById("email");
-    const telefoneInput = document.getElementById("telefone");
-    const cpfInput = document.getElementById("cpf");
-
-    // ====== BOTÃO FINALIZAR COMPRA → CHAMA BACKEND STRIPE ======
-    const payBtn = document.getElementById("pay-btn");
-
-    payBtn.addEventListener("click", async () => {
-        try {
-            // ---- valida dados pessoais ----
-            const nome = nomeInput.value.trim();
-            const email = emailInput.value.trim();
-            const telefone = telefoneInput.value.trim();
-            const cpf = cpfInput.value.trim();
-
-            if (!nome || !email || !telefone || !cpf) {
-                alert("Preencha todos os dados antes de continuar.");
-                return;
-            }
-
-            const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-            const resumo   = JSON.parse(localStorage.getItem("resumoCompra")) || {};
-
-            if (!carrinho.length) {
-                alert("Seu carrinho está vazio.");
-                return;
-            }
-
-            // total final
-            const total = Number(resumo.totalFinal);
-
-            // determina se é pacote
-            const isPacote = carrinho.length > 1;
-
-            // determina ticket avulso
-            let ticketId = null;
-            let quantidade = 1;
-            let descricao = "Compra de ingresso(s) – Guia Rancho Queimado";
-
-            // ticket avulso → 1 item no carrinho
-            if (!isPacote) {
-                const item = carrinho[0];
-                ticketId = item?.id || null;
-                quantidade = item?.quantidade || 1;
-                descricao = item?.nome || descricao;
-            }
-
-            console.log("📦 Tipo de compra:", isPacote ? "Pacote" : "Ticket avulso");
-            console.log("➡️ Enviando para Stripe:", {
-                amount: total,
-                description: descricao,
-                nome,
-                email,
-                telefone,
-                cpf,
-                pacote: isPacote,
-                ticketId,
-                quantidade
-            });
-
-            const response = await fetch(`${window.API_URL}/api/stripe/create-checkout`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    amount: total,
-                    description: descricao,
-                    nome,
-                    email,
-                    telefone,
-                    cpf,
-
-                    // flags essenciais para o backend
-                    pacote: isPacote,
-                    ticketId: ticketId,
-                    quantidade: quantidade
-                })
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error("Erro Stripe:", errorText);
-                throw new Error("Falha ao criar sessão de pagamento.");
-            }
-
-            const data = await response.json();
-
-            if (!data.url) {
-                console.error("Resposta inválida:", data);
-                throw new Error("URL de checkout não recebida.");
-            }
-
-            // redireciona para Stripe Checkout
-            window.location.href = data.url;
-
-        } catch (err) {
-            console.error("Erro ao iniciar pagamento:", err);
-            alert("Erro ao iniciar pagamento. Recarregue a página e tente novamente.");
+    window.API_URL = "https://guia-rq-backend.onrender.com";
         }
-    });
+
+        const nomeInput = document.getElementById("nome");
+        const emailInput = document.getElementById("email");
+        const telefoneInput = document.getElementById("telefone");
+        const cpfInput = document.getElementById("cpf");
+        const payBtn = document.getElementById("pay-btn");
+
+        function validarDados(nome, email, telefone, cpf) {
+            return nome && email && telefone && cpf;
+        }
+
+        function isCompraPacote(descricao) {
+            return descricao?.toLowerCase().trim() === "pacote completo guia rq";
+        }
+
+        payBtn.addEventListener("click", async () => {
+            payBtn.disabled = true;
+            payBtn.textContent = "Processando...";
+
+    try {
+        const nome = nomeInput.value.trim();
+        const email = emailInput.value.trim();
+        const telefone = telefoneInput.value.trim();
+        const cpf = cpfInput.value.trim();
+
+        if (!validarDados(nome, email, telefone, cpf)) {
+            alert("Preencha todos os dados antes de continuar.");
+            return;
+        }
+
+        const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+        console.log("Carrinho:", carrinho);
+        const resumo = JSON.parse(localStorage.getItem("resumoCompra")) || {};
+
+        if (!carrinho.length) {
+            alert("Seu carrinho está vazio.");
+            return;
+        }
+
+        const total = Number(resumo.totalFinal);
+
+        const ticketIds = carrinho.map(item => item.id).join(",");
+        const descricaoCarrinho = carrinho.length > 1
+            ? "Tickets Avulsos"
+            : carrinho[0]?.nome || "Compra de ingresso(s) – Guia Rancho Queimado";
+
+        const ticketId = carrinho.length === 1 ? carrinho[0].id : null;
+        let quantidade = 0;
+        const isPacote = ticketId === 11 || isCompraPacote(descricaoCarrinho);
+        const isMultiplosAvulsos = carrinho.length > 1 || (quantidade > 1 && !isPacote);
+        const isAvulso = !isPacote && !isMultiplosAvulsos;
+
+        let tipoCompra = "Ticket avulso";
+        if (isPacote) tipoCompra = "Pacote";
+        else if (isMultiplosAvulsos) tipoCompra = "Tickets avulsos";
+
+        let pedidos = new Map();
+        for(const item of carrinho){
+            pedidos.set(item.id, item.qtd);
+            quantidade = quantidade + item.qtd;
+        }
+        pedidos = Object.fromEntries(pedidos)
+        const payload = {
+            amount: total,
+            description: descricaoCarrinho,
+            nome,
+            email,
+            telefone,
+            cpf,
+            pacote: isPacote,
+            ids: isMultiplosAvulsos ? ticketIds : null,
+            pedidos: pedidos,
+            quantidade
+        };
+
+        console.log("📦 Tipo de compra:", tipoCompra);
+        console.log("➡️ Enviando para Stripe:", payload);
+        const response = await fetch(`${window.API_URL}/api/stripe/create-checkout`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!data.url) throw new Error("URL de checkout não recebida.");
+
+        window.location.href = data.url;
+
+    } catch (err) {
+        console.error("Erro ao iniciar pagamento:", err);
+        alert("Erro ao iniciar pagamento. Recarregue a página e tente novamente.");
+    } finally {
+        payBtn.disabled = false;
+        payBtn.textContent = "Pagar";
+    }
+});
 </script>
 </body>
 </html>

@@ -5,15 +5,19 @@ import br.com.guiarq.Model.Entities.TicketCatalogo;
 import br.com.guiarq.Model.Repository.TicketCatalogoRepository;
 import br.com.guiarq.Model.Repository.TicketRepository;
 import br.com.guiarq.Model.Service.TicketService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @RestController
@@ -21,12 +25,6 @@ import java.util.*;
 public class StripeWebhookController {
 
     private static final Logger logger = LoggerFactory.getLogger(StripeWebhookController.class);
-
-    // IDs reais do catálogo
-    private static final List<Long> IDS_TICKETS_PACOTE = Arrays.asList(
-            1L, 2L, 3L, 4L, 5L,
-            6L, 7L, 8L, 9L, 10L
-    );
 
     @Autowired
     private TicketRepository ticketRepository;
@@ -37,203 +35,261 @@ public class StripeWebhookController {
     @Autowired
     private TicketService ticketService;
 
-    @Value("${STRIPE_WEBHOOK_SECRET}")
-    private String endpointSecret;
+    private static String lastSession = "";
+
+    private static final Set<String> CPFS_LIBERADOS = Set.of(
+            "11999143981",
+            "13544956918"
+    );
 
     @PostMapping("/webhook")
     public ResponseEntity<String> handleWebhook(@RequestBody String payload) {
-
-        logger.info("📩 Payload recebido: {}", payload);
-
-        JSONObject json = new JSONObject(payload);
-        String eventType = json.optString("type");
-
-        if ("checkout.session.completed".equals(eventType)) {
-            processCheckout(json);
+        try {
+            JSONObject json = new JSONObject(payload);
+            if ("checkout.session.completed".equals(json.optString("type"))) {
+                processCheckout(json);
+            }
+            return ResponseEntity.ok("OK");
+        } catch (Exception e) {
+            logger.error("Erro processando webhook", e);
+            return ResponseEntity.status(500).body("ERROR");
         }
-
-        return ResponseEntity.ok("OK");
     }
 
     private void processCheckout(JSONObject json) {
-
         JSONObject data = json.getJSONObject("data").getJSONObject("object");
-
         String sessionId = data.optString("id");
+
         if (sessionId == null || sessionId.isBlank()) {
             logger.error("❌ sessionId inválido");
             return;
         }
 
-        // Idempotência
         if (ticketRepository.existsByStripeSessionId(sessionId)) {
-            logger.warn("⚠️ Webhook duplicado ignorado para sessionId: {}", sessionId);
+            logger.warn("⚠️ Webhook já processado para sessionId={}", sessionId);
             return;
         }
 
-        JSONObject metadata = data.optJSONObject("metadata");
+        if (!"paid".equalsIgnoreCase(data.optString("payment_status"))) {
+            logger.warn("⚠️ Pagamento não confirmado para sessionId={}", sessionId);
+            return;
+        }
+        // Alterar dps, bug anotado no bloco de notas
+        if (lastSession.equalsIgnoreCase(sessionId)) {
+            logger.info("Sessão já processada");
+            return;
+        } else {
+            lastSession = sessionId;
+        }
 
-        if (metadata == null) {
-            logger.error("❌ Metadata vazio no checkout.session");
+        JSONObject metadata = Optional.ofNullable(data.optJSONObject("metadata"))
+                .orElse(new JSONObject());
+
+        String email = metadata.optString("email", "").trim();
+        String nome = metadata.optString("nome", "").trim();
+        String telefone = metadata.optString("telefone", "").trim();
+        String cpf = normalizeCpf(metadata.optString("cpf", ""));
+
+        boolean isPacote = metadata.optBoolean("pacote", false);
+        String pedidosJson = metadata.optString("pedidos");
+
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Integer> pedidos = new HashMap<>();
+        try{
+            pedidos = mapper.readValue(pedidosJson, new TypeReference<Map<String, Integer>>() {});
+        }catch (Exception e){
+            logger.error("Erro processando pedidos", e);
+        }
+
+        //pedidos.forEach((id, quantidade) -> {
+          //  String a = " ";
+        //});
+
+        //String idsString = metadata.optString("ids", null);
+
+        /*List<Long> catalogoIds = new ArrayList<>();
+        if (idsString != null && !idsString.isBlank()) {
+            catalogoIds = Arrays.stream(idsString.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .map(this::parseLong)
+                    .filter(Objects::nonNull)
+                    .toList();
+        } else if (ticketCatalogoId != null) {
+            catalogoIds = Collections.singletonList(ticketCatalogoId);
+        }*/
+
+        //if (catalogoIds.contains(11L)) {
+          //  isPacote = true;
+        //}
+
+        int quantidade = parseInt(metadata.optString("quantidade", "1"), 1);
+
+        if (email.isBlank() || nome.isBlank()) {
+            logger.error("Metadata incompleta: email ou nome ausente");
             return;
         }
 
-        String email = metadata.optString("email");
-        String nome = metadata.optString("nome");
-        String telefone = metadata.optString("telefone");
-        String cpf = metadata.optString("cpf");
-        String ticketIdStr = metadata.optString("ticketId", null);
-
-        boolean isPacote = "true".equalsIgnoreCase(metadata.optString("pacote", "false"));
-
-        if (email == null || nome == null) {
-            logger.error("❌ Metadata insuficiente.");
-            return;
-        }
+        // Log principal do checkout
+        //logger.info("Checkout confirmado sessionId={} | pacote={} | quantidade={} | ticketIds={} | cliente={} ({})",
+          //      sessionId, isPacote, quantidade, catalogoIds, nome, email);
 
         if (isPacote) {
-            processarPacote(sessionId, data, email, nome, telefone, cpf);
+            logger.info("Tipo de compra identificado: PACOTE");
+            //processarPacote(sessionId, email, nome, telefone, cpf, catalogoIds);
+        } else if (quantidade > 1) {
+            logger.info("Tipo de compra identificado: TICKETS AVULSOS (múltiplos)");
+            //processarMultiplosTicketsAvulsos(sessionId, email, nome, telefone, cpf, pedidos, quantidade);
         } else {
-            processarTicketAvulso(sessionId, data, email, nome, telefone, cpf, ticketIdStr);
+            logger.info("Tipo de compra identificado: TICKET AVULSO (único)");
+            //processarTicketAvulso(sessionId, email, nome, telefone, cpf, ticketCatalogoId);
         }
+        logger.info(pedidos.toString());
+        processarMultiplosTicketsAvulsos(sessionId, email, nome, telefone, cpf, pedidos, quantidade);
     }
 
-    private void processarTicketAvulso(String sessionId,
-                                       JSONObject data,
-                                       String email,
-                                       String nome,
-                                       String telefone,
-                                       String cpf,
-                                       String ticketIdStr) {
+    @Transactional
+    private void processarTicketAvulso(String sessionId, String email, String nome,
+                                       String telefone, String cpf, Long ticketCatalogoId) {
+        if (!clientePodeComprar(cpf)) {
+            logger.warn("Cliente bloqueado por regra 90 dias cpf={}", cpf);
+            return;
+        }
 
-        Long ticketCatalogoId = null;
-        String nomeTicket = "Guia RQ aaaaaa";
+        UUID compraId = UUID.randomUUID();
+        List<Ticket> tickets = criarTickets(sessionId, email, nome, telefone, cpf,
+                Collections.singletonList(ticketCatalogoId), 1, false, compraId);
 
-        try {
-            ticketCatalogoId = Long.parseLong(ticketIdStr);
-            Optional<TicketCatalogo> cat = ticketCatalogoRepository.findById(ticketCatalogoId);
+        ticketService.processarCompra(tickets.get(0));
+        logger.info("Ticket avulso criado sessionId={} | ticketId={} | cliente={}", sessionId, ticketCatalogoId, email);
+    }
 
-            if (cat.isPresent()) {
-                nomeTicket = cat.get().getNome() + " - Guia RQ aaaaa";
+    @Transactional
+    private void processarMultiplosTicketsAvulsos(String sessionId, String email, String nome,
+                                                  String telefone, String cpf, Map<String, Integer> pedidos,
+                                                  int quantidade) {
+        if (!clientePodeComprar(cpf)) {
+            logger.info("Cliente bloqueado por regra 90 dias cpf={}", cpf);
+            return;
+        }
+        List<Ticket> tickets = new ArrayList<>();
+        pedidos.forEach((id, qtdTicket) -> {
+            for(int i = 0; i < qtdTicket; i++) {
+                if (Long.valueOf(id) == 11) {
+                    List<TicketCatalogo> todos_tickets = ticketCatalogoRepository.findAll();
+                    for (TicketCatalogo ticket : todos_tickets) {
+                        if (ticket.getId() != 11) {
+                            tickets.add(criarTicketBase(sessionId, email, nome, telefone, cpf, ticket.getId()));
+                        }
+                    }
+                    continue;
+                }
+                Ticket ticket = criarTicketBase(sessionId, email, nome, telefone, cpf, Long.valueOf(id));
+                logger.info(ticket.toString()  +" - "+ ticket.getNome() +" - "+ ticket.getEmailCliente());
+                tickets.add(ticket);
             }
-
-        } catch (Exception e) {
-            logger.error("Erro ao buscar ticket catálogo: {}", e.getMessage());
-        }
-
-        Ticket ticket = new Ticket();
-        ticket.setStripeSessionId(sessionId);
-        ticket.setTicketCatalogoId(ticketCatalogoId);
-        ticket.setNome(nomeTicket);
-        ticket.setEmailCliente(email);
-        ticket.setNomeCliente(nome);
-        ticket.setTelefoneCliente(telefone);
-        ticket.setCpfCliente(cpf);
-        ticket.setStatus("PAGO");
-        ticket.setUsado(false);
-        ticket.setDataCompra(LocalDateTime.now());
-        ticket.setCriadoEm(LocalDateTime.now());
-        ticket.setIdPublico(UUID.randomUUID());
-        ticket.setCompraId(UUID.randomUUID());
-        ticket.setQrToken(UUID.randomUUID().toString());
-        ticket.setValorPago(data.optDouble("amount_total") / 100.0);
-
-        ticketRepository.save(ticket);
-
-        logger.info("🎫 Ticket criado: {}", ticket.getNome());
-        ticketService.processarCompra(ticket);
-
-        logger.info("📨 Ticket avulso enviado!");
+        });
+        logger.info(tickets.toString());
+        ticketService.processarCompraAvulsaMultipla(tickets);
+        logger.info("Tickets avulsos múltiplos criados sessionId={} | quantidade={} | ids={} | cliente={}",
+                sessionId, quantidade, email);
     }
 
-    // ======================
-    // PACOTE COMPLETO (10 tickets)
-    // ======================
-    /**
-     * Processa a compra de um pacote (ex: 10 tickets)
-     * @param sessionId ID da sessão Stripe
-     * @param data Dados do checkout
-     * @param email Email do cliente
-     * @param nome Nome do cliente
-     * @param telefone Telefone do cliente
-     * @param cpf CPF do cliente
-     */
-    private void processarPacote(String sessionId,
-                                 JSONObject data,
-                                 String email,
-                                 String nome,
-                                 String telefone,
-                                 String cpf) {
+    @Transactional
+    private void processarPacote(String sessionId, String email, String nome,
+                                 String telefone, String cpf, List<Long> ticketCatalogoIds) {
+        logger.info("INICIANDO PROCESSAMENTO DE PACOTE sessionId={}", sessionId);
 
-        logger.info("📦 Iniciando processamento do pacote | sessionId={}", sessionId);
-
-        try {
-
-            // ============================
-            // 1. Dados básicos da compra
-            // ============================
-            LocalDateTime agora = LocalDateTime.now();
-            Double valorTotal = data.optDouble("amount_total") / 100.0;
-
-            // ============================
-            // 2. Configuração do Pacote
-            // ============================
-            int quantidadeTickets = 10; // futuramente: carregar do metadata ou tabela
-
-            Ticket pacote = new Ticket();
-            pacote.setStripeSessionId(sessionId);
-            pacote.setTicketCatalogoId(999L); // criar um item "Pacote" no catálogo, se desejar
-            pacote.setNome("Pacote Guia RQ - " + quantidadeTickets + " usos");
-
-            // Dados do cliente
-            pacote.setEmailCliente(email);
-            pacote.setNomeCliente(nome);
-            pacote.setTelefoneCliente(telefone);
-            pacote.setCpfCliente(cpf);
-
-            // Status da compra
-            pacote.setStatus("PAGO");
-            pacote.setUsado(false);
-            pacote.setDataCompra(agora);
-            pacote.setCriadoEm(agora);
-
-            // Identificadores
-            pacote.setIdPublico(UUID.randomUUID());
-            pacote.setCompraId(UUID.randomUUID());
-            pacote.setQrToken(UUID.randomUUID().toString());
-
-            pacote.setValorPago(valorTotal);
-
-            // ============================
-            // 3. Campos exclusivos do pacote
-            // ============================
-            pacote.setTipoPacote(true);
-            pacote.setUsosTotais(quantidadeTickets);
-            pacote.setUsosRestantes(quantidadeTickets);
-
-            // ============================
-            // 4. Persistência
-            // ============================
-            pacote = ticketRepository.save(pacote);
-
-            logger.info("🎉 Pacote criado com sucesso | pacoteId={} | usos={}",
-                    pacote.getId(), quantidadeTickets);
-
-            // ============================
-            // 5. Notificação por e-mail
-            // ============================
-            ticketService.processarPacote(
-                    email,
-                    nome,
-                    telefone,
-                    cpf,
-                    List.of(pacote)
-            );
-
-            logger.info("📨 Email de pacote enviado ao cliente {}", email);
-
-        } catch (Exception e) {
-            logger.error("❌ Erro ao processar pacote | sessionId={} | erro={}",
-                    sessionId, e.getMessage(), e);
+        if (!clientePodeComprar(cpf)) {
+            logger.warn("Cliente bloqueado por regra 90 dias cpf={}", cpf);
+            return;
         }
+
+        int quantidade = 10;
+        UUID compraId = UUID.randomUUID();
+        List<Ticket> tickets = criarTickets(sessionId, email, nome, telefone, cpf,
+                ticketCatalogoIds, quantidade, true, compraId);
+
+        logger.info("{} tickets criados para PACOTE compraId={} | cliente={}", quantidade, compraId, email);
+        ticketService.processarPacote(tickets);
+        logger.info("Pacote processado com sucesso sessionId={} | cliente={}", sessionId, email);
     }
+
+    private List<Ticket> criarTickets(String sessionId, String email, String nome,
+                                      String telefone, String cpf, List<Long> catalogoIds, int quantidade,
+                                      boolean isPacote, UUID compraId) {
+        if (catalogoIds == null || catalogoIds.isEmpty()) {
+            throw new IllegalArgumentException("Nenhum ID de catálogo recebido para criação de tickets.");
+        }
+
+        List<Ticket> tickets = new ArrayList<>();
+        List<TicketCatalogo> catalogos = ticketCatalogoRepository.findByIdIn(catalogoIds);
+
+        if (catalogos.isEmpty()) {
+            throw new IllegalStateException("Nenhum catálogo encontrado para os IDs fornecidos: " + catalogoIds);
+        }
+
+        for (TicketCatalogo catalogo : catalogos) {
+            Long catalogoId = catalogo.getId();
+            for (int i = 0; i < quantidade; i++) {
+                Ticket t = criarTicketBase(sessionId, email, nome, telefone, cpf, catalogoId);
+                t.setPacote(isPacote);
+                t.setQuantidadeComprada(quantidade);
+                t.setCompraId(compraId);
+
+                ticketRepository.save(t);
+                tickets.add(t);
+
+                System.out.println("Ticket criado: nome=" + t.getNome() + " | catálogoId=" + catalogoId + " | cliente=" + email);
+            }
+        }
+
+        System.out.println("Total de tickets criados: " + tickets.size());
+        return tickets;
+    }
+
+    private Ticket criarTicketBase(String sessionId, String email, String nome,
+                                   String telefone, String cpf, Long catalogoId) {
+
+        String nomeTicket = ticketCatalogoRepository.findById(catalogoId)
+                .map(TicketCatalogo::getNome)
+                .orElse("Guia Rancho Queimado - Ticket");
+
+        Ticket t = new Ticket();
+        t.setStripeSessionId(sessionId);
+        t.setTicketCatalogoId(catalogoId);
+        t.setNome(nomeTicket);
+        t.setEmailCliente(email);
+        t.setNomeCliente(nome);
+        t.setTelefoneCliente(telefone);
+        t.setCpfCliente(cpf);
+        t.setStatus("PAGO");
+        t.setUsado(false);
+        t.setDataCompra(LocalDateTime.now());
+        t.setCriadoEm(LocalDateTime.now());
+        t.setIdPublico(UUID.randomUUID());
+        t.setQrToken(UUID.randomUUID().toString());
+        return t;
+    }
+
+    private String normalizeCpf(String cpf) {
+        return cpf == null ? null : cpf.replaceAll("\\D", "");
+    }
+
+    private boolean clientePodeComprar(String cpf) {
+        if (cpf != null && CPFS_LIBERADOS.contains(cpf)) return true;
+        Ticket ultimo = ticketRepository.findTop1ByCpfClienteOrderByDataCompraDesc(cpf);
+        if (ultimo == null || ultimo.getDataCompra() == null) return true;
+        return ChronoUnit.DAYS.between(
+                ultimo.getDataCompra().toLocalDate(), LocalDate.now()) >= 90;
+    }
+
+    private int parseInt(String v, int def) {
+        try { return Integer.parseInt(v); } catch (Exception e) { return def; }
+    }
+
+    private Long parseLong(String v) {
+        try { return v == null ? null : Long.parseLong(v); } catch (Exception e) {
+            return null; }
+    }
+}

@@ -95,12 +95,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <div class="mt-2 p-4 border-t border-gray-100">
           <div class="flex justify-between items-center mb-2">
             <span class="text-sm text-gray-600">Valor do pacote</span>
-            <span id="package-price" class="text-sm font-medium text-gray-900">R$ 50,00</span>
+            <span id="package-price" class="text-sm font-medium text-gray-900">R$ 77,00</span>
           </div>
           <div class="bg-primary-blue/5 rounded-lg p-3">
             <div class="flex justify-between items-center">
               <span class="text-base font-semibold text-gray-900">Total</span>
-              <span id="total-amount" class="text-xl font-bold text-primary-blue">R$ 50,00</span>
+              <span id="total-amount" class="text-xl font-bold text-primary-blue">R$ 77,00</span>
             </div>
           </div>
         </div>
@@ -201,7 +201,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <div id="fixed-bottom" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
     <div class="flex items-center justify-between mb-3">
       <span class="text-sm font-medium text-gray-700">Total do pedido:</span>
-      <span id="final-total" class="text-lg font-bold text-primary-blue">R$ 50,00</span>
+      <span id="final-total" class="text-lg font-bold text-primary-blue">R$ 77,00</span>
     </div>
     <button id="go-to-payment" class="w-full bg-primary-blue text-white py-3 rounded-xl font-semibold text-base shadow-lg hover:bg-blue-700 transition-colors">
       Ir para o pagamento
@@ -210,7 +210,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   <script>
   // 🔹 Variáveis globais
-  let totalAmount = 50.00;
+  let totalAmount = 77.00;
   let addedItems = [];
 
   // Detecta pacote via URL e atualiza a tela
@@ -278,13 +278,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     });
   });
 
-  // 🔹 Clique no botão "Ir para o pagamento"
+  // Clique no botão "Ir para o pagamento"
   document.getElementById("go-to-payment").addEventListener("click", () => {
     // Monta carrinho
+    //Arrumar depois
+    const nome = document.getElementById("package-title").textContent
     const carrinho = [{
-      id: Date.now(),
-      nome: document.getElementById("package-title").textContent,
-      preco: totalAmount - addedItems.reduce((acc, i) => acc + i.price, 0),
+      id: 11,
+      nome: nome,
+      preco: 77,
       qtd: 1,
       local: "Rancho Queimado",
       img: document.getElementById("package-image").getAttribute("src") // Caminho relativo

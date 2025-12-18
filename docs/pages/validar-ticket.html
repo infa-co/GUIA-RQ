@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Validar Ticket</title>
 </head>
@@ -31,15 +30,15 @@
     </button>
 </div>
 
-<!-- TICKET INVÁLIDO -->
-<div id="erro" class="bg-red-100 text-red-800 p-6 rounded-xl shadow w-full max-w-md text-center hidden">
-    <h2 class="text-xl font-bold mb-2">Ticket Inválido ❌</h2>
-    <p>Este ticket não existe ou o código é inválido.</p>
+<!-- BLOCO NEUTRO: EM PRODUÇÃO -->
+<div id="erro" class="bg-blue-100 text-blue-900 p-6 rounded-xl shadow w-full max-w-md text-center hidden">
+    <h2 class="text-xl font-bold mb-2">Em Produção 🚧</h2>
+    <p>Este ticket ainda não está disponível para validação. Tente novamente mais tarde.</p>
 </div>
 
 <!-- TICKET JÁ UTILIZADO -->
 <div id="usado" class="bg-yellow-100 text-yellow-900 p-6 rounded-xl shadow w-full max-w-md text-center hidden">
-    <h2 class="text-xl font-bold mb-2">Ticket Já Utilizado ⚠️</h2>
+    <h2 class="text-xl font-bold mb-2">Ticket Já Validado ⚠️</h2>
     <p>Este ticket já foi utilizado anteriormente.</p>
 </div>
 
@@ -48,27 +47,22 @@
     const qr = params.get("qr");
 
     if (!qr) {
-        // Sem parâmetro ?qr= → já mostra erro
         document.getElementById("erro").classList.remove("hidden");
     } else {
-        // Valida o ticket no backend
         fetch(`https://guia-rq-backend.onrender.com/api/tickets/validar-ticket/${qr}`)
             .then(res => {
                 if (!res.ok) throw new Error();
                 return res.json();
             })
             .then(ticket => {
-                // Se o backend já marcou como usado
                 if (ticket.usado === true) {
                     document.getElementById("usado").classList.remove("hidden");
                     return;
                 }
 
-                // Preenche dados básicos
                 document.getElementById("nomeCliente").innerText = ticket.nomeCliente || "-";
                 document.getElementById("nomeTicket").innerText = ticket.nomeTicket || "-";
 
-                // Mostra o card principal
                 document.getElementById("card").classList.remove("hidden");
             })
             .catch(() => {
@@ -82,27 +76,20 @@
             return;
         }
 
-        fetch(`https://guia-rq-backend.onrender.com/api/tickets/confirmar/${qr}`, {
-            method: "POST"
-        })
+        fetch(`https://guia-rq-backend.onrender.com/api/tickets/confirmar/${qr}`, { method: "POST" })
             .then(async res => {
                 const texto = await res.text();
 
                 if (res.status === 200) {
                     alert("✔ " + (texto || "Ticket confirmado com sucesso."));
-                    // Opcional: troca o card pela mensagem de já utilizado
                     document.getElementById("card").classList.add("hidden");
                     document.getElementById("usado").classList.remove("hidden");
                 } else if (res.status === 409) {
-                    // Ticket já usado
                     document.getElementById("card").classList.add("hidden");
                     document.getElementById("usado").classList.remove("hidden");
-                } else if (res.status === 404) {
-                    // Ticket não encontrado
+                } else {
                     document.getElementById("card").classList.add("hidden");
                     document.getElementById("erro").classList.remove("hidden");
-                } else {
-                    alert("❌ Não foi possível confirmar o ticket.");
                 }
             })
             .catch(() => {

@@ -16,9 +16,6 @@ public class TicketValidatorController {
     @Autowired
     private TicketRepository ticketRepository;
 
-    // ==========================================================
-    // 1) VALIDAR (carrega informações do ticket)
-    // ==========================================================
     @GetMapping("/validar-ticket/{qr}")
     public ResponseEntity<?> validar(@PathVariable String qr) {
 
@@ -37,10 +34,6 @@ public class TicketValidatorController {
                         Map.of("status", "INVALIDO")
                 ));
     }
-
-    // ==========================================================
-    // 2) CONFIRMAR (grava no banco os dados do proprietário)
-    // ==========================================================
     @PostMapping("/confirmar/{qr}")
     public ResponseEntity<?> confirmar(
             @PathVariable String qr,
@@ -93,6 +86,7 @@ public class TicketValidatorController {
                     ticket.setEstabelecimentoValidacao(dadosValidacao.get("estabelecimento"));
                     ticket.setValidadoPor(dadosValidacao.get("validadoPor"));
 
+                    ticket.setDataCompra(LocalDateTime.now());
                     ticketRepository.save(ticket);
 
                     return ResponseEntity.ok(

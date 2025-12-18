@@ -2,6 +2,9 @@ package br.com.guiarq.Model.Service;
 
 import br.com.guiarq.Model.Entities.Ticket;
 import br.com.guiarq.Model.Repository.TicketRepository;
+import br.com.guiarq.controller.StripeWebhookController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +12,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class TicketService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TicketService.class);
 
     @Autowired
     private TicketRepository ticketRepository;
@@ -25,10 +31,6 @@ public class TicketService {
     private static final String URL_VALIDACAO =
             "https://guiaranchoqueimado.com.br/pages/validar-ticket.html?qr=";
 
-    // -------------------------------
-    // SALVAR / LISTAR
-    // -------------------------------
-
     public Ticket salvar(Ticket ticket) {
         return ticketRepository.save(ticket);
     }
@@ -37,11 +39,11 @@ public class TicketService {
         return ticketRepository.findAll();
     }
 
-    // -------------------------------
-    // TICKET ÚNICO
-    // -------------------------------
-
     public void processarCompra(Ticket ticket) {
+        if (ticket.getStripeSessionId() == null) {
+            System.out.println("Ticket sem pagamento confirmado. Email NÃO enviado.");
+            return;
+        }
         try {
             String conteudo = URL_VALIDACAO + ticket.getQrToken();
             byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
@@ -59,23 +61,20 @@ public class TicketService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("❌ ERRO AO PROCESSAR COMPRA (TICKET ÚNICO)");
+            System.out.println("ERRO AO PROCESSAR COMPRA (TICKET ÚNICO)");
         }
     }
-
-    // -------------------------------
-    // AVULSO MÚLTIPLO (MESMO TICKET)
-    // -------------------------------
-
     public void processarCompraAvulsaMultipla(List<Ticket> tickets) {
+        if (tickets.stream().anyMatch(t -> t.getStripeSessionId() == null)) {
+            logger.info("Existem tickets sem pagamento confirmado. Email NÃO enviado.");
+            return;
+        }
         try {
-
             if (tickets == null || tickets.isEmpty()) {
                 throw new IllegalArgumentException("Lista de tickets vazia");
             }
 
             if (tickets.size() == 1) {
-                // SE tiver só 1 ticket, manda como compra avulsa normal
                 processarCompra(tickets.get(0));
                 return;
             }
@@ -85,40 +84,45 @@ public class TicketService {
             List<byte[]> qrBytesList = new ArrayList<>();
             for (Ticket t : tickets) {
                 String conteudo = URL_VALIDACAO + t.getQrToken();
-                qrBytesList.add(qrCodeService.generateQrCodeBytes(conteudo, 300, 300));
+                byte[] qrBytes = qrCodeService.generateQrCodeBytes(conteudo, 300, 300);
+                if (qrBytes == null) throw new RuntimeException("Falha ao gerar QR do ticket: " + t.getIdPublico());
+                qrBytesList.add(qrBytes);
             }
 
+            String nomesTickets = tickets.stream()
+                    .map(Ticket::getNome)
+                    .collect(Collectors.joining(", "));
+
+            logger.info(qrBytesList.toString() + " " + nomesTickets.toString());
             emailService.sendMultiplosTicketsAvulsos(
                     primeiro.getEmailCliente(),
                     primeiro.getNomeCliente(),
                     primeiro.getTelefoneCliente(),
                     primeiro.getCpfCliente(),
-                    primeiro.getNome(),
+                    nomesTickets, // lista de todos os nomes
                     tickets,
                     qrBytesList
             );
 
-            System.out.println("✔ TICKETS AVULSOS MULTIPLOS ENVIADOS");
+            System.out.println("TICKETS AVULSOS MULTIPLOS ENVIADOS");
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("❌ ERRO AO PROCESSAR AVULSO MULTIPLO: " + e.getMessage());
+            System.out.println("ERRO AO PROCESSAR AVULSO MULTIPLO: " + e.getMessage());
         }
     }
 
-    // -------------------------------
-    // PACOTE (DIFERENTES TICKETS)
-    // -------------------------------
-
     public void processarPacote(List<Ticket> tickets) {
+        if (tickets.stream().anyMatch(t -> t.getStripeSessionId() == null)) {
+            System.out.println("⚠️ Existem tickets sem pagamento confirmado. Email NÃO enviado.");
+            return;
+        }
         try {
-
             if (tickets == null || tickets.isEmpty()) {
                 throw new IllegalArgumentException("Lista de tickets vazia");
             }
 
             if (tickets.size() == 1) {
-                // SE só existe 1 ticket, NÃO É PACOTE → envia como ticket único
                 processarCompra(tickets.get(0));
                 return;
             }
@@ -147,10 +151,6 @@ public class TicketService {
             System.out.println("❌ ERRO AO PROCESSAR PACOTE: " + e.getMessage());
         }
     }
-
-    // -------------------------------
-    // VERIFICAR / USAR
-    // -------------------------------
 
     public Ticket verificar(UUID idPublico) {
         return ticketRepository.findByIdPublico(idPublico)
