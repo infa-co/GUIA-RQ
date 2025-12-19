@@ -30,11 +30,31 @@
     </button>
 </div>
 
-<!-- BLOCO NEUTRO: EM PRODUÇÃO -->
-<div id="erro" class="bg-blue-100 text-blue-900 p-6 rounded-xl shadow w-full max-w-md text-center hidden">
-    <h2 class="text-xl font-bold mb-2">Em Produção 🚧</h2>
-    <p>Este ticket ainda não está disponível para validação. Tente novamente mais tarde.</p>
+<div id="erro" class="bg-blue-100 text-blue-900 p-8 rounded-xl shadow-lg w-full max-w-md text-center hidden">
+    <h2 class="text-2xl font-bold mb-4">Validação Manual - Peça os seguintes dados e nos envie pelo o Whatsapp 🚧</h2>
+
+    <p class="text-gray-800 mb-2">
+        <strong>Nome:</strong>
+        <span id="nomeCliente"></span>
+    </p>
+
+    <p class="text-gray-800 mb-6">
+        <strong>CPF:</strong>
+        <span id="cpfCliente"></span>
+    </p>
+
+    <a
+            id="btnWhatsapp"
+            target="_blank"
+            class="block w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition">
+        Validar via WhatsApp
+    </a>
+
+    <p class="text-sm text-blue-800 mt-6">
+        Este ticket está em processo de validação manual.
+    </p>
 </div>
+
 
 <!-- TICKET JÁ UTILIZADO -->
 <div id="usado" class="bg-yellow-100 text-yellow-900 p-6 rounded-xl shadow w-full max-w-md text-center hidden">
@@ -62,6 +82,8 @@
 
                 document.getElementById("nomeCliente").innerText = ticket.nomeCliente || "-";
                 document.getElementById("nomeTicket").innerText = ticket.nomeTicket || "-";
+
+                configurarWhatsapp(nome, cpf);
 
                 document.getElementById("card").classList.remove("hidden");
             })
@@ -96,6 +118,25 @@
                 alert("❌ Erro de conexão com o servidor.");
             });
     }
+
+
+
+        document.getElementById("btnWhatsapp").addEventListener("click", function () {
+        const nome = document.getElementById("nomeCliente").innerText.trim();
+        const cpf = document.getElementById("cpfCliente").innerText.trim();
+
+        const numeroWhatsapp = "5548999116344";
+
+        const mensagem =
+        `Olá, gostaria de validar um ticket do Guia Rancho Queimado.
+
+Nome: ${nome || "-"}
+CPF: ${cpf || "-"}`;
+
+        const link = `https://api.whatsapp.com/send/?phone=5548999116344&text=Ol%C3%A1%2C+gostaria+de+validar+um+ticket+do+Guia+Rancho+Queimado.%0A%0AEstabelecimento%3A%0A%0ANome%3A+%0ACPF%3A+&type=phone_number&app_absent=0${encodeURIComponent(mensagem)}`;
+
+        this.href = link;
+    });
 </script>
 
 </body>
