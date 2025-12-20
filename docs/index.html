@@ -173,6 +173,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <ul class="text-gray-700 text-sm space-y-2 mb-4 list-disc list-inside">
                     <li>10 tickets válidos nas principais experiências</li>
 
+                    <button
+                            id="toggle-tickets"
+                            class="md:hidden text-blue-600 text-sm font-semibold mt-2 flex items-center gap-1"
+                    >
+                        Ver todos os tickets
+                        <svg id="icon-arrow" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
                     <!-- 🔽 LISTA COMPLETA ESCONDIDA NO MOBILE -->
                     <ul id="ticket-list" class="ml-5 mt-2 text-gray-700 text-sm space-y-1 max-h-0 overflow-hidden transition-all duration-500 md:max-h-none md:overflow-visible">
                         <li>O que você vai ter acesso:</li>
@@ -189,7 +199,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     </ul>
 
                     <li>Transforme R$77 em mais de R$230 em experiências em Rancho Queimado</li>
-                    <li>Uso flexível durante 6 meses</li>
+                    <li>Uso flexível durante 12 meses</li>
                 </ul>
 
                 <button onclick="window.location.href='pages/resumo.html?pacote=rancho-completo'"
@@ -792,6 +802,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+
+    const toggleBtn = document.getElementById('toggle-tickets');
+    const ticketList = document.getElementById('ticket-list');
+    const arrow = document.getElementById('icon-arrow');
+
+    toggleBtn.addEventListener('click', () => {
+    const isOpen = ticketList.classList.contains('max-h-0');
+
+    ticketList.classList.toggle('max-h-0');
+    ticketList.classList.toggle('max-h-[500px]');
+
+    toggleBtn.innerText = isOpen ? 'Ver menos' : 'Ver todos os tickets';
+    arrow.classList.toggle('rotate-180');
+});
 </script>
 
 </body>
