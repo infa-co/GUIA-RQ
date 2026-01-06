@@ -84,9 +84,6 @@ public class EmailService {
             List<byte[]> qrBytesList
     ) {
         try {
-            //if (qrBytesList.size() != tickets.size()) {
-            //    throw new IllegalStateException("Lista de QR codes não corresponde ao número de tickets");
-            //}
             StringBuilder html = new StringBuilder();
             html.append("<h2>Seus Tickets Estão Prontos</h2>");
             html.append("<p>Olá <strong>").append(nomeCliente).append("</strong>,</p>");

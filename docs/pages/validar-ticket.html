@@ -1,143 +1,245 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <title>Guia RQ — Verificação de Ticket</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Validar Ticket</title>
+    <meta name="color-scheme" content="light">
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="bg-gray-100 min-h-screen">
+<!-- Header simples com identidade -->
+<header class="bg-white border-b border-gray-200">
+    <div class="max-w-3xl mx-auto px-4 py-4 flex items-center gap-3">
+        <div class="w-8 h-8 rounded bg-green-700"></div>
+        <div>
+            <h1 class="text-lg font-bold text-gray-900">Guia Rancho Queimado</h1>
+            <p class="text-xs text-gray-600">Verificação de Ticket</p>
+        </div>
+    </div>
+</header>
 
-<!-- CARD PRINCIPAL: TICKET ENCONTRADO -->
-<div id="card" class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center hidden">
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">Ticket Encontrado ✅</h1>
+<main class="max-w-3xl mx-auto px-4 py-8">
+    <!-- Estado: carregando -->
+    <div id="loading" class="bg-white rounded-xl shadow p-6 mb-6">
+        <p class="text-gray-700">Carregando dados do ticket...</p>
+        <div class="mt-3 h-2 w-32 bg-gray-200 rounded overflow-hidden">
+            <div class="h-full w-1/2 bg-green-600 animate-pulse"></div>
+        </div>
+    </div>
 
-    <p class="text-gray-700 mb-2">
-        <strong>Cliente:</strong>
-        <span id="nomeCliente"></span>
-    </p>
-    <p class="text-gray-700 mb-4">
-        <strong>Ticket:</strong>
-        <span id="nomeTicket"></span>
-    </p>
+    <!-- Estado: ticket válido -->
+    <section id="card" class="bg-white p-8 rounded-xl shadow w-full hidden" aria-live="polite">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-3 h-3 bg-green-600 rounded-full"></div>
+            <h2 class="text-2xl font-bold text-green-700">Ticket válido ✅</h2>
+        </div>
 
-    <button
-            id="btnConfirmar"
-            onclick="confirmarTicket()"
-            class="mt-4 w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition">
-        Confirmar uso do ticket
-    </button>
-</div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-gray-50 rounded p-4">
+                <p class="text-sm text-gray-500">Cliente</p>
+                <p id="nomeCliente" class="text-gray-900 font-medium">-</p>
+            </div>
+            <div class="bg-gray-50 rounded p-4">
+                <p class="text-sm text-gray-500">CPF</p>
+                <p id="cpfCliente" class="text-gray-900 font-medium">-</p>
+            </div>
+            <div class="bg-gray-50 rounded p-4">
+                <p class="text-sm text-gray-500">Ticket</p>
+                <p id="nomeTicket" class="text-gray-900 font-medium">-</p>
+            </div>
+            <div class="bg-gray-50 rounded p-4">
+                <p class="text-sm text-gray-500">Status</p>
+                <p id="statusTicket" class="text-gray-900 font-medium">PAGO</p>
+            </div>
+        </div>
 
-<div id="erro" class="bg-blue-100 text-blue-900 p-8 rounded-xl shadow-lg w-full max-w-md text-center hidden">
-    <h2 class="text-2xl font-bold mb-4">Validação Manual - Peça os seguintes dados e nos envie pelo o Whatsapp 🚧</h2>
+        <div class="space-y-3">
+            <button
+                    id="btnConfirmar"
+                    type="button"
+                    class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                    onclick="confirmarTicket()"
+            >
+                Confirmar uso do ticket (Comerciante)
+            </button>
+            <p class="text-xs text-gray-600 text-center">
+                Ao confirmar, este ticket será marcado como usado e não poderá ser reutilizado.
+            </p>
+        </div>
+    </section>
 
-    <p class="text-gray-800 mb-2">
-        <strong>Nome:</strong>
-        <span id="nomeCliente"></span>
-    </p>
+    <!-- Estado: ticket já usado -->
+    <section id="usado" class="bg-yellow-50 border border-yellow-200 text-yellow-900 p-8 rounded-xl shadow w-full hidden" aria-live="polite">
+        <div class="flex items-center gap-3 mb-2">
+            <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+            <h2 class="text-xl font-bold">Ticket já validado ⚠️</h2>
+        </div>
+        <p class="mb-4">Este ticket já foi utilizado anteriormente.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white rounded p-4">
+                <p class="text-sm text-gray-500">Cliente</p>
+                <p id="nomeClienteUsado" class="text-gray-900 font-medium">-</p>
+            </div>
+            <div class="bg-white rounded p-4">
+                <p class="text-sm text-gray-500">Ticket</p>
+                <p id="nomeTicketUsado" class="text-gray-900 font-medium">-</p>
+            </div>
+        </div>
+    </section>
 
-    <p class="text-gray-800 mb-6">
-        <strong>CPF:</strong>
-        <span id="cpfCliente"></span>
-    </p>
+    <!-- Estado: erro / suporte -->
+    <section id="erro" class="bg-blue-50 border border-blue-200 text-blue-900 p-8 rounded-xl shadow w-full hidden" aria-live="polite">
+        <div class="flex items-center gap-3 mb-2">
+            <div class="w-3 h-3 bg-blue-600 rounded-full"></div>
+            <h2 class="text-xl font-bold">Validação manual 🚧</h2>
+        </div>
+        <p class="mb-4">Não foi possível validar automaticamente este ticket. Você pode solicitar validação manual pelo WhatsApp.</p>
 
-    <a
-            id="btnWhatsapp"
-            target="_blank"
-            class="block w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition">
-        Validar via WhatsApp
-    </a>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-white rounded p-4">
+                <p class="text-sm text-gray-500">Cliente</p>
+                <p id="nomeClienteErro" class="text-gray-900 font-medium">-</p>
+            </div>
+            <div class="bg-white rounded p-4">
+                <p class="text-sm text-gray-500">CPF</p>
+                <p id="cpfClienteErro" class="text-gray-900 font-medium">-</p>
+            </div>
+        </div>
 
-    <p class="text-sm text-blue-800 mt-6">
-        Este ticket está em processo de validação manual.
-    </p>
-</div>
+        <a
+                id="btnWhatsapp"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center gap-2 w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+        >
+            Validar via WhatsApp
+        </a>
 
-
-<!-- TICKET JÁ UTILIZADO -->
-<div id="usado" class="bg-yellow-100 text-yellow-900 p-6 rounded-xl shadow w-full max-w-md text-center hidden">
-    <h2 class="text-xl font-bold mb-2">Ticket Já Validado ⚠️</h2>
-    <p>Este ticket já foi utilizado anteriormente.</p>
-</div>
+        <p class="text-xs text-blue-700 mt-4">
+            Dica: verifique se o QR token foi lido corretamente ou tente novamente.
+        </p>
+    </section>
+</main>
 
 <script>
+    const API_BASE = "https://guia-rq-backend.onrender.com";
     const params = new URLSearchParams(window.location.search);
     const qr = params.get("qr");
 
-    if (!qr) {
-        document.getElementById("erro").classList.remove("hidden");
-    } else {
-        fetch(`https://guia-rq-backend.onrender.com/api/tickets/validar-ticket/${qr}`)
-            .then(res => {
-                if (!res.ok) throw new Error();
-                return res.json();
-            })
-            .then(ticket => {
-                if (ticket.usado === true) {
-                    document.getElementById("usado").classList.remove("hidden");
-                    return;
-                }
-
-                document.getElementById("nomeCliente").innerText = ticket.nomeCliente || "-";
-                document.getElementById("nomeTicket").innerText = ticket.nomeTicket || "-";
-
-                configurarWhatsapp(nome, cpf);
-
-                document.getElementById("card").classList.remove("hidden");
-            })
-            .catch(() => {
-                document.getElementById("erro").classList.remove("hidden");
-            });
+    // Util: alterna visibilidade de seções
+    function showSection(id) {
+      for (const el of ["loading", "card", "usado", "erro"]) {
+        document.getElementById(el).classList.add("hidden");
+      }
+      document.getElementById(id).classList.remove("hidden");
     }
 
-    function confirmarTicket() {
-        if (!qr) {
-            alert("QR Code inválido.");
-            return;
+    // Util: preenche WhatsApp
+    function configurarWhatsapp(nome, cpf) {
+      const numeroWhatsapp = "5548999116344";
+      const mensagem = `Olá, gostaria de validar um ticket do Guia Rancho Queimado.%0A%0ANome: ${encodeURIComponent(nome || "-")}%0ACPF: ${encodeURIComponent(cpf || "-")}`;
+      const link = `https://api.whatsapp.com/send?phone=${numeroWhatsapp}&text=${mensagem}`;
+      const btn = document.getElementById("btnWhatsapp");
+      btn.href = link;
+    }
+
+    // Carrega dados pelo qrToken
+    async function carregarTicket() {
+      if (!qr) {
+        // Sem token → erro + suporte
+        showSection("erro");
+        configurarWhatsapp("-", "-");
+        return;
+      }
+
+      showSection("loading");
+
+      try {
+        const res = await fetch(`${API_BASE}/api/ticket/${qr}`, { method: "GET" });
+        if (!res.ok) throw new Error("Ticket não encontrado");
+        const ticket = await res.json();
+
+        const nome = ticket.nomeCliente || "-";
+        const cpf = ticket.cpfCliente || "-";
+        const nomeTicket = ticket.nomeTicket || ticket.nome || "-";
+        const status = ticket.status || "PAGO";
+
+        if (ticket.usado === true) {
+          // já utilizado
+          document.getElementById("nomeClienteUsado").innerText = nome;
+          document.getElementById("nomeTicketUsado").innerText = nomeTicket;
+          showSection("usado");
+          return;
         }
 
-        fetch(`https://guia-rq-backend.onrender.com/api/tickets/confirmar/${qr}`, { method: "POST" })
-            .then(async res => {
-                const texto = await res.text();
+        // válido e não usado
+        document.getElementById("nomeCliente").innerText = nome;
+        document.getElementById("cpfCliente").innerText = cpf;
+        document.getElementById("nomeTicket").innerText = nomeTicket;
+        document.getElementById("statusTicket").innerText = status;
 
-                if (res.status === 200) {
-                    alert("✔ " + (texto || "Ticket confirmado com sucesso."));
-                    document.getElementById("card").classList.add("hidden");
-                    document.getElementById("usado").classList.remove("hidden");
-                } else if (res.status === 409) {
-                    document.getElementById("card").classList.add("hidden");
-                    document.getElementById("usado").classList.remove("hidden");
-                } else {
-                    document.getElementById("card").classList.add("hidden");
-                    document.getElementById("erro").classList.remove("hidden");
-                }
-            })
-            .catch(() => {
-                alert("❌ Erro de conexão com o servidor.");
-            });
+        showSection("card");
+      } catch (e) {
+        // erro / inválido
+        document.getElementById("nomeClienteErro").innerText = "-";
+        document.getElementById("cpfClienteErro").innerText = "-";
+        configurarWhatsapp("-", "-");
+        showSection("erro");
+      }
     }
 
+    // Confirma uso do ticket (comerciante)
+    let confirmando = false;
+    async function confirmarTicket() {
+      if (confirmando) return;
+      confirmando = true;
 
+      const btn = document.getElementById("btnConfirmar");
+      const original = btn.innerText;
+      btn.innerText = "Confirmando...";
+      btn.disabled = true;
 
-        document.getElementById("btnWhatsapp").addEventListener("click", function () {
-        const nome = document.getElementById("nomeCliente").innerText.trim();
-        const cpf = document.getElementById("cpfCliente").innerText.trim();
+      try {
+        const res = await fetch(`${API_BASE}/api/ticket/verify?token=${encodeURIComponent(qr)}`, {
+          method: "POST"
+        });
+        const texto = await res.text();
 
-        const numeroWhatsapp = "5548999116344";
+        if (res.status === 200) {
+          alert("✔ " + (texto || "Ticket confirmado com sucesso."));
+          // Atualiza tela para estado 'usado'
+          const nome = document.getElementById("nomeCliente").innerText.trim() || "-";
+          const ticketNome = document.getElementById("nomeTicket").innerText.trim() || "-";
+          document.getElementById("nomeClienteUsado").innerText = nome;
+          document.getElementById("nomeTicketUsado").innerText = ticketNome;
+          showSection("usado");
+        } else if (res.status === 409) {
+          // já usado
+          showSection("usado");
+        } else {
+          // erro → suporte
+          configurarWhatsapp(
+            document.getElementById("nomeCliente").innerText.trim() || "-",
+            document.getElementById("cpfCliente").innerText.trim() || "-"
+          );
+          showSection("erro");
+        }
+      } catch (err) {
+        alert("❌ Erro de conexão com o servidor.");
+      } finally {
+        btn.innerText = original;
+        btn.disabled = false;
+        confirmando = false;
+      }
+    }
 
-        const mensagem =
-        `Olá, gostaria de validar um ticket do Guia Rancho Queimado.
+    // Inicializa
+    carregarTicket();
 
-Nome: ${nome || "-"}
-CPF: ${cpf || "-"}`;
-
-        const link = `https://api.whatsapp.com/send/?phone=5548999116344&text=Ol%C3%A1%2C+gostaria+de+validar+um+ticket+do+Guia+Rancho+Queimado.%0A%0AEstabelecimento%3A%0A%0ANome%3A+%0ACPF%3A+&type=phone_number&app_absent=0${encodeURIComponent(mensagem)}`;
-
-        this.href = link;
-    });
+    // Exponho para o onclick do botão
+    window.confirmarTicket = confirmarTicket;
 </script>
-
 </body>
 </html>
