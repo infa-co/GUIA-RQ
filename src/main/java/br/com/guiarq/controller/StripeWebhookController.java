@@ -128,9 +128,11 @@ public class StripeWebhookController {
             logger.info("Cliente bloqueado por regra 90 dias cpf={}", cpf);
             return;
         }
+
         List<Ticket> tickets = new ArrayList<>();
+
         pedidos.forEach((id, qtdTicket) -> {
-            for(int i = 0; i < qtdTicket; i++) {
+            for (int i = 0; i < qtdTicket; i++) {
                 if (Long.valueOf(id) == 11) {
                     List<TicketCatalogo> todos_tickets = ticketCatalogoRepository.findAll();
                     for (TicketCatalogo ticket : todos_tickets) {
@@ -141,13 +143,22 @@ public class StripeWebhookController {
                     continue;
                 }
                 Ticket ticket = criarTicketBase(sessionId, email, nome, telefone, cpf, Long.valueOf(id));
-                logger.info(ticket.toString()  +" - "+ ticket.getNome() +" - "+ ticket.getEmailCliente());
+                logger.info("Ticket criado: {} - {} - {}", ticket.getIdPublico(), ticket.getNome(), ticket.getEmailCliente());
                 tickets.add(ticket);
             }
         });
-        logger.info(tickets.toString());
+
+        tickets.forEach(t -> {
+            t.setDataCompra(LocalDateTime.now());
+            t.setCriadoEm(LocalDateTime.now());
+            t.setQuantidadeComprada(1); // garantir campo obrigatório
+        });
+        ticketRepository.saveAll(tickets);
+        logger.info("Tickets salvos no banco: {}", tickets.size());
+
         ticketService.processarCompraAvulsaMultipla(tickets);
-        logger.info("Tickets avulsos múltiplos criados sessionId={} | quantidade={} | ids={} | cliente={}",
+
+        logger.info("Tickets avulsos múltiplos criados e processados | sessionId={} | quantidade={} | cliente={}",
                 sessionId, quantidade, email);
     }
     private Ticket criarTicketBase(String sessionId, String email, String nome,

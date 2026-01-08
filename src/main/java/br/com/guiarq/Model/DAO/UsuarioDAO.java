@@ -10,9 +10,6 @@ import java.util.List;
 
 public class UsuarioDAO {
 
-    // ============================
-    // BUSCAR POR EMAIL
-    // ============================
     public Usuario buscarPorEmail(String email) {
         String sql = "SELECT * FROM usuarios WHERE email = ? LIMIT 1";
 
@@ -33,9 +30,6 @@ public class UsuarioDAO {
         }
     }
 
-    // ============================
-    // BUSCAR POR ID
-    // ============================
     public Usuario buscarPorId(Long id) {
         String sql = "SELECT * FROM usuarios WHERE id = ?";
 
@@ -56,9 +50,6 @@ public class UsuarioDAO {
         }
     }
 
-    // ============================
-    // BUSCAR POR TOKEN DE VERIFICAÇÃO
-    // ============================
     public Usuario buscarPorToken(String token) {
         String sql = "SELECT * FROM usuarios WHERE token_verificacao = ? LIMIT 1";
 
@@ -79,9 +70,6 @@ public class UsuarioDAO {
         }
     }
 
-    // ============================
-    // SALVAR (INSERT / UPDATE)
-    // ============================
     public void salvar(Usuario u) {
 
         if (u.getId() == null) {
@@ -147,9 +135,6 @@ public class UsuarioDAO {
         }
     }
 
-    // ============================
-    // ATUALIZAR SENHA
-    // ============================
     public void atualizarSenha(Long id, String novaSenha) {
         String sql = "UPDATE usuarios SET senha = ? WHERE id = ?";
 
@@ -165,9 +150,6 @@ public class UsuarioDAO {
         }
     }
 
-    // ============================
-    // MARCAR COMO VERIFICADO
-    // ============================
     public void marcarVerificado(Long id) {
         String sql = "UPDATE usuarios SET verificado = true, token_verificacao = NULL WHERE id = ?";
 
@@ -182,9 +164,7 @@ public class UsuarioDAO {
         }
     }
 
-    // ============================
-    // DEFINIR TOKEN DE VERIFICAÇÃO
-    // ============================
+
     public void setarTokenVerificacao(Long id, String token, LocalDateTime expiracao) {
         String sql = "UPDATE usuarios SET token_verificacao = ?, expiracao_token = ? WHERE id = ?";
 
@@ -201,9 +181,6 @@ public class UsuarioDAO {
         }
     }
 
-    // ============================
-    // MAPEAMENTO PADRÃO DO RESULTSET → USUARIO
-    // ============================
     private Usuario mapearUsuario(ResultSet rs) throws Exception {
         Usuario u = new Usuario();
 
